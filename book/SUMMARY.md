@@ -1,6 +1,6 @@
 # Summary
 
-[Megaclite](./README.md)
+[The Megaclite Book](./README.md)
 
 ---
 
