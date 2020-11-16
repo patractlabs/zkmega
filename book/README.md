@@ -31,7 +31,7 @@ upgrade capabilities of Ethereum, the community can only encapsulate some  tool 
 through costly Solidity contracts. On top of these basic contract  libraries, many DApps can combine 
 ZK Rollup technology to achieve some innovations, such as [loopring][loopring], [gitcoin][gitcoin] 
 and [uniswap][uniswap] etc. However, in the past 3 years, ZK technology has further developed, 
-such as the more practical [BLS curve][BLS cureve], and [PLONK algorithm][PLONK algorithm] etc. 
+such as the more practical [BLS curve][BLS curve], and [PLONK algorithm][PLONK algorithm] etc. 
 Ethereum has not yet supported it.
 
 
