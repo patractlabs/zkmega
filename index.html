@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Intro - Megaclite</title>
+        <title>The Megaclite Book - The Megaclite Book</title>
         
         
 
@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html" class="active">Intro</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html" class="active">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="curves.html"><strong aria-hidden="true">1.</strong> Curves</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html"><strong aria-hidden="true">2.</strong> Pallet Contracts</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="example.html"><strong aria-hidden="true">2.1.</strong> Example Contract</a></li></ol></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">3.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -127,7 +127,7 @@
                         
                     </div>
 
-                    <h1 class="menu-title">Megaclite</h1>
+                    <h1 class="menu-title">The Megaclite Book</h1>
 
                     <div class="right-buttons">
                         
@@ -169,24 +169,37 @@
                     <main>
                         <h1><a class="header" href="#megaclite" id="megaclite">Megaclite</a></h1>
 <p>Megaclite is a zero-knowledge proof tool set building for the Polkadot ecology. </p>
-<h2><a class="header" href="#curves" id="curves">Curves</a></h2>
-<p>Here we provide <code>alt_bn128</code> and <code>bls12_381</code> curves for ZKP, both of them contain <code>Integrate addition</code>, 
-<code>Scalar multiplication</code> and <code>Pairing</code> functions, for helping devlopers trying and testing the curves, 
-we provide <code>groth16</code> for verifaction as well.</p>
-<h2><a class="header" href="#runtime-interfaces" id="runtime-interfaces">Runtime Interfaces</a></h2>
 <ul>
-<li><a href="https://github.com/patractlabs/substrate/tree/contracts/frame/contracts">jupiter-contracts</a></li>
+<li><a href="https://patractlabs.github.io/megaclite/">The Megaclite Book</a></li>
+<li><a href="https://patractlabs.github.io/megaclite/curves.html">Curves</a></li>
+<li><a href="https://patractlabs.github.io/megaclite/pallet-contracts.html">Pallet Contracts</a></li>
+<li><a href="https://patractlabs.github.io/megaclite/metis.html">Metis</a></li>
 </ul>
-<h2><a class="header" href="#ink" id="ink">Ink!</a></h2>
-<ul>
-<li><a href="https://github.com/patractlabs/ink/tree/altbn128/env/crates/env">jupiter-ink-env</a></li>
-</ul>
-<h2><a class="header" href="#references" id="references">References</a></h2>
-<ul>
-<li><a href="https://github.com/zcash-hackworks/bn">alt_bn128</a></li>
-<li><a href="https://github.com/zkcrypto/bls12_381">bls12_381</a></li>
-<li><a href="http://www.zeroknowledgeblog.com/index.php/groth16">groth16</a></li>
-</ul>
+<h2><a class="header" href="#zk-rollup-introduction" id="zk-rollup-introduction">ZK Rollup Introduction</a></h2>
+<p>Compared with the privacy function, the performance improvement brought by Rollup is the
+early application direction of zero-knowledge proof. At present, the Layer 2 expansion
+plan of the blockchain is to transfer a considerable part of the on-chain workload to 
+off-chain to complete, and the most watched one is ZK Rollup. The essence of ZK Rollup 
+is to compress the application on-chain state and store it in a Merkle tree, and move 
+the state transition funtions to off-chain. At the same time, the correctness of the 
+off-chain state transition process is guaranteed through the proof of zkSNARK. Compared 
+with the high cost of directly processing state changes on the chain, the ZK Proof's 
+on-chain smart contract verification is extremely cost low. At the same time, the 
+compressed information will also be submitted to the chain together with the proof, 
+which ensures data availability and obtains the same level of security as Layer 1.</p>
+<p>The Ethereum Layer 2 protocols related to ZK Rollup are: <a href="https://zksync.io/">zkSync</a>, <a href="https://aztec.network/">aztec</a>, 
+etc. Their contract verification modules share a part of the elliptic curve's basic algorithms. 
+In 2017, Ethereum integrated three basic cryptographic calculation units of the alt
+bn128 curve in the form of pre-compiled contracts, which are <a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-196.md">EIP196</a>’s ADD and Scalar_MUL 
+algorithms, and <a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-197.md">EIP197</a>’s Pairing algorithm. On top of this, due to the lack of rapid 
+upgrade capabilities of Ethereum, the community can only encapsulate some  tool libraries 
+through costly Solidity contracts. On top of these basic contract  libraries, many DApps can combine 
+ZK Rollup technology to achieve some innovations, such as <a href="https://loopring.org/">loopring</a>, <a href="https://gitcoin.co/">gitcoin</a> 
+and <a href="https://uniswap.org/">uniswap</a> etc. However, in the past 3 years, ZK technology has further developed, 
+such as the more practical <a href="https://electriccoin.co/blog/new-snark-curve/">BLS curve</a>, and <a href="https://eprint.iacr.org/2019/953/20190827:165656">PLONK algorithm</a> etc. 
+Ethereum has not yet supported it.</p>
+<h2><a class="header" href="#license" id="license">LICENSE</a></h2>
+<p>Apache-2.0</p>
 
                     </main>
 
@@ -194,6 +207,10 @@ we provide <code>groth16</code> for verifaction as well.</p>
                         <!-- Mobile navigation buttons -->
                         
 
+                        
+                            <a rel="next" href="curves.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
                         
 
                         <div style="clear: both"></div>
@@ -204,6 +221,10 @@ we provide <code>groth16</code> for verifaction as well.</p>
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
 
+                
+                    <a rel="next" href="curves.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
                 
             </nav>
 

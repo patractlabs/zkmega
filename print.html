@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Megaclite</title>
+        <title>The Megaclite Book</title>
         
         <meta name="robots" content="noindex" />
         
@@ -97,7 +97,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Intro</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="curves.html"><strong aria-hidden="true">1.</strong> Curves</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html"><strong aria-hidden="true">2.</strong> Pallet Contracts</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="example.html"><strong aria-hidden="true">2.1.</strong> Example Contract</a></li></ol></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">3.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -129,7 +129,7 @@
                         
                     </div>
 
-                    <h1 class="menu-title">Megaclite</h1>
+                    <h1 class="menu-title">The Megaclite Book</h1>
 
                     <div class="right-buttons">
                         
@@ -171,24 +171,141 @@
                     <main>
                         <h1><a class="header" href="#megaclite" id="megaclite">Megaclite</a></h1>
 <p>Megaclite is a zero-knowledge proof tool set building for the Polkadot ecology. </p>
-<h2><a class="header" href="#curves" id="curves">Curves</a></h2>
-<p>Here we provide <code>alt_bn128</code> and <code>bls12_381</code> curves for ZKP, both of them contain <code>Integrate addition</code>, 
-<code>Scalar multiplication</code> and <code>Pairing</code> functions, for helping devlopers trying and testing the curves, 
-we provide <code>groth16</code> for verifaction as well.</p>
-<h2><a class="header" href="#runtime-interfaces" id="runtime-interfaces">Runtime Interfaces</a></h2>
 <ul>
-<li><a href="https://github.com/patractlabs/substrate/tree/contracts/frame/contracts">jupiter-contracts</a></li>
+<li><a href="https://patractlabs.github.io/megaclite/">The Megaclite Book</a></li>
+<li><a href="https://patractlabs.github.io/megaclite/curves.html">Curves</a></li>
+<li><a href="https://patractlabs.github.io/megaclite/pallet-contracts.html">Pallet Contracts</a></li>
+<li><a href="https://patractlabs.github.io/megaclite/metis.html">Metis</a></li>
 </ul>
-<h2><a class="header" href="#ink" id="ink">Ink!</a></h2>
+<h2><a class="header" href="#zk-rollup-introduction" id="zk-rollup-introduction">ZK Rollup Introduction</a></h2>
+<p>Compared with the privacy function, the performance improvement brought by Rollup is the
+early application direction of zero-knowledge proof. At present, the Layer 2 expansion
+plan of the blockchain is to transfer a considerable part of the on-chain workload to 
+off-chain to complete, and the most watched one is ZK Rollup. The essence of ZK Rollup 
+is to compress the application on-chain state and store it in a Merkle tree, and move 
+the state transition funtions to off-chain. At the same time, the correctness of the 
+off-chain state transition process is guaranteed through the proof of zkSNARK. Compared 
+with the high cost of directly processing state changes on the chain, the ZK Proof's 
+on-chain smart contract verification is extremely cost low. At the same time, the 
+compressed information will also be submitted to the chain together with the proof, 
+which ensures data availability and obtains the same level of security as Layer 1.</p>
+<p>The Ethereum Layer 2 protocols related to ZK Rollup are: <a href="https://zksync.io/">zkSync</a>, <a href="https://aztec.network/">aztec</a>, 
+etc. Their contract verification modules share a part of the elliptic curve's basic algorithms. 
+In 2017, Ethereum integrated three basic cryptographic calculation units of the alt
+bn128 curve in the form of pre-compiled contracts, which are <a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-196.md">EIP196</a>’s ADD and Scalar_MUL 
+algorithms, and <a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-197.md">EIP197</a>’s Pairing algorithm. On top of this, due to the lack of rapid 
+upgrade capabilities of Ethereum, the community can only encapsulate some  tool libraries 
+through costly Solidity contracts. On top of these basic contract  libraries, many DApps can combine 
+ZK Rollup technology to achieve some innovations, such as <a href="https://loopring.org/">loopring</a>, <a href="https://gitcoin.co/">gitcoin</a> 
+and <a href="https://uniswap.org/">uniswap</a> etc. However, in the past 3 years, ZK technology has further developed, 
+such as the more practical <a href="https://electriccoin.co/blog/new-snark-curve/">BLS curve</a>, and <a href="https://eprint.iacr.org/2019/953/20190827:165656">PLONK algorithm</a> etc. 
+Ethereum has not yet supported it.</p>
+<h2><a class="header" href="#license" id="license">LICENSE</a></h2>
+<p>Apache-2.0</p>
+<h1><a class="header" href="#curves" id="curves">Curves</a></h1>
+<blockquote>
+<p>In Progress</p>
+</blockquote>
+<p>Here we provide <a href="https://github.com/zcash-hackworks/bn">alt_bn128</a> and <a href="https://github.com/zkcrypto/bls12_381">bls12_381</a> curves for ZKP, both of 
+them contain <code>Integrate addition</code>, <code>Scalar multiplication</code> and <code>Pairing</code> functions, for helping 
+devlopers trying and testing the curves, we provide <a href="http://www.zeroknowledgeblog.com/index.php/groth16">groth16</a> for verifaction as well.</p>
+<h2><a class="header" href="#altbn128" id="altbn128">altbn128</a></h2>
 <ul>
-<li><a href="https://github.com/patractlabs/ink/tree/altbn128/env/crates/env">jupiter-ink-env</a></li>
+<li><a href="https://github.com/patractlabs/jupiter/blob/altbn128/primitives/io/src/lib.rs">jupiter-io</a></li>
 </ul>
-<h2><a class="header" href="#references" id="references">References</a></h2>
+<h2><a class="header" href="#bls12381" id="bls12381">bls12381</a></h2>
 <ul>
-<li><a href="https://github.com/zcash-hackworks/bn">alt_bn128</a></li>
-<li><a href="https://github.com/zkcrypto/bls12_381">bls12_381</a></li>
-<li><a href="http://www.zeroknowledgeblog.com/index.php/groth16">groth16</a></li>
+<li><a href="https://github.com/patractlabs/jupiter/blob/altbn128/primitives/io/src/lib.rs">jupiter-io</a></li>
 </ul>
+<h1><a class="header" href="#pallet-contracts" id="pallet-contracts">Pallet Contracts</a></h1>
+<blockquote>
+<p>In Progress</p>
+</blockquote>
+<p>See the <a href="https://github.com/patractlabs/substrate/tree/contracts">pallet-contracts</a> in <a href="https://github.com/patractlabs/substrate.git">patractlabs/substrate</a>.</p>
+<h1><a class="header" href="#example-contract" id="example-contract">Example Contract</a></h1>
+<p>For trying the impletation this article shows, we need to import a modified version
+<a href="https://github.com/patractlabs/ink">ink-lang</a> provied by patractlabs.</p>
+<pre><code class="language-toml">[dependencies.jupiter-ink-lang]
+git = &quot;https://github.com/patractlabs/ink&quot;
+branch = &quot;altbn128/env&quot;
+</code></pre>
+<h2><a class="header" href="#example" id="example">Example</a></h2>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span>#![cfg_attr(not(feature = &quot;std&quot;), no_std)]
+
+<span class="boring">fn main() {
+</span>use jupiter_ink_lang as ink;
+
+#[ink::contract]
+mod altbn128 {
+    use ink_env::zk_snarks::AltBn128;
+    use ink_prelude::string::String;
+
+    #[ink(storage)]
+    pub struct Altbn128 {
+        value: String,
+    }
+
+    impl Altbn128 {
+        #[ink(constructor)]
+        pub fn new(init_value: String) -&gt; Self {
+            Self { value: init_value }
+        }
+
+        #[ink(constructor)]
+        pub fn default() -&gt; Self {
+            Self::new(&quot;hello, world&quot;.into())
+        }
+
+        #[ink(message)]
+        pub fn bn_256_add(&amp;mut self) {
+            let mut result = [0; 64];
+            ink_env::inflect_add::&lt;AltBn128&gt;(&amp;[], &amp;[], &amp;mut result);
+            self.value = ink_prelude::format!(&quot;0x{:x?}&quot;, result);
+        }
+
+        #[ink(message)]
+        pub fn get(&amp;self) -&gt; String {
+            ink_prelude::format!(&quot;{}&quot;, &amp;self.value)
+        }
+    }
+}
+<span class="boring">}
+</span></code></pre></pre>
+<h1><a class="header" href="#metis" id="metis">Metis</a></h1>
+<blockquote>
+<p>TODO</p>
+</blockquote>
+<h1><a class="header" href="#milestones" id="milestones">Milestones</a></h1>
+<h3><a class="header" href="#m1-integrate-the-basic-units-of-alt_bn128--bls12_381-3-developer--1-weeks" id="m1-integrate-the-basic-units-of-alt_bn128--bls12_381-3-developer--1-weeks">M1: Integrate the basic units of alt_bn128 &amp; bls12_381 (3 developer * 1 weeks)</a></h3>
+<ol>
+<li>Prepare the 3 basic algorithm codes (Add, Scalar_Mul, and Pairing) of alt_bn128 elliptic curve from zcash's official library <a href="https://github.com/zcash-hackworks/bn">bn</a>.</li>
+<li>Prepare the same 3  basic algorithm codes of bls12_381 from zcash's official library <a href="https://github.com/zkcrypto/bls12_381">bls12_381</a> .</li>
+<li>Integrate the above 6 algorithms into the under layer of Substrate Runtime.</li>
+</ol>
+<h3><a class="header" href="#m2-provide-to-upper-runtime-and-smart-contract-applications-3-developers--1-weeks" id="m2-provide-to-upper-runtime-and-smart-contract-applications-3-developers--1-weeks">M2: Provide to upper runtime and smart contract applications (3 developers * 1 weeks)</a></h3>
+<ol>
+<li>Add Runtime_interface to the Jupiter testnet and provide it to Runtime applications.</li>
+<li>Add Contract_Seal to the contract module of the Jupiter testnet and provide it to the WASM contract application.</li>
+</ol>
+<h3><a class="header" href="#m3-integrate-upper-level-verification-and-tool-functions-3-developers--1-week" id="m3-integrate-upper-level-verification-and-tool-functions-3-developers--1-week">M3: Integrate upper-level verification and tool functions (3 developers * 1 week)</a></h3>
+<ol>
+<li>The runtime pallet that implements the zkSNARK verification algorithm.</li>
+<li>The Metis contract library that implements the zkSNARK verification algorithm.</li>
+<li>The Metis contract library that implements other commonly used algorithms, such as Poseidon, EdDSA, MerkleTree, MiMC and other commonly used algorithms.</li>
+</ol>
+<h3><a class="header" href="#m4-test-3-developers--1-week" id="m4-test-3-developers--1-week">M4: Test (3 developers * 1 week)</a></h3>
+<ol>
+<li>Test six basic elliptic curve algorithms</li>
+<li>Test the zkSNARK verification algorithm of the Runtime layer</li>
+<li>Test the zkSNARK verification algorithm implemented in the contract layer</li>
+<li>Test Poseidon, EdDSA, MerkleTree, MiMC and other commonly used algorithm contract templates.</li>
+</ol>
+<h3><a class="header" href="#m5-benchmark-3-developers--1-week" id="m5-benchmark-3-developers--1-week">M5: Benchmark (3 developers * 1 week)</a></h3>
+<ol>
+<li>Provide benchmark results of all the above functions and develop them for the community as a reference for transaction weight and pricing.</li>
+</ol>
 
                     </main>
 
