@@ -3,7 +3,7 @@ authors = ["Megaclite"]
 language = "en"
 multilingual = false
 src = "book"
-title = "Megaclite"
+title = "The Megaclite Book"
 
 [build]
 build-dir = "gh-pages"
