@@ -4,14 +4,15 @@ Megaclite is a zero-knowledge proof tool set building for the Polkadot ecology.
 
 ## Curves
 
-Here we provide `alt_bn128` and `bls12_381` curves for the ZKP, both of them contains `Integrate addition`, 
-`Scalar multiplication` and `Pairing` functions, for help devlopers trying and testing these tools, we 
-provide `groth16` for verifaction as well.
+Here we provide `alt_bn128` and `bls12_381` curves for ZKP, both of them contain `Integrate addition`, 
+`Scalar multiplication` and `Pairing` functions, for helping devlopers trying and testing the curves, 
+we provide `groth16` for verifaction as well.
 
 
-## Runtime Interface
+## Runtime Interfaces
 
 TODO
+
 
 ## Ink!
 
