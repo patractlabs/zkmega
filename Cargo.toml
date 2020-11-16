@@ -1,0 +1,7 @@
+[package]
+name = "megaclite"
+version = "0.1.0"
+authors = ["Megaclite <https://github.com/patractlabs/megaclite>"]
+edition = "2018"
+
+[dependencies]
