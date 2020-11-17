@@ -5,3 +5,8 @@ authors = ["Megaclite <https://github.com/patractlabs/megaclite>"]
 edition = "2018"
 
 [dependencies]
+
+[dev-dependencies.cargo-husky]
+version = "1"
+features = ["user-hooks"]
+default-features = false

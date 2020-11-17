@@ -1,0 +1,26 @@
+name: Megaclite
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the source code
+        uses: actions/checkout@v1
+      - name: Cache Rust Outputs
+        uses: actions/cache@v1
+        env:
+          cache-name: rust-cache
+        with:
+          path: ./target
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/*/Cargo.lock') }}
+      - name: Build
+        run: cargo build -vv
+      - name: Run tests
+        run: cargo test -vv
+          
