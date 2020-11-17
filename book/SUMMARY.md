@@ -4,10 +4,9 @@
 
 ---
 
-+ [Curves](./curves.md)
-+ [Pallet Contracts](./pallet-contracts.md)
-  + [Example Contract](./example.md)
-+ [Metis](./metis.md)
+- [Curves](./curves.md)
+- [Pallet Contracts](./pallet-contracts.md)
+- [Metis](./metis.md)
 
 ---
 
