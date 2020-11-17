@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="curves.html"><strong aria-hidden="true">1.</strong> Curves</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html" class="active"><strong aria-hidden="true">2.</strong> Pallet Contracts</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="example.html"><strong aria-hidden="true">2.1.</strong> Example Contract</a></li></ol></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">3.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="curves.html"><strong aria-hidden="true">1.</strong> Curves</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html" class="active"><strong aria-hidden="true">2.</strong> Pallet Contracts</a></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">3.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -168,10 +168,64 @@
                 <div id="content" class="content">
                     <main>
                         <h1><a class="header" href="#pallet-contracts" id="pallet-contracts">Pallet Contracts</a></h1>
-<blockquote>
-<p>In Progress</p>
-</blockquote>
-<p>See the <a href="https://github.com/patractlabs/substrate/tree/contracts">pallet-contracts</a> in <a href="https://github.com/patractlabs/substrate.git">patractlabs/substrate</a>.</p>
+<p>Here we did some modifications on <a href="https://github.com/paritytech/substrate.git">paritytech/substrate</a>, added the
+curves mentioned in last chapters into <code>runtime_interfaces</code>, for more detail, check the 
+<a href="https://github.com/patractlabs/substrate/tree/patract-contracts/frame/contracts">pallet-contracts</a>.</p>
+<pre><code class="language-toml">[dependencies.pallet-contracts]
+git = &quot;https://github.com/patractlabs/substrate&quot;
+branch = &quot;patract-contracts&quot;
+</code></pre>
+<p>We also modified <a href="https://github.com/patractlabs/ink">ink!</a> to adapt the new interfaces we provided,
+all of these modifications will test on <a href="https://github.com/paritytech/jupiter.git">patractlabs/jupiter</a> in the 
+future, and will pr to the offical repos if they are accepted by the Polkadot Ecology.</p>
+<pre><code class="language-toml">[dependencies.jupiter-ink-lang]
+git = &quot;https://github.com/patractlabs/ink&quot;
+branch = &quot;megaclite&quot;
+</code></pre>
+<h2><a class="header" href="#example" id="example">Example</a></h2>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span>#![cfg_attr(not(feature = &quot;std&quot;), no_std)]
+
+<span class="boring">fn main() {
+</span>use jupiter_ink_lang as ink;
+
+#[ink::contract]
+mod altbn128 {
+    use ink_env::zk_snarks::AltBn128;
+    use ink_prelude::string::String;
+
+    #[ink(storage)]
+    pub struct Altbn128 {
+        value: String,
+    }
+
+    impl Altbn128 {
+        #[ink(constructor)]
+        pub fn new(init_value: String) -&gt; Self {
+            Self { value: init_value }
+        }
+
+        #[ink(constructor)]
+        pub fn default() -&gt; Self {
+            Self::new(&quot;hello, world&quot;.into())
+        }
+
+        #[ink(message)]
+        pub fn bn_256_add(&amp;mut self) {
+            let mut result = [0; 64];
+            ink_env::inflect_add::&lt;AltBn128&gt;(&amp;[], &amp;[], &amp;mut result);
+            self.value = ink_prelude::format!(&quot;0x{:x?}&quot;, result);
+        }
+
+        #[ink(message)]
+        pub fn get(&amp;self) -&gt; String {
+            ink_prelude::format!(&quot;{}&quot;, &amp;self.value)
+        }
+    }
+}
+<span class="boring">}
+</span></code></pre></pre>
 
                     </main>
 
@@ -184,7 +238,7 @@
                         
 
                         
-                            <a rel="next" href="example.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="metis.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -202,7 +256,7 @@
                 
 
                 
-                    <a rel="next" href="example.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="metis.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 

@@ -97,7 +97,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="curves.html"><strong aria-hidden="true">1.</strong> Curves</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html"><strong aria-hidden="true">2.</strong> Pallet Contracts</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="example.html"><strong aria-hidden="true">2.1.</strong> Example Contract</a></li></ol></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">3.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="curves.html"><strong aria-hidden="true">1.</strong> Curves</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html"><strong aria-hidden="true">2.</strong> Pallet Contracts</a></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">3.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -218,16 +218,19 @@ devlopers trying and testing the curves, we provide <a href="http://www.zeroknow
 <li><a href="https://github.com/patractlabs/jupiter/blob/altbn128/primitives/io/src/lib.rs">jupiter-io</a></li>
 </ul>
 <h1><a class="header" href="#pallet-contracts" id="pallet-contracts">Pallet Contracts</a></h1>
-<blockquote>
-<p>In Progress</p>
-</blockquote>
-<p>See the <a href="https://github.com/patractlabs/substrate/tree/contracts">pallet-contracts</a> in <a href="https://github.com/patractlabs/substrate.git">patractlabs/substrate</a>.</p>
-<h1><a class="header" href="#example-contract" id="example-contract">Example Contract</a></h1>
-<p>For trying the impletation this article shows, we need to import a modified version
-<a href="https://github.com/patractlabs/ink">ink-lang</a> provied by patractlabs.</p>
+<p>Here we did some modifications on <a href="https://github.com/paritytech/substrate.git">paritytech/substrate</a>, added the
+curves mentioned in last chapters into <code>runtime_interfaces</code>, for more detail, check the 
+<a href="https://github.com/patractlabs/substrate/tree/patract-contracts/frame/contracts">pallet-contracts</a>.</p>
+<pre><code class="language-toml">[dependencies.pallet-contracts]
+git = &quot;https://github.com/patractlabs/substrate&quot;
+branch = &quot;patract-contracts&quot;
+</code></pre>
+<p>We also modified <a href="https://github.com/patractlabs/ink">ink!</a> to adapt the new interfaces we provided,
+all of these modifications will test on <a href="https://github.com/paritytech/jupiter.git">patractlabs/jupiter</a> in the 
+future, and will pr to the offical repos if they are accepted by the Polkadot Ecology.</p>
 <pre><code class="language-toml">[dependencies.jupiter-ink-lang]
 git = &quot;https://github.com/patractlabs/ink&quot;
-branch = &quot;altbn128/env&quot;
+branch = &quot;megaclite&quot;
 </code></pre>
 <h2><a class="header" href="#example" id="example">Example</a></h2>
 <pre><pre class="playground"><code class="language-rust">
