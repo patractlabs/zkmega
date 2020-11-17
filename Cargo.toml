@@ -12,3 +12,8 @@ bn = { git = "https://github.com/paritytech/bn", default-features = false }
 hex-literal = "0.3.1"
 parity-bytes = "0.1.2"
 rand = "0.7.3"
+
+[dev-dependencies.cargo-husky]
+version = "1"
+features = ["user-hooks"]
+default-features = false
