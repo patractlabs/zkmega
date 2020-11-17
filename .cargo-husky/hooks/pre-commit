@@ -1,5 +1,8 @@
-# rustfmt --all
+# 1. Run format
 cargo fmt --all
 
-# add formatted code
+# 2. Run Test
+cargo test -all -vv
+
+# 3. Add files
 git add -A
