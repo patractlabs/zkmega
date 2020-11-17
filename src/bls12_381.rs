@@ -1,36 +1,33 @@
-use bls12_381::{ G1Affine, G2Affine,G2Prepared,G1Projective, Scalar,Gt, multi_miller_loop};
+use bls12_381::{multi_miller_loop, G1Affine, G1Projective, G2Affine, G2Prepared, Gt, Scalar};
 use std::convert::TryFrom;
 
-pub fn bls381_add(point1: &[u8], point2: &[u8]) -> Result<[u8;96], &'static str> {
-    if point1.len()!=96 || point2.len()!=96 {
+pub fn bls381_add(point1: &[u8], point2: &[u8]) -> Result<[u8; 96], &'static str> {
+    if point1.len() != 96 || point2.len() != 96 {
         return Err("Invalid input length, should be 96 length slice(uncompressed)");
     }
 
-    let p1 = G1Affine::from_uncompressed (
-        <&[u8; 96]>::try_from(point1)
-            .map_err(|_| "point1 slice try_from &[u8;64] fail")?
+    let p1 = G1Affine::from_uncompressed(
+        <&[u8; 96]>::try_from(point1).map_err(|_| "point1 slice try_from &[u8;64] fail")?,
     );
-    let p1 :G1Affine =  Option::from(p1).ok_or("Invalid a pairing G1Affine")?;
-    let p2 = G1Affine::from_uncompressed (
-        <&[u8; 96]>::try_from(point2)
-            .map_err(|_| "point2 slice try_from &[u8;64] fail")?
+    let p1: G1Affine = Option::from(p1).ok_or("Invalid a pairing G1Affine")?;
+    let p2 = G1Affine::from_uncompressed(
+        <&[u8; 96]>::try_from(point2).map_err(|_| "point2 slice try_from &[u8;64] fail")?,
     );
-    let p2 :G1Affine =  Option::from(p2).ok_or( "Invalid a pairing G1Affine")?;
+    let p2: G1Affine = Option::from(p2).ok_or("Invalid a pairing G1Affine")?;
 
-    let add_res = G1Affine::from( p1 +  G1Projective::from(p2));
+    let add_res = G1Affine::from(p1 + G1Projective::from(p2));
     Ok(add_res.to_uncompressed())
 }
 
-pub fn bls381_scalar_mul(point: &[u8], scalar: u64) -> Result<[u8;96], &'static str> {
-    if point.len()!=96 {
+pub fn bls381_scalar_mul(point: &[u8], scalar: u64) -> Result<[u8; 96], &'static str> {
+    if point.len() != 96 {
         return Err("Invalid input length, should be 96 length slice(uncompressed)");
     }
 
-    let p = G1Affine::from_uncompressed (
-        <&[u8; 96]>::try_from(point)
-            .map_err(|_| "point1 slice try_from &[u8;64] fail")?
+    let p = G1Affine::from_uncompressed(
+        <&[u8; 96]>::try_from(point).map_err(|_| "point1 slice try_from &[u8;64] fail")?,
     );
-    let p :G1Affine =  Option::from(p).ok_or("Invalid a pairing G1Affine")?;
+    let p: G1Affine = Option::from(p).ok_or("Invalid a pairing G1Affine")?;
     let scalar = Scalar::from(scalar);
 
     let mul_res = G1Affine::from(p * scalar);
@@ -39,37 +36,38 @@ pub fn bls381_scalar_mul(point: &[u8], scalar: u64) -> Result<[u8;96], &'static 
 
 pub fn bls381_pairing(input: &[u8]) -> Result<bool, &'static str> {
     if input.len() % 289 != 0 {
-        return Err("Invalid input length, must be multiple of 289 (3 * (48*2)) (uncompressed)")
+        return Err("Invalid input length, must be multiple of 289 (3 * (48*2)) (uncompressed)");
     }
 
     let ret_val = if input.is_empty() {
         Gt::identity()
     } else {
-        let elements = input.len() /  289;
+        let elements = input.len() / 289;
         let mut vals = Vec::new();
         for idx in 0..elements {
-            let a = G1Affine::from_uncompressed (
+            let a = G1Affine::from_uncompressed(
                 <&[u8; 96]>::try_from(&input[idx * 289..idx * 289 + 96])
-                    .map_err(|_| "point1 slice try_from &[u8;64] fail")?
+                    .map_err(|_| "point1 slice try_from &[u8;64] fail")?,
             );
-            let a :G1Affine =  Option::from(a).ok_or("Invalid a pairing G1Affine")?;
-            let b = G2Affine::from_uncompressed (
+            let a: G1Affine = Option::from(a).ok_or("Invalid a pairing G1Affine")?;
+            let b = G2Affine::from_uncompressed(
                 <&[u8; 192]>::try_from(&input[idx * 289 + 96..idx * 289 + 289])
-                    .map_err(|_| "point1 slice try_from &[u8;64] fail")?
+                    .map_err(|_| "point1 slice try_from &[u8;64] fail")?,
             );
-            let b :G2Affine =  Option::from(b).ok_or("Invalid a pairing G1Affine")?;
+            let b: G2Affine = Option::from(b).ok_or("Invalid a pairing G1Affine")?;
 
-            vals.push((a , G2Prepared::from(b)));
-        };
+            vals.push((a, G2Prepared::from(b)));
+        }
 
         multi_miller_loop(
-            &vals.iter().map(
-                |point|(&point.0,&point.1)
-            )
-                .collect::<Vec<_>>()
-        ).final_exponentiation()
+            &vals
+                .iter()
+                .map(|point| (&point.0, &point.1))
+                .collect::<Vec<_>>(),
+        )
+        .final_exponentiation()
     };
-    Ok(ret_val==Gt::identity())
+    Ok(ret_val == Gt::identity())
 }
 
 #[test]
@@ -195,10 +193,6 @@ fn test_bls381_add() {
     // }
 }
 #[test]
-fn test_bls381_mul() {
-
-}
+fn test_bls381_mul() {}
 #[test]
-fn test_bls381_pairing() {
-
-}
+fn test_bls381_pairing() {}
