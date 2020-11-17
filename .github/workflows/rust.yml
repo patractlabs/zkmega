@@ -8,17 +8,14 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macOS-latest, ubuntu-latest]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout the source code
         uses: actions/checkout@v1
-      - name: Cache Node Template
+      - name: Cache Rust Outputs
         uses: actions/cache@v1
         env:
-          cache-name: substrate-cache
+          cache-name: rust-cache
         with:
           path: ./target
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/*/Cargo.lock') }}
