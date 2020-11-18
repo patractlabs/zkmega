@@ -1,5 +1,5 @@
 use bn::{arith::U256, pairing_batch, AffineG1, AffineG2, Fq, Fq2, Group, Gt, G1, G2};
-use rustc_hex::ToHex;
+// use rustc_hex::ToHex;
 use std::io::{self, Read};
 
 // Can fail if any of the 2 points does not belong the bn128 curve
