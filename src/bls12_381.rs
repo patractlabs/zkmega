@@ -72,125 +72,32 @@ pub fn bls381_pairing(input: &[u8]) -> Result<bool, &'static str> {
 
 #[test]
 fn test_bls381_add() {
-    // use bls12_381::Fq;
-    // {
-    //     let a = G1Affine::identity();
-    //     let b = G1Projective::identity();
-    //     let c = a + b;
-    //     assert!(bool::from(c.is_identity()));
-    //     assert!(bool::from(c.is_on_curve()));
-    // }
-    // {
-    //     let a = G1Affine::identity();
-    //     let mut b = G1Projective::generator();
-    //     {
-    //         let z = Fp::from_raw_unchecked([
-    //             0xba7a_fa1f_9a6f_e250,
-    //             0xfa0f_5b59_5eaf_e731,
-    //             0x3bdc_4776_94c3_06e7,
-    //             0x2149_be4b_3949_fa24,
-    //             0x64aa_6e06_49b2_078c,
-    //             0x12b1_08ac_3364_3c3e,
-    //         ]);
-    //
-    //         b = G1Projective {
-    //             x: b.x * z,
-    //             y: b.y * z,
-    //             z,
-    //         };
-    //     }
-    //     let c = a + b;
-    //     assert!(!bool::from(c.is_identity()));
-    //     assert!(bool::from(c.is_on_curve()));
-    //     assert!(c == G1Projective::generator());
-    // }
-    // {
-    //     let a = G1Affine::identity();
-    //     let mut b = G1Projective::generator();
-    //     {
-    //         let z = Fp::from_raw_unchecked([
-    //             0xba7a_fa1f_9a6f_e250,
-    //             0xfa0f_5b59_5eaf_e731,
-    //             0x3bdc_4776_94c3_06e7,
-    //             0x2149_be4b_3949_fa24,
-    //             0x64aa_6e06_49b2_078c,
-    //             0x12b1_08ac_3364_3c3e,
-    //         ]);
-    //
-    //         b = G1Projective {
-    //             x: b.x * z,
-    //             y: b.y * z,
-    //             z,
-    //         };
-    //     }
-    //     let c = b + a;
-    //     assert!(!bool::from(c.is_identity()));
-    //     assert!(bool::from(c.is_on_curve()));
-    //     assert!(c == G1Projective::generator());
-    // }
-    // {
-    //     let a = G1Projective::generator().double().double(); // 4P
-    //     let b = G1Projective::generator().double(); // 2P
-    //     let c = a + b;
-    //
-    //     let mut d = G1Projective::generator();
-    //     for _ in 0..5 {
-    //         d += G1Affine::generator();
-    //     }
-    //     assert!(!bool::from(c.is_identity()));
-    //     assert!(bool::from(c.is_on_curve()));
-    //     assert!(!bool::from(d.is_identity()));
-    //     assert!(bool::from(d.is_on_curve()));
-    //     assert_eq!(c, d);
-    // }
-    //
-    // // Degenerate case
-    // {
-    //     let beta = Fp::from_raw_unchecked([
-    //         0xcd03_c9e4_8671_f071,
-    //         0x5dab_2246_1fcd_a5d2,
-    //         0x5870_42af_d385_1b95,
-    //         0x8eb6_0ebe_01ba_cb9e,
-    //         0x03f9_7d6e_83d0_50d2,
-    //         0x18f0_2065_5463_8741,
-    //     ]);
-    //     let beta = beta.square();
-    //     let a = G1Projective::generator().double().double();
-    //     let b = G1Projective {
-    //         x: a.x * beta,
-    //         y: -a.y,
-    //         z: a.z,
-    //     };
-    //     let a = G1Affine::from(a);
-    //     assert!(bool::from(a.is_on_curve()));
-    //     assert!(bool::from(b.is_on_curve()));
-    //
-    //     let c = a + b;
-    //     assert_eq!(
-    //         G1Affine::from(c),
-    //         G1Affine::from(G1Projective {
-    //             x: Fp::from([
-    //                 0x29e1_e987_ef68_f2d0,
-    //                 0xc5f3_ec53_1db0_3233,
-    //                 0xacd6_c4b6_ca19_730f,
-    //                 0x18ad_9e82_7bc2_bab7,
-    //                 0x46e3_b2c5_785c_c7a9,
-    //                 0x07e5_71d4_2d22_ddd6,
-    //             ]),
-    //             y: Fp::from_raw_unchecked([
-    //                 0x94d1_17a7_e5a5_39e7,
-    //                 0x8e17_ef67_3d4b_5d22,
-    //                 0x9d74_6aaf_508a_33ea,
-    //                 0x8c6d_883d_2516_c9a2,
-    //                 0x0bc3_b8d5_fb04_47f7,
-    //                 0x07bf_a4c7_210f_4f44,
-    //             ]),
-    //             z: Fp::one()
-    //         })
-    //     );
-    //     assert!(!bool::from(c.is_identity()));
-    //     assert!(bool::from(c.is_on_curve()));
-    // }
+    use group::Curve;
+    use rustc_hex::{FromHex, ToHex};
+
+    {
+        let a_hex = "400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+        let a_uncompressed: Vec<u8> = a_hex.from_hex().unwrap();
+        let a_hex = "400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+        let a_uncompressed: Vec<u8> = a_hex.from_hex().unwrap();
+
+        let c_uncompressed = bls381_add(a_uncompressed.as_ref(), a_uncompressed.as_ref())
+            .expect("identity add failed");
+
+        let c = G1Affine::from_uncompressed(&c_uncompressed).unwrap();
+        assert!(bool::from(c.is_identity()));
+        assert!(bool::from(c.is_on_curve()));
+    }
+    {
+        let p1_hex = "17f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb08b3f481e3aaa0f1a09e30ed741d8ae4fcf5e095d5d00af600db18cb2c04b3edd03cc744a2888ae40caa232946c5e7e1";
+        let p1_uncompressed: Vec<u8> = p1_hex.from_hex().unwrap();
+
+        let p1_add_p1 = bls381_add(&p1_uncompressed[..], &p1_uncompressed[..]).expect("add fail:");
+
+        let p2_hex = "0572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62ae28f75bb8f1c7c42c39a8c5529bf0f4e166a9d8cabc673a322fda673779d8e3822ba3ecb8670e461f73bb9021d5fd76a4c56d9d4cd16bd1bba86881979749d28";
+        let p2_uncompressed: Vec<u8> = p2_hex.from_hex().unwrap();
+        assert_eq!(p2_uncompressed, p1_add_p1.to_vec());
+    }
 }
 #[test]
 fn test_bls381_mul() {}

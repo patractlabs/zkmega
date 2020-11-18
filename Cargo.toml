@@ -9,11 +9,15 @@ bls12_381 = "0.3.1"
 bn = { git = "https://github.com/paritytech/bn", default-features = false }
 
 [dev-dependencies]
-hex-literal = "0.3.1"
-parity-bytes = "0.1.2"
-rand = "0.7.3"
+hex-literal = "0.2.1"
+rand = { version = "0.5", features = ["i128_support"], default-features = false }
+rustc-hex = { version = "2", default-features = false }
 
 [dev-dependencies.cargo-husky]
 version = "1"
 features = ["user-hooks"]
+default-features = false
+
+[dev-dependencies.group]
+version = "0.8"
 default-features = false
