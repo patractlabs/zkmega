@@ -1,5 +1,6 @@
 # 1. Run format
 cargo fmt --all
+cargo test --all
 
 # 2. Run Test
 cargo test -all -vv
