@@ -38,11 +38,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="91b633ef-cad0-4842-952b-f409d7480174" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.cargo-husky/hooks/pre-commit" beforeDir="false" afterPath="$PROJECT_DIR$/.cargo-husky/hooks/pre-commit" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/alt_bn128.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/alt_bn128.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/bls12_381.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/bls12_381.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +79,7 @@
     <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
     <property name="settings.editor.selected.configurable" value="http.proxy" />
   </component>
-  <component name="RunManager" selected="Cargo.Test alt_bn128::add_all">
+  <component name="RunManager" selected="Cargo.Test alt_bn128::test_alt_bn128_add">
     <configuration name="Test alt_bn128::add" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
       <option name="channel" value="DEFAULT" />
       <option name="command" value="test --package megaclite --lib alt_bn128::add -- --exact" />
@@ -151,11 +147,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Cargo.Test alt_bn128::test_alt_bn128_add" />
         <item itemvalue="Cargo.Test alt_bn128::add_all" />
         <item itemvalue="Cargo.Test bls12_381::test_bls381_add" />
         <item itemvalue="Cargo.Test alt_bn128::add" />
         <item itemvalue="Cargo.Test alt_bn128::test_alt_bn128_mul" />
-        <item itemvalue="Cargo.Test alt_bn128::test_alt_bn128_add" />
       </list>
     </recent_temporary>
   </component>
@@ -170,7 +166,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1605581718997</updated>
-      <workItem from="1605581720058" duration="36081000" />
+      <workItem from="1605581720058" duration="36446000" />
     </task>
     <task id="LOCAL-00001" summary="Add add,scalar_mul,pairing function on bls12_381 and alt_bn128 respectively.">
       <created>1605582605661</created>
@@ -186,7 +182,14 @@
       <option name="project" value="LOCAL" />
       <updated>1605583984033</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Add bls381 alt_bn128 completed test.">
+      <created>1605673325901</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1605673325901</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -217,29 +220,34 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Add add,scalar_mul,pairing function on bls12_381 and alt_bn128 respectively." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add add,scalar_mul,pairing function on bls12_381 and alt_bn128 respectively." />
+    <MESSAGE value="Add bls381 alt_bn128 completed test." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add bls381 alt_bn128 completed test." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="486" y="38" width="920" height="1020" key="CommitChangelistDialog2" timestamp="1605583983971">
+    <state x="486" y="38" width="920" height="1020" key="CommitChangelistDialog2" timestamp="1605673325099">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="486" y="38" width="920" height="1020" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1605583983971" />
-    <state width="1799" height="290" key="GridCell.Tab.0.bottom" timestamp="1605671618186">
+    <state x="486" y="38" width="920" height="1020" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1605673325099" />
+    <state x="200" y="112" width="1482" height="872" key="DiffContextDialog" timestamp="1605673322922">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1799" height="290" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1605671618186" />
-    <state width="1799" height="290" key="GridCell.Tab.0.center" timestamp="1605671618184">
+    <state x="200" y="112" width="1482" height="872" key="DiffContextDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1605673322922" />
+    <state width="1799" height="290" key="GridCell.Tab.0.bottom" timestamp="1605673596258">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1799" height="290" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1605671618184" />
-    <state width="1799" height="290" key="GridCell.Tab.0.left" timestamp="1605671618183">
+    <state width="1799" height="290" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1605673596258" />
+    <state width="1799" height="290" key="GridCell.Tab.0.center" timestamp="1605673596253">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1799" height="290" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1605671618183" />
-    <state width="1799" height="290" key="GridCell.Tab.0.right" timestamp="1605671618185">
+    <state width="1799" height="290" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1605673596253" />
+    <state width="1799" height="290" key="GridCell.Tab.0.left" timestamp="1605673596252">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1799" height="290" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1605671618185" />
+    <state width="1799" height="290" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1605673596252" />
+    <state width="1799" height="290" key="GridCell.Tab.0.right" timestamp="1605673596256">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state width="1799" height="290" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1605673596256" />
     <state width="1799" height="487" key="GridCell.Tab.1.bottom" timestamp="1605630959385">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
@@ -264,10 +272,10 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="722" y="286" width="540" height="524" key="StructurePopup/67.27.1853.1053@67.27.1853.1053" timestamp="1605633766830" />
-    <state x="588" y="287" width="800" height="531" key="Vcs.Push.Dialog.v2" timestamp="1605584362284">
+    <state x="588" y="287" width="800" height="531" key="Vcs.Push.Dialog.v2" timestamp="1605673370083">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="588" y="287" width="800" height="531" key="Vcs.Push.Dialog.v2/67.27.1853.1053@67.27.1853.1053" timestamp="1605584362284" />
+    <state x="588" y="287" width="800" height="531" key="Vcs.Push.Dialog.v2/67.27.1853.1053@67.27.1853.1053" timestamp="1605673370083" />
     <state x="773" y="462" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1605592646862">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>

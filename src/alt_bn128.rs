@@ -122,7 +122,7 @@ fn read_point(reader: &mut io::Chain<&[u8], io::Repeat>) -> Result<bn::G1, &'sta
         .read_exact(&mut buf[..])
         .expect("reading from zero-extended memory cannot fail; qed");
     let py = Fq::from_slice(&buf[0..32]).map_err(|_| "Invalid point y coordinate")?;
-    println!("sum in fn AffineG1:{:?}", AffineG1::new(px, py).unwrap());
+    // println!("sum in fn AffineG1:{:?}", AffineG1::new(px, py).unwrap());
     Ok(if px == Fq::zero() && py == Fq::zero() {
         G1::zero()
     } else {
