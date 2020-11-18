@@ -38,7 +38,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="91b633ef-cad0-4842-952b-f409d7480174" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/alt_bn128.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/alt_bn128.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -166,7 +166,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1605581718997</updated>
-      <workItem from="1605581720058" duration="36872000" />
+      <workItem from="1605581720058" duration="37239000" />
     </task>
     <task id="LOCAL-00001" summary="Add add,scalar_mul,pairing function on bls12_381 and alt_bn128 respectively.">
       <created>1605582605661</created>
@@ -203,11 +203,28 @@
       <option name="project" value="LOCAL" />
       <updated>1605673860307</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="fixed unresolved import `rustc_hex` error.">
+      <created>1605674062536</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1605674062536</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -237,17 +254,18 @@
     <MESSAGE value="Add bls381 alt_bn128 completed test." />
     <MESSAGE value="fixed print error." />
     <MESSAGE value="delete idea file." />
-    <option name="LAST_COMMIT_MESSAGE" value="delete idea file." />
+    <MESSAGE value="fixed unresolved import `rustc_hex` error." />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed unresolved import `rustc_hex` error." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="486" y="38" width="920" height="1020" key="CommitChangelistDialog2" timestamp="1605673860092">
+    <state x="486" y="38" width="920" height="1020" key="CommitChangelistDialog2" timestamp="1605674061867">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="486" y="38" width="920" height="1020" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1605673860092" />
-    <state x="200" y="112" width="1482" height="872" key="DiffContextDialog" timestamp="1605673322922">
+    <state x="486" y="38" width="920" height="1020" key="CommitChangelistDialog2/67.27.1853.1053@67.27.1853.1053" timestamp="1605674061867" />
+    <state x="200" y="112" width="1482" height="872" key="DiffContextDialog" timestamp="1605674396142">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="200" y="112" width="1482" height="872" key="DiffContextDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1605673322922" />
+    <state x="200" y="112" width="1482" height="872" key="DiffContextDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1605674396142" />
     <state width="1799" height="290" key="GridCell.Tab.0.bottom" timestamp="1605673716585">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
@@ -288,10 +306,10 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="722" y="286" width="540" height="524" key="StructurePopup/67.27.1853.1053@67.27.1853.1053" timestamp="1605633766830" />
-    <state x="588" y="287" width="800" height="531" key="Vcs.Push.Dialog.v2" timestamp="1605673865319">
+    <state x="588" y="287" width="800" height="531" key="Vcs.Push.Dialog.v2" timestamp="1605674232519">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="588" y="287" width="800" height="531" key="Vcs.Push.Dialog.v2/67.27.1853.1053@67.27.1853.1053" timestamp="1605673865319" />
+    <state x="588" y="287" width="800" height="531" key="Vcs.Push.Dialog.v2/67.27.1853.1053@67.27.1853.1053" timestamp="1605674232519" />
     <state x="773" y="462" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1605592646862">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
