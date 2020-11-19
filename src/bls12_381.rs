@@ -1,5 +1,8 @@
 use bls::{multi_miller_loop, G1Affine, G1Projective, G2Affine, G2Prepared, Gt, Scalar};
-use core::convert::{TryFrom, TryInto};
+use core::convert::TryFrom;
+
+#[cfg(test)]
+use rustc_hex::FromHex;
 
 // Point add on bls12_381 curve, return a point.
 pub fn bls381_add(input: &[u8]) -> Result<[u8; 96], &'static str> {
@@ -81,8 +84,6 @@ pub fn bls381_pairing(input: &[u8]) -> Result<bool, &'static str> {
 
 #[test]
 fn test_bls381_add() {
-    use rustc_hex::{FromHex, ToHex};
-
     // Test identity add.
     {
         let a_hex = "400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";

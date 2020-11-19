@@ -3,7 +3,7 @@ cargo fmt --all
 cargo test --all
 
 # 2. Run Test
-cargo test -all -vv
+cargo test --all -vv
 
 # 3. Add files
 git add -A
