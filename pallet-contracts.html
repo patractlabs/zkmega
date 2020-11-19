@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="curves.html"><strong aria-hidden="true">1.</strong> Curves</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html" class="active"><strong aria-hidden="true">2.</strong> Pallet Contracts</a></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">3.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="pairing.html"><strong aria-hidden="true">1.</strong> Pairing</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html" class="active"><strong aria-hidden="true">2.</strong> Pallet Contracts</a></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">3.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -183,12 +183,9 @@ git = &quot;https://github.com/patractlabs/ink&quot;
 branch = &quot;megaclite&quot;
 </code></pre>
 <h2><a class="header" href="#example" id="example">Example</a></h2>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span>#![cfg_attr(not(feature = &quot;std&quot;), no_std)]
+<pre><code class="language-rust ignore">#![cfg_attr(not(feature = &quot;std&quot;), no_std)]
 
-<span class="boring">fn main() {
-</span>use jupiter_ink_lang as ink;
+use jupiter_ink_lang as ink;
 
 #[ink::contract]
 mod altbn128 {
@@ -224,15 +221,14 @@ mod altbn128 {
         }
     }
 }
-<span class="boring">}
-</span></code></pre></pre>
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="curves.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="pairing.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
@@ -250,7 +246,7 @@ mod altbn128 {
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="curves.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="pairing.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 

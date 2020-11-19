@@ -97,7 +97,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="curves.html"><strong aria-hidden="true">1.</strong> Curves</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html"><strong aria-hidden="true">2.</strong> Pallet Contracts</a></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">3.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="pairing.html"><strong aria-hidden="true">1.</strong> Pairing</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html"><strong aria-hidden="true">2.</strong> Pallet Contracts</a></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">3.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -170,10 +170,9 @@
                 <div id="content" class="content">
                     <main>
                         <h1><a class="header" href="#megaclite" id="megaclite">Megaclite</a></h1>
-<p>Megaclite is a zero-knowledge proof tool set building for the Polkadot ecology. </p>
+<p><a href="https://patractlabs.github.io/megaclite">Megaclite</a> is a zero-knowledge proof tool set building for the Polkadot ecology. </p>
 <ul>
-<li><a href="https://patractlabs.github.io/megaclite/">The Megaclite Book</a></li>
-<li><a href="https://patractlabs.github.io/megaclite/curves">Curves</a></li>
+<li><a href="https://patractlabs.github.io/megaclite/pairing">Pairing</a></li>
 <li><a href="https://patractlabs.github.io/megaclite/pallet-contracts">Pallet Contracts</a></li>
 <li><a href="https://patractlabs.github.io/megaclite/metis">Metis</a></li>
 </ul>
@@ -202,21 +201,43 @@ such as the more practical <a href="https://electriccoin.co/blog/new-snark-curve
 Ethereum has not yet supported it.</p>
 <h2><a class="header" href="#license" id="license">LICENSE</a></h2>
 <p>Apache-2.0</p>
-<h1><a class="header" href="#curves" id="curves">Curves</a></h1>
+<h2><a class="header" href="#pairing-friendly-curves" id="pairing-friendly-curves">Pairing-Friendly Curves</a></h2>
 <blockquote>
 <p>In Progress</p>
 </blockquote>
-<p>Here we provide <a href="https://github.com/zcash-hackworks/bn">alt_bn128</a> and <a href="https://github.com/zkcrypto/bls12_381">bls12_381</a> curves for ZKP, both of 
-them contain <code>Integrate addition</code>, <code>Scalar multiplication</code> and <code>Pairing</code> functions, for helping 
-devlopers trying and testing the curves, we provide <a href="http://www.zeroknowledgeblog.com/index.php/groth16">groth16</a> for verifaction as well.</p>
-<h2><a class="header" href="#altbn128" id="altbn128">altbn128</a></h2>
-<ul>
-<li><a href="https://github.com/patractlabs/jupiter/blob/altbn128/primitives/io/src/lib.rs">jupiter-io</a></li>
-</ul>
-<h2><a class="header" href="#bls12381" id="bls12381">bls12381</a></h2>
-<ul>
-<li><a href="https://github.com/patractlabs/jupiter/blob/altbn128/primitives/io/src/lib.rs">jupiter-io</a></li>
-</ul>
+<p>Here we provide <a href="https://github.com/patractlabs/megaclite/blob/master/src/alt_bn128.rs">alt_bn128</a> and <a href="https://github.com/patractlabs/megaclite/blob/master/src/bls12_381.rs">bls12_381</a> curves for the 
+<a href="https://tools.ietf.org/id/draft-yonezawa-pairing-friendly-curves-02.html">pairing-friendly curves</a>, both of them contain <code>add</code>, <code>mul</code> and <code>pairing</code> functions, 
+for helping devlopers trying and testing the curves, we provide <a href="http://www.zeroknowledgeblog.com/index.php/groth16">groth16</a> for
+<code>verifaction</code>.</p>
+<h2><a class="header" href="#interfaces" id="interfaces">Interfaces</a></h2>
+<p>We follow the format of the contracts that ethereum pre-compiled.</p>
+<pre><code class="language-rust ignore">/// Pairing-Friendly Curves
+trait PairingOp {
+    type VK;
+    type Proof;
+    
+    // Integrate addition
+    fn add(input: &amp;[u8], output: &amp;mut [u8]) -&gt; bool;
+    
+    // Scalar multiplication
+    fn mul(input: &amp;[u8], output: &amp;mut [u8]) -&gt; bool;
+    
+    // Pairing
+    fn pairing(input: &amp;[u8], output: &amp;mut [u8]) -&gt; bool;
+    
+    // Verifiy BLS
+    fn verify(
+        in_vk: VK,
+        vk_gammaABC: &amp;[u8],
+        in_proof: Proof,
+        proof_inputs: &amp;[u8],
+    ) -&gt; bool;
+}
+
+
+impl PairingOp for Bls12_381 {}
+impl PairingOp for AltBn_128 {}
+</code></pre>
 <h1><a class="header" href="#pallet-contracts" id="pallet-contracts">Pallet Contracts</a></h1>
 <p>Here we did some modifications on <a href="https://github.com/paritytech/substrate.git">paritytech/substrate</a>, added the
 curves mentioned in last chapters into <code>runtime_interfaces</code>, for more detail, check the 
@@ -233,12 +254,9 @@ git = &quot;https://github.com/patractlabs/ink&quot;
 branch = &quot;megaclite&quot;
 </code></pre>
 <h2><a class="header" href="#example" id="example">Example</a></h2>
-<pre><pre class="playground"><code class="language-rust">
-<span class="boring">#![allow(unused)]
-</span>#![cfg_attr(not(feature = &quot;std&quot;), no_std)]
+<pre><code class="language-rust ignore">#![cfg_attr(not(feature = &quot;std&quot;), no_std)]
 
-<span class="boring">fn main() {
-</span>use jupiter_ink_lang as ink;
+use jupiter_ink_lang as ink;
 
 #[ink::contract]
 mod altbn128 {
@@ -274,8 +292,7 @@ mod altbn128 {
         }
     }
 }
-<span class="boring">}
-</span></code></pre></pre>
+</code></pre>
 <h1><a class="header" href="#metis" id="metis">Metis</a></h1>
 <blockquote>
 <p>TODO</p>
