@@ -1,6 +1,7 @@
-use bls12_381::{multi_miller_loop, G1Affine, G1Projective, G2Affine, G2Prepared, Gt, Scalar};
-use std::convert::TryFrom;
+use bls::{multi_miller_loop, G1Affine, G1Projective, G2Affine, G2Prepared, Gt, Scalar};
+use core::convert::{TryFrom, TryInto};
 
+// Point add on bls12_381 curve, return a point.
 pub fn bls381_add(point1: &[u8], point2: &[u8]) -> Result<[u8; 96], &'static str> {
     if point1.len() != 96 || point2.len() != 96 {
         return Err("Invalid input length, should be 96 length slice(uncompressed)");
@@ -19,39 +20,45 @@ pub fn bls381_add(point1: &[u8], point2: &[u8]) -> Result<[u8; 96], &'static str
     Ok(add_res.to_uncompressed())
 }
 
-pub fn bls381_scalar_mul(point: &[u8], scalar: u64) -> Result<[u8; 96], &'static str> {
-    if point.len() != 96 {
-        return Err("Invalid input length, should be 96 length slice(uncompressed)");
+// Scalar mul point on bls12_381 curve, return a point.
+pub fn bls381_scalar_mul(point: &[u8], scalar: &[u8]) -> Result<[u8; 96], &'static str> {
+    if point.len() != 96 && scalar.len() != 32 {
+        return Err("point or scalar Invalid input length, should be 96(uncompressed point) or 32(scalar) length slice");
     }
 
     let p = G1Affine::from_uncompressed(
         <&[u8; 96]>::try_from(point).map_err(|_| "point1 slice try_from &[u8;64] fail")?,
     );
     let p: G1Affine = Option::from(p).ok_or("Invalid a pairing G1Affine")?;
-    let scalar = Scalar::from(scalar);
+
+    let scalar = Scalar::from_bytes(<&[u8; 32]>::try_from(scalar).unwrap());
+    let scalar: Scalar = Option::from(scalar).ok_or("Invalid a pairing G1Affine")?;
 
     let mul_res = G1Affine::from(p * scalar);
     Ok(mul_res.to_uncompressed())
 }
 
+// Return the result of computing the pairing check
+// e(p1[0], p2[0]) *  .... * e(p1[n], p2[n]) == 1.
+// For example pairing([P1(), P1().negate()], [P2(), P2()]) should return true.
 pub fn bls381_pairing(input: &[u8]) -> Result<bool, &'static str> {
-    if input.len() % 289 != 0 {
-        return Err("Invalid input length, must be multiple of 289 (3 * (48*2)) (uncompressed)");
+    if input.len() % 288 != 0 {
+        return Err("Invalid input length, must be multiple of 288 (3 * (48*2)) (uncompressed)");
     }
 
     let ret_val = if input.is_empty() {
         Gt::identity()
     } else {
-        let elements = input.len() / 289;
+        let elements = input.len() / 288;
         let mut vals = Vec::new();
         for idx in 0..elements {
             let a = G1Affine::from_uncompressed(
-                <&[u8; 96]>::try_from(&input[idx * 289..idx * 289 + 96])
+                <&[u8; 96]>::try_from(&input[idx * 288..idx * 288 + 96])
                     .map_err(|_| "point1 slice try_from &[u8;64] fail")?,
             );
             let a: G1Affine = Option::from(a).ok_or("Invalid a pairing G1Affine")?;
             let b = G2Affine::from_uncompressed(
-                <&[u8; 192]>::try_from(&input[idx * 289 + 96..idx * 289 + 289])
+                <&[u8; 192]>::try_from(&input[idx * 288 + 96..idx * 288 + 288])
                     .map_err(|_| "point1 slice try_from &[u8;64] fail")?,
             );
             let b: G2Affine = Option::from(b).ok_or("Invalid a pairing G1Affine")?;
@@ -72,9 +79,9 @@ pub fn bls381_pairing(input: &[u8]) -> Result<bool, &'static str> {
 
 #[test]
 fn test_bls381_add() {
-    use group::Curve;
     use rustc_hex::{FromHex, ToHex};
 
+    // Test identity add.
     {
         let a_hex = "400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
         let a_uncompressed: Vec<u8> = a_hex.from_hex().unwrap();
