@@ -2,10 +2,11 @@ use bls::{multi_miller_loop, G1Affine, G1Projective, G2Affine, G2Prepared, Gt, S
 use core::convert::{TryFrom, TryInto};
 
 // Point add on bls12_381 curve, return a point.
-pub fn bls381_add(point1: &[u8], point2: &[u8]) -> Result<[u8; 96], &'static str> {
-    if point1.len() != 96 || point2.len() != 96 {
-        return Err("Invalid input length, should be 96 length slice(uncompressed)");
+pub fn bls381_add(input: &[u8]) -> Result<[u8; 96], &'static str> {
+    if input.len() != 96 * 2 {
+        return Err("Invalid input length, should be 96*2 length slice(uncompressed)");
     }
+    let (point1, point2) = input.split_at(96);
 
     let p1 = G1Affine::from_uncompressed(
         <&[u8; 96]>::try_from(point1).map_err(|_| "point1 slice try_from &[u8;64] fail")?,
@@ -21,10 +22,11 @@ pub fn bls381_add(point1: &[u8], point2: &[u8]) -> Result<[u8; 96], &'static str
 }
 
 // Scalar mul point on bls12_381 curve, return a point.
-pub fn bls381_scalar_mul(point: &[u8], scalar: &[u8]) -> Result<[u8; 96], &'static str> {
-    if point.len() != 96 && scalar.len() != 32 {
+pub fn bls381_scalar_mul(input: &[u8]) -> Result<[u8; 96], &'static str> {
+    if input.len() != 96 + 32 {
         return Err("point or scalar Invalid input length, should be 96(uncompressed point) or 32(scalar) length slice");
     }
+    let (point, scalar) = input.split_at(96);
 
     let p = G1Affine::from_uncompressed(
         <&[u8; 96]>::try_from(point).map_err(|_| "point1 slice try_from &[u8;64] fail")?,
@@ -85,11 +87,9 @@ fn test_bls381_add() {
     {
         let a_hex = "400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
         let a_uncompressed: Vec<u8> = a_hex.from_hex().unwrap();
-        let a_hex = "400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
-        let a_uncompressed: Vec<u8> = a_hex.from_hex().unwrap();
 
-        let c_uncompressed = bls381_add(a_uncompressed.as_ref(), a_uncompressed.as_ref())
-            .expect("identity add failed");
+        let c_uncompressed =
+            bls381_add(a_uncompressed.repeat(2).as_ref()).expect("identity add failed");
 
         let c = G1Affine::from_uncompressed(&c_uncompressed).unwrap();
         assert!(bool::from(c.is_identity()));
@@ -99,7 +99,7 @@ fn test_bls381_add() {
         let p1_hex = "17f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb08b3f481e3aaa0f1a09e30ed741d8ae4fcf5e095d5d00af600db18cb2c04b3edd03cc744a2888ae40caa232946c5e7e1";
         let p1_uncompressed: Vec<u8> = p1_hex.from_hex().unwrap();
 
-        let p1_add_p1 = bls381_add(&p1_uncompressed[..], &p1_uncompressed[..]).expect("add fail:");
+        let p1_add_p1 = bls381_add(&p1_uncompressed.repeat(2)[..]).expect("add fail:");
 
         let p2_hex = "0572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62ae28f75bb8f1c7c42c39a8c5529bf0f4e166a9d8cabc673a322fda673779d8e3822ba3ecb8670e461f73bb9021d5fd76a4c56d9d4cd16bd1bba86881979749d28";
         let p2_uncompressed: Vec<u8> = p2_hex.from_hex().unwrap();

@@ -53,16 +53,25 @@ pub fn verify_proof(
     };
 
     // Compute the linear combination vk_x
-    // add = [(βui(x)+αvi(x)+wi(x))/γ]∈G1
-    // acc = sigma(i:0~l)* add
+    //  [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
+    // acc = sigma(i:0~l)* [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
     for (i, b) in public_inputs.iter().zip(vk_gammaABC.iter().skip(1)) {
         if BigInt::from_signed_bytes_be(i)
             < BigInt::from_str_radix(SCALAR_FIELD, 10).expect("wrong ")
         {
             return Err("Invalid public input!");
         }
-        let mul_ic = bls381_scalar_mul(b, i)?;
-        acc = bls381_add(&acc, &mul_ic[..])?;
+        let mut mul = Vec::new();
+        mul.extend_from_slice(b);
+        mul.extend_from_slice(i);
+
+        let mul_ic = bls381_scalar_mul(&*mul)?;
+
+        let mut acc_mul_ic = Vec::new();
+        acc_mul_ic.extend_from_slice(&acc);
+        acc_mul_ic.extend_from_slice(&mul_ic);
+
+        acc = bls381_add(&*acc_mul_ic)?;
     }
 
     // The original verification equation is:
