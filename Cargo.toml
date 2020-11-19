@@ -5,8 +5,11 @@ authors = ["Megaclite <https://github.com/patractlabs/megaclite>"]
 edition = "2018"
 
 [dependencies]
-bls12_381 = "0.3.1"
+bls = { package = "bls12_381", version = "0.3.1" }
 bn = { git = "https://github.com/paritytech/bn", default-features = false }
+zkp-u256 = "0.2.0"
+num-bigint = "0.3"
+num-traits = "0.2"
 
 [dev-dependencies]
 hex-literal = "0.2.1"
@@ -16,8 +19,4 @@ rustc-hex = { version = "2", default-features = false }
 [dev-dependencies.cargo-husky]
 version = "1"
 features = ["user-hooks"]
-default-features = false
-
-[dev-dependencies.group]
-version = "0.8"
 default-features = false
