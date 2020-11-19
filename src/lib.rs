@@ -1,17 +1,17 @@
-mod alt_bn128;
-mod bls12_381;
+pub mod alt_bn128;
+pub mod bls12_381;
 
 use bls12_381::{bls381_add, bls381_pairing, bls381_scalar_mul};
-use core::convert::{TryFrom, TryInto};
-use core::str::FromStr;
-use num_bigint::{BigInt, Sign};
+use core::convert::TryInto;
+use num_bigint::BigInt;
 use num_traits::Num;
 use zkp_u256::U256;
 
 static SCALAR_FIELD: &'static str =
     "21888242871839275222246405745257275088548364400416034343698204186575808495617";
 
-fn negate_y_u256(y: U256) -> U256 {
+/// docs: TODO
+pub fn negate_y_u256(y: U256) -> U256 {
     let q = U256::from_decimal_str(
         "21888242871839275222246405745257275088696311157297823662689037894645226208583",
     )
@@ -20,7 +20,8 @@ fn negate_y_u256(y: U256) -> U256 {
     q - y % q_clone
 }
 
-fn negate(y: BigInt) -> BigInt {
+/// docs: TODO
+pub fn negate(y: BigInt) -> BigInt {
     let q = BigInt::from_str_radix(
         "21888242871839275222246405745257275088696311157297823662689037894645226208583",
         10,
@@ -30,32 +31,34 @@ fn negate(y: BigInt) -> BigInt {
     q - y % q_clone
 }
 
+/// docs: TODO
 fn negate_y_slice(y: &[u8]) -> Vec<u8> {
     let negate_y = BigInt::from_signed_bytes_be(y);
     negate(negate_y).to_signed_bytes_be()
 }
 
+/// docs: TODO
 pub fn verify_proof(
-    vk_gammaABC: &[&[u8]],
+    vk_gamma_abc: &[&[u8]],
     vk: &[u8],
     proof: &[u8],
     public_inputs: &[&[u8]],
 ) -> Result<bool, &'static str> {
-    if (public_inputs.len() + 1) != vk_gammaABC.len() {
+    if (public_inputs.len() + 1) != vk_gamma_abc.len() {
         return Err("verifying key was malformed.");
     }
 
     // First two fields are used as the sum
-    let mut acc: [u8; 96] = if vk_gammaABC[0].len() != 96 {
-        return Err("vk_gammaABC first element length isn't 96,Invalid length!");
+    let mut acc: [u8; 96] = if vk_gamma_abc[0].len() != 96 {
+        return Err("vk_gamma_abc first element length isn't 96,Invalid length!");
     } else {
-        vk_gammaABC[0].try_into().unwrap()
+        vk_gamma_abc[0].try_into().unwrap()
     };
 
     // Compute the linear combination vk_x
     //  [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
     // acc = sigma(i:0~l)* [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
-    for (i, b) in public_inputs.iter().zip(vk_gammaABC.iter().skip(1)) {
+    for (i, b) in public_inputs.iter().zip(vk_gamma_abc.iter().skip(1)) {
         if BigInt::from_signed_bytes_be(i)
             < BigInt::from_str_radix(SCALAR_FIELD, 10).expect("wrong ")
         {
