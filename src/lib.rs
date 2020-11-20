@@ -2,9 +2,8 @@ mod alt_bn128;
 mod bls12_381;
 
 use bls12_381::{bls381_add, bls381_pairing, bls381_scalar_mul};
-use core::convert::{TryFrom, TryInto};
-use core::str::FromStr;
-use num_bigint::{BigInt, Sign};
+use core::convert::TryInto;
+use num_bigint::BigUint;
 use num_traits::Num;
 use zkp_u256::U256;
 
@@ -20,8 +19,8 @@ fn negate_y_u256(y: U256) -> U256 {
     q - y % q_clone
 }
 
-fn negate(y: BigInt) -> BigInt {
-    let q = BigInt::from_str_radix(
+fn negate(y: BigUint) -> BigUint {
+    let q = BigUint::from_str_radix(
         "21888242871839275222246405745257275088696311157297823662689037894645226208583",
         10,
     )
@@ -31,8 +30,8 @@ fn negate(y: BigInt) -> BigInt {
 }
 
 fn negate_y_slice(y: &[u8]) -> Vec<u8> {
-    let negate_y = BigInt::from_signed_bytes_be(y);
-    negate(negate_y).to_signed_bytes_be()
+    let negate_y = BigUint::from_bytes_be(y);
+    negate(negate_y).to_bytes_be()
 }
 
 pub fn verify_proof(
@@ -56,9 +55,7 @@ pub fn verify_proof(
     //  [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
     // acc = sigma(i:0~l)* [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
     for (i, b) in public_inputs.iter().zip(vk_gammaABC.iter().skip(1)) {
-        if BigInt::from_signed_bytes_be(i)
-            < BigInt::from_str_radix(SCALAR_FIELD, 10).expect("wrong ")
-        {
+        if BigUint::from_bytes_be(i) < BigUint::from_str_radix(SCALAR_FIELD, 10).expect("wrong ") {
             return Err("Invalid public input!");
         }
         let mut mul = Vec::new();
