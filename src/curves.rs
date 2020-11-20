@@ -53,7 +53,32 @@ pub trait Curve<E: Engine, S: ScalarEngine> {
     }
 
     /// Pairing operation for Curves
-    fn pairing() -> bool {
-        false
+    fn pairing(input: &[u8], g1_len: usize) -> Result<bool, GroupDecodingError> {
+        let element_len = g1_len * 3;
+        if input.len() % element_len != 0 && input.len() != 0 {
+            return Ok(false);
+        }
+
+        // Get pairs
+        let mut pairs = Vec::new();
+        for idx in 0..input.len() / element_len {
+            let mut g1 =
+                <<<E as Engine>::G1Affine as CurveAffine>::Uncompressed as EncodedPoint>::empty();
+            let mut g2 =
+                <<<E as Engine>::G2Affine as CurveAffine>::Uncompressed as EncodedPoint>::empty();
+            g1.as_mut()
+                .copy_from_slice(&input[idx * element_len..idx * element_len + 96]);
+            g2.as_mut()
+                .copy_from_slice(&input[(idx * element_len + 96)..(idx * element_len + 288)]);
+
+            pairs.push((g1.into_affine()?.prepare(), g2.into_affine()?.prepare()))
+        }
+
+        // Check if pairing
+        Ok(
+            <E as pairing_ce::Engine>::final_exponentiation(&E::miller_loop(
+                &pairs.iter().map(|p| (&p.0, &p.1)).collect::<Vec<_>>(),
+            )) == Some(<E as Engine>::Fqk::one()),
+        )
     }
 }
