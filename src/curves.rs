@@ -4,7 +4,7 @@ use pairing_ce::{
 };
 
 /// Pairing-Friendly Curve
-pub trait Curve<E: Engine, S: ScalarEngine> {
+pub trait Curve: Engine + ScalarEngine {
     /// Add operation for all Pairing-Friendly Engines
     fn add(input: &[u8], output: &mut [u8]) -> Result<(), GroupDecodingError> {
         let len = output.len();
@@ -12,14 +12,16 @@ pub trait Curve<E: Engine, S: ScalarEngine> {
             Err(GroupDecodingError::UnexpectedInformation)
         } else {
             let (mut p1, mut p2) = (
-                <<<E as Engine>::G1Affine as CurveAffine>::Uncompressed as EncodedPoint>::empty(),
-                <<<E as Engine>::G1Affine as CurveAffine>::Uncompressed as EncodedPoint>::empty(),
+                <<<Self as Engine>::G1Affine as CurveAffine>::Uncompressed as EncodedPoint>::empty(
+                ),
+                <<<Self as Engine>::G1Affine as CurveAffine>::Uncompressed as EncodedPoint>::empty(
+                ),
             );
             p1.as_mut().copy_from_slice(&input[0..len]);
             p2.as_mut().copy_from_slice(&input[len..]);
 
             // The added point
-            let mut p = E::G1::from(p1.into_affine()?);
+            let mut p = Self::G1::from(p1.into_affine()?);
             p.add_assign_mixed(&p2.into_affine()?);
 
             // Compose output stream
@@ -31,18 +33,19 @@ pub trait Curve<E: Engine, S: ScalarEngine> {
     /// Mul operation for all Pairing-Friendly Engines
     fn mul(input: &[u8], output: &mut [u8]) -> Result<(), GroupDecodingError>
     where
-        <<E as ScalarEngine>::Fr as PrimeField>::Repr: From<<S as ScalarEngine>::Fr>,
+        <<Self as ScalarEngine>::Fr as PrimeField>::Repr: From<<Self as ScalarEngine>::Fr>,
     {
         let len = output.len();
         if input.len() != len + 32 {
             Err(GroupDecodingError::UnexpectedInformation)
         } else {
             let mut p1 =
-                <<<E as Engine>::G1Affine as CurveAffine>::Uncompressed as EncodedPoint>::empty();
+                <<<Self as Engine>::G1Affine as CurveAffine>::Uncompressed as EncodedPoint>::empty(
+                );
             p1.as_mut().copy_from_slice(&input[0..len]);
 
             // Get scalar
-            let m = <S as ScalarEngine>::Fr::one();
+            let m = <Self as ScalarEngine>::Fr::one();
             m.into_repr().write_be(&mut input[len..].to_vec()).unwrap();
 
             // Compose output stream
@@ -63,9 +66,11 @@ pub trait Curve<E: Engine, S: ScalarEngine> {
         let mut pairs = Vec::new();
         for idx in 0..input.len() / element_len {
             let mut g1 =
-                <<<E as Engine>::G1Affine as CurveAffine>::Uncompressed as EncodedPoint>::empty();
+                <<<Self as Engine>::G1Affine as CurveAffine>::Uncompressed as EncodedPoint>::empty(
+                );
             let mut g2 =
-                <<<E as Engine>::G2Affine as CurveAffine>::Uncompressed as EncodedPoint>::empty();
+                <<<Self as Engine>::G2Affine as CurveAffine>::Uncompressed as EncodedPoint>::empty(
+                );
             g1.as_mut()
                 .copy_from_slice(&input[idx * element_len..idx * element_len + 96]);
             g2.as_mut()
@@ -76,9 +81,57 @@ pub trait Curve<E: Engine, S: ScalarEngine> {
 
         // Check if pairing
         Ok(
-            <E as pairing_ce::Engine>::final_exponentiation(&E::miller_loop(
+            <Self as pairing_ce::Engine>::final_exponentiation(&Self::miller_loop(
                 &pairs.iter().map(|p| (&p.0, &p.1)).collect::<Vec<_>>(),
-            )) == Some(<E as Engine>::Fqk::one()),
+            )) == Some(<Self as Engine>::Fqk::one()),
         )
+    }
+}
+
+impl<T> Curve for T where T: Engine + ScalarEngine {}
+
+/// Pairing-Friendly Curve ALTBN128
+pub mod altbn_128 {
+    use super::Curve;
+    use pairing_ce::{bn256::Bn256, GroupDecodingError};
+
+    const G1_LENGTH: usize = 96;
+
+    /// altbn_128 add
+    pub fn add(input: &[u8], output: &mut [u8]) -> Result<(), GroupDecodingError> {
+        <Bn256 as Curve>::add(input, output)
+    }
+
+    /// altbn_128 mul
+    pub fn mul(input: &[u8], output: &mut [u8]) -> Result<(), GroupDecodingError> {
+        <Bn256 as Curve>::mul(input, output)
+    }
+
+    /// altbn_128 pairing
+    pub fn pairing(input: &[u8]) -> Result<bool, GroupDecodingError> {
+        <Bn256 as Curve>::pairing(input, G1_LENGTH)
+    }
+}
+
+/// Pairing-Friendly Curve BLS12_381
+pub mod bls12_381 {
+    use super::Curve;
+    use pairing_ce::{bls12_381::Bls12, GroupDecodingError};
+
+    const G1_LENGTH: usize = 64;
+
+    /// altbn_128 add
+    pub fn add(input: &[u8], output: &mut [u8]) -> Result<(), GroupDecodingError> {
+        <Bls12 as Curve>::add(input, output)
+    }
+
+    /// altbn_128 mul
+    pub fn mul(input: &[u8], output: &mut [u8]) -> Result<(), GroupDecodingError> {
+        <Bls12 as Curve>::mul(input, output)
+    }
+
+    /// altbn_128 pairing
+    pub fn pairing(input: &[u8]) -> Result<bool, GroupDecodingError> {
+        <Bls12 as Curve>::pairing(input, G1_LENGTH)
     }
 }
