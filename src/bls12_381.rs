@@ -1,3 +1,4 @@
+use alloc::vec::Vec;
 use bls::{multi_miller_loop, G1Affine, G1Projective, G2Affine, G2Prepared, Gt, Scalar};
 use core::convert::TryFrom;
 

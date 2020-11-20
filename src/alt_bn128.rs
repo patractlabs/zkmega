@@ -1,3 +1,4 @@
+use alloc::vec::Vec;
 use bn::arith::U256;
 use bn::{pairing_batch, AffineG1, AffineG2, Fq, Fq2, Group, Gt, G1, G2};
 use std::io::{self, Read};
