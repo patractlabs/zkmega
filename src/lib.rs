@@ -2,6 +2,8 @@ extern crate alloc;
 
 pub mod alt_bn128;
 pub mod bls12_381;
+mod curves;
+pub mod result;
 
 use alloc::vec::Vec;
 use bls12_381::{bls381_add, bls381_pairing, bls381_scalar_mul};
