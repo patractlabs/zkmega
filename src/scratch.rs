@@ -58,7 +58,7 @@ pub trait Curve: Engine + ScalarEngine {
     /// Pairing operation for Curves
     fn pairing(input: &[u8], g1_len: usize) -> Result<bool, GroupDecodingError> {
         let element_len = g1_len * 3;
-        if input.len() % element_len != 0 && input.len() != 0 {
+        if input.len() % element_len != 0 && !input.is_empty() {
             return Ok(false);
         }
 
