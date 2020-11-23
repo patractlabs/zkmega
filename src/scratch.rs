@@ -1,4 +1,4 @@
-use crate::util;
+use crate::parse;
 use bellman_ce::pairing::{
     ff::{Field, PrimeField, PrimeFieldRepr, ScalarEngine},
     CurveAffine, CurveProjective, EncodedPoint, Engine, GroupDecodingError,
@@ -13,8 +13,8 @@ pub trait Curve: Engine + ScalarEngine {
             Err(GroupDecodingError::UnexpectedInformation)
         } else {
             let (p1, p2) = (
-                util::curve_affine::<<Self as Engine>::G1Affine>(&input[0..len]),
-                util::curve_affine::<<Self as Engine>::G1Affine>(&input[len..]),
+                parse::curve_affine::<<Self as Engine>::G1Affine>(&input[0..len]),
+                parse::curve_affine::<<Self as Engine>::G1Affine>(&input[len..]),
             );
 
             // The added point
@@ -36,7 +36,7 @@ pub trait Curve: Engine + ScalarEngine {
         if input.len() != len + 32 {
             Err(GroupDecodingError::UnexpectedInformation)
         } else {
-            let p1 = util::curve_affine::<<Self as Engine>::G1Affine>(&input[0..len]);
+            let p1 = parse::curve_affine::<<Self as Engine>::G1Affine>(&input[0..len]);
 
             // Get scalar
             let m = <Self as ScalarEngine>::Fr::one();
@@ -59,10 +59,10 @@ pub trait Curve: Engine + ScalarEngine {
         // Get pairs
         let mut pairs = Vec::new();
         for idx in 0..input.len() / element_len {
-            let g1 = util::curve_affine::<<Self as Engine>::G1Affine>(
+            let g1 = parse::curve_affine::<<Self as Engine>::G1Affine>(
                 &input[idx * element_len..idx * element_len + 96],
             );
-            let g2 = util::curve_affine::<<Self as Engine>::G2Affine>(
+            let g2 = parse::curve_affine::<<Self as Engine>::G2Affine>(
                 &input[(idx * element_len + 96)..(idx * element_len + 288)],
             );
 

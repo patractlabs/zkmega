@@ -2,8 +2,8 @@ extern crate alloc;
 
 pub mod altbn_128;
 pub mod bls12_381;
+pub mod parse;
 mod scratch;
-pub mod util;
 
 // use alloc::vec::Vec;
 // use bls12_381::{bls381_add, bls381_pairing, bls381_scalar_mul};
