@@ -1,5 +1,5 @@
 use crate::scratch::Curve;
-use pairing_ce::{bn256::Bn256, GroupDecodingError};
+use bellman_ce::pairing::{bn256::Bn256, GroupDecodingError};
 
 /// The G1 length of altbn_128
 const G1_LENGTH: usize = 96;

@@ -1,5 +1,5 @@
 use crate::scratch::Curve;
-use pairing_ce::{bls12_381::Bls12, GroupDecodingError};
+use bellman_ce::pairing::{bls12_381::Bls12, GroupDecodingError};
 
 const G1_LENGTH: usize = 64;
 

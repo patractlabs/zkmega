@@ -5,7 +5,8 @@ authors = ["Megaclite <https://github.com/patractlabs/megaclite>"]
 edition = "2018"
 
 [dependencies]
-pairing_ce = { version = "0.24.2" }
+pairing_ce = "0.24.2"
+bellman_ce = "0.3.5"
 
 # For the `verifier` trait
 [dependencies.zkp-u256]

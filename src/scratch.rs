@@ -1,4 +1,5 @@
-use pairing_ce::{
+use crate::util;
+use bellman_ce::pairing::{
     ff::{Field, PrimeField, PrimeFieldRepr, ScalarEngine},
     CurveAffine, CurveProjective, EncodedPoint, Engine, GroupDecodingError,
 };
@@ -11,14 +12,10 @@ pub trait Curve: Engine + ScalarEngine {
         if input.len() != len * 2 {
             Err(GroupDecodingError::UnexpectedInformation)
         } else {
-            let (mut p1, mut p2) = (
-                <<<Self as Engine>::G1Affine as CurveAffine>::Uncompressed as EncodedPoint>::empty(
-                ),
-                <<<Self as Engine>::G1Affine as CurveAffine>::Uncompressed as EncodedPoint>::empty(
-                ),
+            let (p1, p2) = (
+                util::curve_affine::<<Self as Engine>::G1Affine>(&input[0..len]),
+                util::curve_affine::<<Self as Engine>::G1Affine>(&input[len..]),
             );
-            p1.as_mut().copy_from_slice(&input[0..len]);
-            p2.as_mut().copy_from_slice(&input[len..]);
 
             // The added point
             let mut p = Self::G1::from(p1.into_affine()?);
@@ -39,10 +36,7 @@ pub trait Curve: Engine + ScalarEngine {
         if input.len() != len + 32 {
             Err(GroupDecodingError::UnexpectedInformation)
         } else {
-            let mut p1 =
-                <<<Self as Engine>::G1Affine as CurveAffine>::Uncompressed as EncodedPoint>::empty(
-                );
-            p1.as_mut().copy_from_slice(&input[0..len]);
+            let p1 = util::curve_affine::<<Self as Engine>::G1Affine>(&input[0..len]);
 
             // Get scalar
             let m = <Self as ScalarEngine>::Fr::one();
@@ -65,26 +59,20 @@ pub trait Curve: Engine + ScalarEngine {
         // Get pairs
         let mut pairs = Vec::new();
         for idx in 0..input.len() / element_len {
-            let mut g1 =
-                <<<Self as Engine>::G1Affine as CurveAffine>::Uncompressed as EncodedPoint>::empty(
-                );
-            let mut g2 =
-                <<<Self as Engine>::G2Affine as CurveAffine>::Uncompressed as EncodedPoint>::empty(
-                );
-            g1.as_mut()
-                .copy_from_slice(&input[idx * element_len..idx * element_len + 96]);
-            g2.as_mut()
-                .copy_from_slice(&input[(idx * element_len + 96)..(idx * element_len + 288)]);
+            let g1 = util::curve_affine::<<Self as Engine>::G1Affine>(
+                &input[idx * element_len..idx * element_len + 96],
+            );
+            let g2 = util::curve_affine::<<Self as Engine>::G2Affine>(
+                &input[(idx * element_len + 96)..(idx * element_len + 288)],
+            );
 
             pairs.push((g1.into_affine()?.prepare(), g2.into_affine()?.prepare()))
         }
 
         // Check if pairing
-        Ok(
-            <Self as pairing_ce::Engine>::final_exponentiation(&Self::miller_loop(
-                &pairs.iter().map(|p| (&p.0, &p.1)).collect::<Vec<_>>(),
-            )) == Some(<Self as Engine>::Fqk::one()),
-        )
+        Ok(<Self as Engine>::final_exponentiation(&Self::miller_loop(
+            &pairs.iter().map(|p| (&p.0, &p.1)).collect::<Vec<_>>(),
+        )) == Some(<Self as Engine>::Fqk::one()))
     }
 }
 
