@@ -79,7 +79,7 @@ pub trait Curve: Engine + ScalarEngine {
     }
 
     /// Standard Verify
-    fn verify<G1Affine, G2Affine, E>(
+    fn verify<G1Affine, G2Affine>(
         alpha_g1: G1Affine,
         beta_g1: G1Affine,
         beta_g2: G2Affine,
@@ -95,12 +95,11 @@ pub trait Curve: Engine + ScalarEngine {
     where
         G1Affine: AsRef<[u8]>,
         G2Affine: AsRef<[u8]>,
-        E: Engine + ScalarEngine,
     {
-        Ok(groth16::verify_proof::<E>(
+        Ok(groth16::verify_proof::<Self>(
             &parse::verifying_key(alpha_g1, beta_g1, beta_g2, gamma_g2, delta_g1, delta_g2, ic)?,
             &parse::proof(proof_a, proof_b, proof_c)?,
-            &parse::vector_fr::<E>(&input)?,
+            &parse::vector_fr::<Self>(&input)?,
         )?)
     }
 }
