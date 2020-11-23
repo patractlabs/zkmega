@@ -7,38 +7,9 @@ edition = "2018"
 [dependencies]
 bellman_ce = "0.3.5"
 
-# For the `verifier` trait
-[dependencies.zkp-u256]
-git = "https://github.com/patractlabs/OpenZKP.git"
-version = "0.2.0"
-features = ["stable"]
-optional = true
-
-[dependencies.num-bigint]
-version = "0.3"
-optional = true
-
-[dependencies.num-traits]
-version = "0.2"
-optional = true
-
-# For tests
-[dev-dependencies]
-hex-literal = "0.2.1"
-rand = { version = "0.5", features = ["i128_support"], default-features = false }
-rustc-hex = { version = "2", default-features = false }
-
 # Local CI
 [dev-dependencies.cargo-husky]
 version = "1"
 features = ["user-hooks"]
 default-features = false
 
-# Features
-[features]
-default = []
-verifier = [
-         "num-bigint",
-         "num-traits",
-         "zkp-u256",
-]
