@@ -20,11 +20,11 @@ checksum = "a5ca1343d8690bb4d62e0665116bd4f109e33a642f86908ed107d226a402b0ef"
 dependencies = [
  "bit-vec",
  "byteorder",
- "cfg-if 0.1.10",
+ "cfg-if",
  "crossbeam",
  "futures",
  "num_cpus",
- "pairing_ce 0.21.1",
+ "pairing_ce",
  "rand 0.4.6",
 ]
 
@@ -69,18 +69,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4785bdd1c96b2a846b2bd7cc02e86b6b3dbf14e7e53446c4f54c92a361040822"
 
 [[package]]
-name = "cfg-if"
-version = "1.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
-
-[[package]]
 name = "crossbeam"
 version = "0.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "69323bff1fb41c635347b8ead484a5ca6c3f11914d784170b158d8449ab07f8e"
 dependencies = [
- "cfg-if 0.1.10",
+ "cfg-if",
  "crossbeam-channel",
  "crossbeam-deque",
  "crossbeam-epoch",
@@ -116,7 +110,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "058ed274caafc1f60c4997b5fc07bf7dc7cca454af7c6e81edffe5f33f70dace"
 dependencies = [
  "autocfg",
- "cfg-if 0.1.10",
+ "cfg-if",
  "crossbeam-utils",
  "lazy_static",
  "maybe-uninit",
@@ -130,7 +124,7 @@ version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "774ba60a54c213d409d5353bda12d49cd68d14e45036a285234c8d6f91f92570"
 dependencies = [
- "cfg-if 0.1.10",
+ "cfg-if",
  "crossbeam-utils",
  "maybe-uninit",
 ]
@@ -142,7 +136,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c3c7c73a2d1e9fc0886a08b93e98eb643461230d5f1925e4036204d5f2e261a8"
 dependencies = [
  "autocfg",
- "cfg-if 0.1.10",
+ "cfg-if",
  "lazy_static",
 ]
 
@@ -165,19 +159,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4592897f75fd1bd178e5ec12d9d7df3d1943464feda2cbce1e708a484e82c8f6"
 dependencies = [
  "byteorder",
- "ff_derive_ce 0.8.0",
- "hex",
- "rand 0.4.6",
-]
-
-[[package]]
-name = "ff_ce"
-version = "0.12.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "38107cbd8bac0d907d7e7513c9f68c95adbda9e6f6f6bdf3f5111c6ecac4fe47"
-dependencies = [
- "byteorder",
- "ff_derive_ce 0.9.0",
+ "ff_derive_ce",
  "hex",
  "rand 0.4.6",
 ]
@@ -187,20 +169,6 @@ name = "ff_derive_ce"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "50c052fa6d4c2f12305ec364bfb8ef884836f3f61ea015b202372ff996d1ac4b"
-dependencies = [
- "num-bigint 0.2.6",
- "num-integer",
- "num-traits",
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
-name = "ff_derive_ce"
-version = "0.9.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "77d4fecbd8714dc12f4bab026d74e3f5766436bf4d9fc1161709d6e45a593400"
 dependencies = [
  "num-bigint 0.2.6",
  "num-integer",
@@ -303,7 +271,7 @@ version = "0.1.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fc587bc0ec293155d5bfa6b9891ec18a1e330c234f896ea47fbada4cadbe47e6"
 dependencies = [
- "cfg-if 0.1.10",
+ "cfg-if",
  "libc",
  "wasi",
 ]
@@ -378,7 +346,6 @@ dependencies = [
  "hex-literal",
  "num-bigint 0.3.1",
  "num-traits",
- "pairing_ce 0.24.2",
  "rand 0.5.6",
  "rustc-hex",
  "zkp-u256",
@@ -469,19 +436,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bfc00d65b1d29e0a067a967fcea83d8db261c149f76a557ba73f0304f01cdfde"
 dependencies = [
  "byteorder",
- "ff_ce 0.10.3",
- "rand 0.4.6",
-]
-
-[[package]]
-name = "pairing_ce"
-version = "0.24.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1e753515675eaaa98071d814bea0148ae8c9d7995fa0531bf222e7857e3f1759"
-dependencies = [
- "byteorder",
- "cfg-if 1.0.0",
- "ff_ce 0.12.0",
+ "ff_ce",
  "rand 0.4.6",
 ]
 
