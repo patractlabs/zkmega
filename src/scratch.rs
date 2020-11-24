@@ -1,3 +1,4 @@
+#![macro_use]
 use crate::{parse, result::Result};
 use bellman_ce::{
     groth16,
@@ -7,11 +8,20 @@ use bellman_ce::{
     },
 };
 
+/// Custom bytes
+pub trait Bytes: AsRef<[u8]> + AsMut<[u8]> {
+    fn default() -> Self;
+}
+
 /// Pairing-Friendly Curve
 pub trait Curve: Engine + ScalarEngine {
     /// Add operation for all Pairing-Friendly Engines
-    fn add(input: &[u8], output: &mut [u8]) -> Result<()> {
-        let len = output.len();
+    fn add<Output>(input: &[u8]) -> Result<Output>
+    where
+        Output: Bytes,
+    {
+        let mut output = <Output as Bytes>::default();
+        let len = output.as_ref().len();
         if input.len() != len * 2 {
             Err(GroupDecodingError::UnexpectedInformation.into())
         } else {
@@ -25,17 +35,21 @@ pub trait Curve: Engine + ScalarEngine {
             p.add_assign_mixed(&p2.into_affine()?);
 
             // Compose output stream
-            output.copy_from_slice(p.into_affine().into_uncompressed().as_ref());
-            Ok(())
+            output
+                .as_mut()
+                .copy_from_slice(p.into_affine().into_uncompressed().as_ref());
+            Ok(output)
         }
     }
 
     /// Mul operation for all Pairing-Friendly Engines
-    fn mul(input: &[u8], output: &mut [u8]) -> Result<()>
+    fn mul<Output>(input: &[u8]) -> Result<Output>
     where
         <<Self as ScalarEngine>::Fr as PrimeField>::Repr: From<<Self as ScalarEngine>::Fr>,
+        Output: Bytes,
     {
-        let len = output.len();
+        let mut output = <Output as Bytes>::default();
+        let len = output.as_ref().len();
         if input.len() != len + 32 {
             Err(GroupDecodingError::UnexpectedInformation.into())
         } else {
@@ -47,13 +61,19 @@ pub trait Curve: Engine + ScalarEngine {
 
             // Compose output stream
             let p = p1.into_affine()?.mul(m);
-            output.copy_from_slice(p.into_affine().into_uncompressed().as_ref());
-            Ok(())
+            output
+                .as_mut()
+                .copy_from_slice(p.into_affine().into_uncompressed().as_ref());
+            Ok(output)
         }
     }
 
     /// Pairing operation for Curves
-    fn pairing(input: &[u8], g1_len: usize) -> Result<bool> {
+    fn pairing<Output>(input: &[u8]) -> Result<bool>
+    where
+        Output: Bytes,
+    {
+        let g1_len = <Output as Bytes>::default().as_ref().len();
         let element_len = g1_len * 3;
         if input.len() % element_len != 0 && !input.is_empty() {
             return Ok(false);
@@ -105,3 +125,51 @@ pub trait Curve: Engine + ScalarEngine {
 }
 
 impl<T> Curve for T where T: Engine + ScalarEngine {}
+
+/// Declare curve
+macro_rules! curve {
+    ($curve:ident, $g1:expr, $g2:expr) => {
+        /// Op Bytes
+        type OpOutput = [u8; $g1];
+        impl Bytes for OpOutput {
+            fn default() -> [u8; $g1] {
+                [0; $g1]
+            }
+        }
+
+        /// bls12_381 add
+        pub fn add(input: &[u8]) -> Result<OpOutput> {
+            <$curve as Curve>::add::<OpOutput>(input)
+        }
+
+        /// bls12_381 mul
+        pub fn mul(input: &[u8]) -> Result<OpOutput> {
+            <$curve as Curve>::mul::<OpOutput>(input)
+        }
+
+        /// bls12_381 pairing
+        pub fn pairing(input: &[u8]) -> Result<bool> {
+            <$curve as Curve>::pairing::<OpOutput>(input)
+        }
+
+        ///! bls12_381  verify
+        pub fn verify(
+            alpha_g1: [u8; $g1],
+            beta_g1: [u8; $g1],
+            beta_g2: [u8; $g2],
+            gamma_g2: [u8; $g2],
+            delta_g1: [u8; $g1],
+            delta_g2: [u8; $g2],
+            ic: Vec<[u8; $g1]>,
+            proof_a: [u8; $g1],
+            proof_b: [u8; $g2],
+            proof_c: [u8; $g1],
+            input: &[u64],
+        ) -> Result<bool> {
+            <$curve as Curve>::verify::<[u8; $g1], [u8; $g2]>(
+                alpha_g1, beta_g1, beta_g2, gamma_g2, delta_g1, delta_g2, ic, proof_a, proof_b,
+                proof_c, input,
+            )
+        }
+    };
+}

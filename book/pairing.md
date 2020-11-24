@@ -14,18 +14,18 @@ We follow the format of the contracts that ethereum pre-compiled.
 
 ```rust,ignore
 /// Pairing-Friendly Curves
-trait PairingOp {
+trait Curve {
     type VK;
     type Proof;
     
     // Integrate addition
-    fn add(input: &[u8], output: &mut [u8]) -> bool;
+    fn add(input: &[u8]) -> [u8; G1_LENGTH];
     
     // Scalar multiplication
-    fn mul(input: &[u8], output: &mut [u8]) -> bool;
+    fn mul(input: &[u8]) -> [u8; G1_LENGTH];
     
     // Pairing
-    fn pairing(input: &[u8], output: &mut [u8]) -> bool;
+    fn pairing(input: &[u8]) -> bool;
     
     // Verifiy BLS
     fn verify(
@@ -37,8 +37,8 @@ trait PairingOp {
 }
 
 
-impl PairingOp for Bls12_381 {}
-impl PairingOp for AltBn_128 {}
+impl Curve for Bls12_381 {}
+impl Curve for AltBn_128 {}
 ```
 
 [alt_bn128]: https://github.com/patractlabs/megaclite/blob/master/src/alt_bn128.rs

@@ -48,8 +48,9 @@
 //! [loopring]: https://loopring.org/
 //! [BLS curve]: https://electriccoin.co/blog/new-snark-curve/
 //! [PLONK algorithm]: https://eprint.iacr.org/2019/953/20190827:165656
+mod scratch;
+
 pub mod altbn_128;
 pub mod bls12_381;
 pub mod parse;
 pub mod result;
-mod scratch;
