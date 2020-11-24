@@ -212,18 +212,18 @@ for helping devlopers trying and testing the curves, we provide <a href="http://
 <h2><a class="header" href="#interfaces" id="interfaces">Interfaces</a></h2>
 <p>We follow the format of the contracts that ethereum pre-compiled.</p>
 <pre><code class="language-rust ignore">/// Pairing-Friendly Curves
-trait PairingOp {
+trait Curve {
     type VK;
     type Proof;
     
     // Integrate addition
-    fn add(input: &amp;[u8], output: &amp;mut [u8]) -&gt; bool;
+    fn add(input: &amp;[u8]) -&gt; [u8; G1_LENGTH];
     
     // Scalar multiplication
-    fn mul(input: &amp;[u8], output: &amp;mut [u8]) -&gt; bool;
+    fn mul(input: &amp;[u8]) -&gt; [u8; G1_LENGTH];
     
     // Pairing
-    fn pairing(input: &amp;[u8], output: &amp;mut [u8]) -&gt; bool;
+    fn pairing(input: &amp;[u8]) -&gt; bool;
     
     // Verifiy BLS
     fn verify(
@@ -235,8 +235,8 @@ trait PairingOp {
 }
 
 
-impl PairingOp for Bls12_381 {}
-impl PairingOp for AltBn_128 {}
+impl Curve for Bls12_381 {}
+impl Curve for AltBn_128 {}
 </code></pre>
 <h1><a class="header" href="#pallet-contracts" id="pallet-contracts">Pallet Contracts</a></h1>
 <p>Here we did some modifications on <a href="https://github.com/paritytech/substrate.git">paritytech/substrate</a>, added the
