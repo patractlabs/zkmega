@@ -69,7 +69,11 @@ pub trait Curve: Engine + ScalarEngine {
     }
 
     /// Pairing operation for Curves
-    fn pairing(input: &[u8], g1_len: usize) -> Result<bool> {
+    fn pairing<Output>(input: &[u8]) -> Result<bool>
+    where
+        Output: Bytes,
+    {
+        let g1_len = <Output as Bytes>::default().as_ref().len();
         let element_len = g1_len * 3;
         if input.len() % element_len != 0 && !input.is_empty() {
             return Ok(false);
@@ -145,7 +149,7 @@ macro_rules! curve {
 
         /// bls12_381 pairing
         pub fn pairing(input: &[u8]) -> Result<bool> {
-            <$curve as Curve>::pairing(input, $g1)
+            <$curve as Curve>::pairing::<OpOutput>(input)
         }
 
         ///! bls12_381  verify
