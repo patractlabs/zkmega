@@ -84,5 +84,5 @@ pub fn vector_fr<E: Engine + ScalarEngine>(
         repr.as_mut().copy_from_slice(&input[i..elem + i]);
         vfr.push(<E::Fr as PrimeField>::from_repr(repr)?);
     }
-    Ok(vec![])
+    Ok(vfr)
 }
