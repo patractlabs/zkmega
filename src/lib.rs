@@ -85,5 +85,12 @@ fn negate_y(y: &[u8]) -> Result<Vec<u8>> {
         48 => negate_y_based_curve(negate_y, BLS381_PRIME_FIELD)?.to_bytes_be(),
         _ => return Err(Megaclite("Invalid y coordinate length!".to_string())),
     };
-    Ok(neg_y)
+    // Because of randomness, Negate_y vector might not satisfy 32 or 48 bytes.
+    let mut neg_y_fill_with_zero = vec![0u8; y.len()];
+    if neg_y.len() != y.len() {
+        neg_y_fill_with_zero[y.len() - neg_y.len()..y.len()].copy_from_slice(&*neg_y);
+    } else {
+        neg_y_fill_with_zero[0..y.len()].copy_from_slice(&*neg_y);
+    }
+    Ok(neg_y_fill_with_zero)
 }

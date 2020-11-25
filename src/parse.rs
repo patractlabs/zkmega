@@ -2,7 +2,6 @@
 use bellman_ce::{
     groth16::{self, Parameters, PreparedVerifyingKey, Proof, VerifyingKey},
     pairing::{
-        bn256::Bn256,
         ff::{PrimeField, PrimeFieldDecodingError, ScalarEngine},
         CurveAffine, EncodedPoint, Engine, GroupDecodingError,
     },
