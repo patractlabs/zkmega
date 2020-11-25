@@ -57,7 +57,7 @@ pub trait Curve: Engine + ScalarEngine {
 
             // Get scalar
             let m = <Self as ScalarEngine>::Fr::one();
-            m.into_repr().write_be(&mut input[len..].to_vec()).unwrap();
+            m.into_repr().read_be(&input[len..]).unwrap();
 
             // Compose output stream
             let p = p1.into_affine()?.mul(m);
@@ -83,10 +83,10 @@ pub trait Curve: Engine + ScalarEngine {
         let mut pairs = Vec::new();
         for idx in 0..input.len() / element_len {
             let g1 = parse::curve_affine::<<Self as Engine>::G1Affine>(
-                &input[idx * element_len..idx * element_len + 96],
+                &input[idx * element_len..idx * element_len + g1_len],
             );
             let g2 = parse::curve_affine::<<Self as Engine>::G2Affine>(
-                &input[(idx * element_len + 96)..(idx * element_len + 288)],
+                &input[(idx * element_len + g1_len)..(idx * element_len + element_len)],
             );
 
             pairs.push((g1.into_affine()?.prepare(), g2.into_affine()?.prepare()))
@@ -127,6 +127,7 @@ pub trait Curve: Engine + ScalarEngine {
 impl<T> Curve for T where T: Engine + ScalarEngine {}
 
 /// Declare curve
+#[macro_export]
 macro_rules! curve {
     ($curve:ident, $g1:expr, $g2:expr) => {
         /// Op Bytes

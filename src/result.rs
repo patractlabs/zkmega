@@ -5,10 +5,12 @@ use bellman_ce::{
     },
     SynthesisError as Synthesis,
 };
+use core::array::TryFromSliceError;
 use core::{
     fmt::{Display, Formatter, Result as FmtResult},
     result::Result as DefaultResult,
 };
+use num_bigint::ParseBigIntError as ParseBigInt;
 
 /// The custom megaclite error
 pub struct Megaclite(String);
@@ -46,7 +48,7 @@ macro_rules! error {
     };
 }
 
-error! {PrimeFieldDecoding, GroupDecoding, Synthesis}
+error! {PrimeFieldDecoding, GroupDecoding, Synthesis,ParseBigInt,Megaclite,TryFromSliceError}
 
 /// Megaclite Result
 pub type Result<T> = DefaultResult<T, Error>;

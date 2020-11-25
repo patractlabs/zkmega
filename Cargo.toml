@@ -5,7 +5,26 @@ authors = ["Megaclite <https://github.com/patractlabs/megaclite>"]
 edition = "2018"
 
 [dependencies]
-bellman_ce = "0.3.5"
+bellman_ce = { version = "0.3.0", default-features = false }
+
+bls = { package = "bls12_381", version = "0.3.1" }
+bn = { git = "https://github.com/paritytech/bn", default-features = false }
+zkp-u256 = "0.2.0"
+num-bigint = "0.3"
+num-traits = "0.2"
+group = "0.8.0"
+
+sapling_crypto_ce = { package = "sapling-crypto_ce", git = "https://github.com/matter-labs/sapling-crypto", branch = "master" }
+rust-crypto = "0.2.36"
+pairing_ce = "0.24.2"
+
+[dependencies.rand]
+version = "0.4"
+
+[dev-dependencies]
+hex-literal = "0.2.1"
+#rand = { version = "0.5", features = ["i128_support"], default-features = false }
+rustc-hex = { version = "2", default-features = false }
 
 # Local CI
 [dev-dependencies.cargo-husky]
