@@ -1,6 +1,6 @@
 //! Util functions
 use bellman_ce::{
-    groth16::{self, PreparedVerifyingKey, Proof, VerifyingKey},
+    groth16::{self, Parameters, PreparedVerifyingKey, Proof, VerifyingKey},
     pairing::{
         ff::{PrimeField, PrimeFieldDecodingError, ScalarEngine},
         CurveAffine, EncodedPoint, Engine, GroupDecodingError,
@@ -85,4 +85,23 @@ pub fn vector_fr<E: Engine + ScalarEngine>(
         vfr.push(<E::Fr as PrimeField>::from_repr(repr)?);
     }
     Ok(vfr)
+}
+
+/// Write the proof to the bytes
+pub fn proof_write<E: Engine>(proof: &mut Proof<E>, proof_encode: &mut Vec<u8>) {
+    let len = proof_encode.len() / 8;
+    proof_encode[0..len * 2].copy_from_slice(proof.a.into_uncompressed().as_ref());
+    proof_encode[len * 2..len * 6].copy_from_slice(proof.b.into_uncompressed().as_ref());
+    proof_encode[len * 6..len * 8].copy_from_slice(proof.c.into_uncompressed().as_ref());
+    println!("proof : {:?}", proof_encode);
+}
+
+/// Write the verify key to the bytes
+pub fn vk_write<E: Engine>(vk_encode: &mut Vec<u8>, params: &Parameters<E>) {
+    let len = vk_encode.len() / 14;
+    vk_encode[0..len * 4].copy_from_slice(params.vk.gamma_g2.into_uncompressed().as_ref());
+    vk_encode[len * 4..len * 8].copy_from_slice(params.vk.delta_g2.into_uncompressed().as_ref());
+    vk_encode[len * 8..len * 10].copy_from_slice(params.vk.alpha_g1.into_uncompressed().as_ref());
+    vk_encode[len * 10..len * 14].copy_from_slice(params.vk.beta_g2.into_uncompressed().as_ref());
+    println!("vk.ic : {:?}", vk_encode.len());
 }

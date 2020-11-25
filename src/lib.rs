@@ -53,4 +53,37 @@ mod scratch;
 pub mod altbn_128;
 pub mod bls12_381;
 pub mod parse;
+pub mod raw_bn_bls;
 pub mod result;
+
+use num_bigint::BigUint;
+use num_traits::Num;
+use result::{Error::Megaclite, Result};
+
+static BN256_SCALAR_FIELD: &'static str =
+    "21888242871839275222246405745257275088548364400416034343698204186575808495617";
+
+static BN256_PRIME_FIELD: &'static str =
+    "21888242871839275222246405745257275088696311157297823662689037894645226208583";
+
+static BLS381_SCALAR_FIELD: &'static str =
+    "52435875175126190479447740508185965837690552500527637822603658699938581184513";
+
+static BLS381_PRIME_FIELD: &'static str =
+    "4002409555221667393417789825735904156556882819939007885332058136124031650490837864442687629129015664037894272559787";
+
+fn negate_y_based_curve(y: BigUint, prime_field: &'static str) -> Result<BigUint> {
+    let q = BigUint::from_str_radix(prime_field, 10)?;
+    let q_clone = q.clone();
+    Ok(q - y % q_clone)
+}
+
+fn negate_y(y: &[u8]) -> Result<Vec<u8>> {
+    let negate_y = BigUint::from_bytes_be(y);
+    let neg_y = match y.len() {
+        32 => negate_y_based_curve(negate_y, BN256_PRIME_FIELD)?.to_bytes_be(),
+        48 => negate_y_based_curve(negate_y, BLS381_PRIME_FIELD)?.to_bytes_be(),
+        _ => return Err(Megaclite("Invalid y coordinate length!".to_string())),
+    };
+    Ok(neg_y)
+}
