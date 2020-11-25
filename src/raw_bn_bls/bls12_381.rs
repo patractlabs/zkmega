@@ -128,7 +128,6 @@ fn test_bls381_add() {
 
 #[test]
 fn test_bls381_mul() {
-    use group::GroupEncoding;
     let g = G1Affine::generator();
 
     let a = Scalar::from_raw([
@@ -191,6 +190,7 @@ fn test_bls381_pairing() {
     let expected = pairing(&a1, &b1) + pairing(&a2, &b2) + pairing(&a3, &b3) + pairing(&a4, &b4);
 
     let pairings = [(a1, b1), (a2, b2), (a3, b3), (a4, b4)];
+
     let mut input = [0u8; 288 * 4];
     pairings.iter().enumerate().for_each(|(i, (a, b))| {
         input[96 * (3 * i)..96 * (3 * i + 1)].copy_from_slice(&a.to_uncompressed());

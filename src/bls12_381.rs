@@ -27,7 +27,7 @@ pub fn bls381_verify_proof(
     //  [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
     // acc = sigma(i:0~l)* [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
     for (i, b) in public_inputs.iter().zip(vk_gammaABC.iter().skip(1)) {
-        if BigUint::from_bytes_be(i)
+        if BigUint::from_bytes_le(i)
             >= BigUint::from_str_radix(BLS381_SCALAR_FIELD, 10).expect("wrong ")
         {
             return Err(Megaclite("Invalid public input!".to_string()));
