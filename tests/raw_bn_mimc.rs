@@ -1,11 +1,11 @@
 use bellman_ce::{
     groth16::{
         create_random_proof, generate_random_parameters, prepare_verifying_key,
-        verify_proof as raw_verify_proof, Parameters, Proof,
+        verify_proof as raw_verify_proof, Proof,
     },
     pairing::{
         bn256::Bn256,
-        ff::{Field, PrimeField, PrimeFieldDecodingError, PrimeFieldRepr},
+        ff::{Field, PrimeField, PrimeFieldRepr},
         CurveAffine, Engine,
     },
     Circuit, ConstraintSystem, SynthesisError,

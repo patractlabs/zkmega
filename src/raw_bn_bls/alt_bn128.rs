@@ -164,7 +164,7 @@ fn test_alt_bn128_add() {
 
         assert_eq!(
             &expected[..],
-            alt_bn128_add(&input[..]).expect("Builtin should not fail")
+            AltBn128::point_add(&input[..]).expect("Builtin should not fail")
         );
     }
 
@@ -179,7 +179,7 @@ fn test_alt_bn128_add() {
 
         assert_eq!(
             &expected[..],
-            alt_bn128_add(&input[..]).expect("Builtin should not fail")
+            AltBn128::point_add(&input[..]).expect("Builtin should not fail")
         );
     }
 
@@ -193,7 +193,7 @@ fn test_alt_bn128_add() {
 				1111111111111111111111111111111111111111111111111111111111111111"
         );
 
-        let res = alt_bn128_add(&input[..]);
+        let res = AltBn128::point_add(&input[..]);
         assert!(res.is_err(), "There should be built-in error here");
     }
 }
@@ -217,7 +217,7 @@ fn test_alt_bn128_mul() {
 
         assert_eq!(
             &expected[..],
-            alt_bn128_scalar_mul(&input[..]).expect("Builtin should not fail")
+            AltBn128::point_scalar_mul(&input[..]).expect("Builtin should not fail")
         );
     }
 
@@ -230,32 +230,7 @@ fn test_alt_bn128_mul() {
 				0f00000000000000000000000000000000000000000000000000000000000000"
         );
 
-        let res = alt_bn128_scalar_mul(&input[..]);
+        let res = AltBn128::point_scalar_mul(&input[..]);
         assert!(res.is_err(), "There should be built-in error here");
     }
-}
-
-#[test]
-fn add() {
-    use bn::{Fr, Group, G1};
-    use hex_literal::hex;
-    use rand::{SeedableRng, StdRng};
-
-    let seed = [
-        0, 0, 0, 0, 0, 0, 64, 13, // 103245
-        0, 0, 0, 0, 0, 0, 176, 2, // 191922
-        0, 0, 0, 0, 0, 0, 0, 13, // 1293
-        0, 0, 0, 0, 0, 0, 96, 7u8, // 192103
-    ];
-
-    let p1 = G1::random(&mut StdRng::from_seed(seed));
-
-    println!("p1:{:?}", p1);
-    println!("p1 + p1:{:?}", p1 + p1);
-    println!("p1 * 2: {:?}", p1 * Fr::from_str("2").unwrap());
-
-    let p1_2times = alt_bn128_scalar_mul(
-        &hex!("0230644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd46")[..],
-    );
-    println!("{:?}", p1_2times);
 }

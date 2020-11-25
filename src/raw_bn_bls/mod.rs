@@ -1,12 +1,9 @@
 pub mod alt_bn128;
 pub mod bls12_381;
 
-use core::convert::TryInto;
 use num_bigint::BigUint;
 use num_traits::Num;
 use std::convert::TryFrom;
-use std::ops::Index;
-use std::slice::SliceIndex;
 
 static BN256_SCALAR_FIELD: &'static str =
     "21888242871839275222246405745257275088548364400416034343698204186575808495617";
@@ -54,9 +51,7 @@ pub fn verify_proof<'a, C: Curve<'a>>(
     //  [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
     // acc = sigma(i:0~l)* [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
     for (i, b) in public_inputs.iter().zip(vk_gammaABC.iter().skip(1)) {
-        // if BigUint::from_bytes_be(i) >= BigUint::from_str_radix(BLS381_SCALAR_FIELD, 10).expect("Parse BigUint wrong ") {
-        //     return Err("Invalid public input!");
-        // }
+        input_require_on_curve::<C>(i)?;
         let mut mul = Vec::new();
         mul.extend_from_slice(b);
         mul.extend_from_slice(i);
@@ -127,4 +122,29 @@ fn negate_y(y: &[u8]) -> Result<Vec<u8>, &'static str> {
         _ => return Err("Invalid y coordinate length!"),
     };
     Ok(neg_y)
+}
+
+fn input_require_on_curve<'a, E: Curve<'a>>(input: &[u8]) -> Result<(), &'static str> {
+    match E::fq_bytes_length() {
+        32 => {
+            if BigUint::from_bytes_be(input)
+                >= BigUint::from_str_radix(BN256_SCALAR_FIELD, 10)
+                    .map_err(|_| "Parse BigUint wrong ")?
+            {
+                return Err("Invalid public input!");
+            }
+        }
+        48 => {
+            if BigUint::from_bytes_le(input)
+                >= BigUint::from_str_radix(BLS381_SCALAR_FIELD, 10)
+                    .map_err(|_| "Parse BigUint wrong ")?
+            {
+                return Err("Invalid public input!");
+            }
+        }
+        _ => return Err(
+            "The length of fq does not exist, perhaps here you need to add your own curve require",
+        ),
+    }
+    Ok(())
 }
