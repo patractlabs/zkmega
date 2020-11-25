@@ -23,7 +23,7 @@ branch = "megaclite"
 
 ## Example
 
-```rust
+```rust,ignore
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use jupiter_ink_lang as ink;

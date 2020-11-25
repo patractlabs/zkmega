@@ -1,106 +1,89 @@
-mod alt_bn128;
-mod bls12_381;
+//! # Megaclite
+//!
+//! [Megaclite][book] is a zero-knowledge proof tool set building for the Polkadot ecology.
+//!
+//! + [Pairing](https://patractlabs.github.io/megaclite/pairing)
+//! + [Pallet Contracts](https://patractlabs.github.io/megaclite/pallet-contracts)
+//! + [Metis](https://patractlabs.github.io/megaclite/metis)
+//!
+//!
+//! ## ZK Rollup Introduction
+//!
+//! Compared with the privacy function, the performance improvement brought by Rollup is the
+//! early application direction of zero-knowledge proof. At present, the Layer 2 expansion
+//! plan of the blockchain is to transfer a considerable part of the on-chain workload to
+//! off-chain to complete, and the most watched one is ZK Rollup. The essence of ZK Rollup
+//! is to compress the application on-chain state and store it in a Merkle tree, and move
+//! the state transition funtions to off-chain. At the same time, the correctness of the
+//! off-chain state transition process is guaranteed through the proof of zkSNARK. Compared
+//! with the high cost of directly processing state changes on the chain, the ZK Proof's
+//! on-chain smart contract verification is extremely cost low. At the same time, the
+//! compressed information will also be submitted to the chain together with the proof,
+//! which ensures data availability and obtains the same level of security as Layer 1.
+//!
+//! The Ethereum Layer 2 protocols related to ZK Rollup are: [zkSync][zkSync], [aztec][aztec],
+//! etc. Their contract verification modules share a part of the elliptic curve's basic algorithms.
+//! In 2017, Ethereum integrated three basic cryptographic calculation units of the alt
+//! bn128 curve in the form of pre-compiled contracts, which are [EIP196][EIP196]’s ADD and Scalar_MUL
+//! algorithms, and [EIP197][EIP197]’s Pairing algorithm. On top of this, due to the lack of rapid
+//! upgrade capabilities of Ethereum, the community can only encapsulate some  tool libraries
+//! through costly Solidity contracts. On top of these basic contract  libraries, many DApps can combine
+//! ZK Rollup technology to achieve some innovations, such as [loopring][loopring], [gitcoin][gitcoin]
+//! and [uniswap][uniswap] etc. However, in the past 3 years, ZK technology has further developed,
+//! such as the more practical [BLS curve][BLS curve], and [PLONK algorithm][PLONK algorithm] etc.
+//! Ethereum has not yet supported it.
+//!
+//!
+//! ## LICENSE
+//!
+//! Apache-2.0
+//!
+//! [book]: https://patractlabs.github.io/megaclite
+//! [zkSync]: https://zksync.io/
+//! [aztec]: https://aztec.network/
+//! [EIP196]: https://github.com/ethereum/EIPs/blob/master/EIPS/eip-196.md
+//! [EIP197]: https://github.com/ethereum/EIPs/blob/master/EIPS/eip-197.md
+//! [gitcoin]: https://gitcoin.co/
+//! [uniswap]: https://uniswap.org/
+//! [loopring]: https://loopring.org/
+//! [BLS curve]: https://electriccoin.co/blog/new-snark-curve/
+//! [PLONK algorithm]: https://eprint.iacr.org/2019/953/20190827:165656
+mod scratch;
 
-use bls12_381::{bls381_add, bls381_pairing, bls381_scalar_mul};
-use core::convert::TryInto;
+pub mod altbn_128;
+pub mod bls12_381;
+pub mod parse;
+pub mod raw_bn_bls;
+pub mod result;
+
 use num_bigint::BigUint;
 use num_traits::Num;
-use zkp_u256::U256;
+use result::{Error::Megaclite, Result};
 
-static SCALAR_FIELD: &'static str =
+static BN256_SCALAR_FIELD: &'static str =
     "21888242871839275222246405745257275088548364400416034343698204186575808495617";
 
-fn negate_y_u256(y: U256) -> U256 {
-    let q = U256::from_decimal_str(
-        "21888242871839275222246405745257275088696311157297823662689037894645226208583",
-    )
-    .expect("Wrong U256");
+static BN256_PRIME_FIELD: &'static str =
+    "21888242871839275222246405745257275088696311157297823662689037894645226208583";
+
+static BLS381_SCALAR_FIELD: &'static str =
+    "52435875175126190479447740508185965837690552500527637822603658699938581184513";
+
+static BLS381_PRIME_FIELD: &'static str =
+    "4002409555221667393417789825735904156556882819939007885332058136124031650490837864442687629129015664037894272559787";
+
+fn negate_y_based_curve(y: BigUint, prime_field: &'static str) -> Result<BigUint> {
+    let q = BigUint::from_str_radix(prime_field, 10)?;
     let q_clone = q.clone();
-    q - y % q_clone
+    Ok(q - y % q_clone)
 }
 
-fn negate(y: BigUint) -> BigUint {
-    let q = BigUint::from_str_radix(
-        "21888242871839275222246405745257275088696311157297823662689037894645226208583",
-        10,
-    )
-    .expect("Wrong BigInt");
-    let q_clone = q.clone();
-    q - y % q_clone
-}
-
-fn negate_y_slice(y: &[u8]) -> Vec<u8> {
+fn negate_y(y: &[u8]) -> Result<Vec<u8>> {
     let negate_y = BigUint::from_bytes_be(y);
-    negate(negate_y).to_bytes_be()
-}
-
-pub fn verify_proof(
-    vk_gammaABC: &[&[u8]],
-    vk: &[u8],
-    proof: &[u8],
-    public_inputs: &[&[u8]],
-) -> Result<bool, &'static str> {
-    if (public_inputs.len() + 1) != vk_gammaABC.len() {
-        return Err("verifying key was malformed.");
-    }
-
-    // First two fields are used as the sum
-    let mut acc: [u8; 96] = if vk_gammaABC[0].len() != 96 {
-        return Err("vk_gammaABC first element length isn't 96,Invalid length!");
-    } else {
-        vk_gammaABC[0].try_into().unwrap()
+    let neg_y = match y.len() {
+        32 => negate_y_based_curve(negate_y, BN256_PRIME_FIELD)?.to_bytes_be(),
+        48 => negate_y_based_curve(negate_y, BLS381_PRIME_FIELD)?.to_bytes_be(),
+        _ => return Err(Megaclite("Invalid y coordinate length!".to_string())),
     };
-
-    // Compute the linear combination vk_x
-    //  [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
-    // acc = sigma(i:0~l)* [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
-    for (i, b) in public_inputs.iter().zip(vk_gammaABC.iter().skip(1)) {
-        if BigUint::from_bytes_be(i) < BigUint::from_str_radix(SCALAR_FIELD, 10).expect("wrong ") {
-            return Err("Invalid public input!");
-        }
-        let mut mul = Vec::new();
-        mul.extend_from_slice(b);
-        mul.extend_from_slice(i);
-
-        let mul_ic = bls381_scalar_mul(&*mul)?;
-
-        let mut acc_mul_ic = Vec::new();
-        acc_mul_ic.extend_from_slice(&acc);
-        acc_mul_ic.extend_from_slice(&mul_ic);
-
-        acc = bls381_add(&*acc_mul_ic)?;
-    }
-
-    // The original verification equation is:
-    // A * B = alpha * beta + acc * gamma + C * delta
-    // ... however, we rearrange it so that it is:
-    // A * B - acc * gamma - C * delta = alpha * beta
-    // or equivalently:
-    // A * B + (-acc) * gamma + (-C) * delta + (-alpha) * beta = 0
-    // which allows us to do a single final exponentiation.
-    let mut input = Vec::new();
-    input.extend_from_slice(&proof[0..96]); // A
-    input.extend_from_slice(&proof[96..96 * 3]); // B
-
-    let negate_acc = negate_y_slice(&acc);
-    input.extend_from_slice(&*negate_acc); // -acc
-    input.extend_from_slice(&vk[0..96 * 2]); // γ
-
-    input.extend_from_slice(&proof[96 * 3..96 * 3 + 48]);
-    let negate_c = negate_y_slice(&proof[96 * 3 + 48..96 * 4]);
-    input.extend_from_slice(&*negate_c); // -C
-    input.extend_from_slice(&vk[96 * 2..96 * 4]); // δ
-
-    input.extend_from_slice(&vk[96 * 4..96 * 4 + 48]);
-    let negate_gamma = negate_y_slice(&vk[96 * 4 + 48..96 * 5]);
-    input.extend_from_slice(&*negate_gamma); // -α
-    input.extend_from_slice(&vk[96 * 5..96 * 7]); // β
-
-    // Return the result of computing the pairing check
-    // e(p1[0], p2[0]) *  .... * e(p1[n], p2[n]) == 1.
-    // For example pairing([P1(), P1().negate()], [P2(), P2()]) should return true.
-    bls381_pairing(&input[..])
+    Ok(neg_y)
 }
-
-#[test]
-fn test_verify_proof() {}

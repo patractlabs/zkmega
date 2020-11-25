@@ -1,112 +1,89 @@
-use bls::{multi_miller_loop, G1Affine, G1Projective, G2Affine, G2Prepared, Gt, Scalar};
-use core::convert::TryFrom;
+use crate::*;
+use crate::{
+    result::Result,
+    scratch::{Bytes, Curve},
+};
+use bellman_ce::pairing::bls12_381::Bls12;
+use core::convert::TryInto;
 
-// Point add on bls12_381 curve, return a point.
-pub fn bls381_add(input: &[u8]) -> Result<[u8; 96], &'static str> {
-    if input.len() != 96 * 2 {
-        return Err("Invalid input length, should be 96*2 length slice(uncompressed)");
-    }
-    let (point1, point2) = input.split_at(96);
+curve! {Bls12, 96, 192}
 
-    let p1 = G1Affine::from_uncompressed(
-        <&[u8; 96]>::try_from(point1).map_err(|_| "point1 slice try_from &[u8;64] fail")?,
-    );
-    let p1: G1Affine = Option::from(p1).ok_or("Invalid a pairing G1Affine")?;
-    let p2 = G1Affine::from_uncompressed(
-        <&[u8; 96]>::try_from(point2).map_err(|_| "point2 slice try_from &[u8;64] fail")?,
-    );
-    let p2: G1Affine = Option::from(p2).ok_or("Invalid a pairing G1Affine")?;
+static BLS: usize = 48;
 
-    let add_res = G1Affine::from(p1 + G1Projective::from(p2));
-    Ok(add_res.to_uncompressed())
-}
-
-// Scalar mul point on bls12_381 curve, return a point.
-pub fn bls381_scalar_mul(input: &[u8]) -> Result<[u8; 96], &'static str> {
-    if input.len() != 96 + 32 {
-        return Err("point or scalar Invalid input length, should be 96(uncompressed point) or 32(scalar) length slice");
-    }
-    let (point, scalar) = input.split_at(96);
-
-    let p = G1Affine::from_uncompressed(
-        <&[u8; 96]>::try_from(point).map_err(|_| "point1 slice try_from &[u8;64] fail")?,
-    );
-    let p: G1Affine = Option::from(p).ok_or("Invalid a pairing G1Affine")?;
-
-    let scalar = Scalar::from_bytes(<&[u8; 32]>::try_from(scalar).unwrap());
-    let scalar: Scalar = Option::from(scalar).ok_or("Invalid a pairing G1Affine")?;
-
-    let mul_res = G1Affine::from(p * scalar);
-    Ok(mul_res.to_uncompressed())
-}
-
-// Return the result of computing the pairing check
-// e(p1[0], p2[0]) *  .... * e(p1[n], p2[n]) == 1.
-// For example pairing([P1(), P1().negate()], [P2(), P2()]) should return true.
-pub fn bls381_pairing(input: &[u8]) -> Result<bool, &'static str> {
-    if input.len() % 288 != 0 {
-        return Err("Invalid input length, must be multiple of 288 (3 * (48*2)) (uncompressed)");
+pub fn bls381_verify_proof(
+    vk_gammaABC: &[&[u8]],
+    vk: &[u8],
+    proof: &[u8],
+    public_inputs: &[&[u8]],
+) -> Result<bool> {
+    if (public_inputs.len() + 1) != vk_gammaABC.len() {
+        return Err(Megaclite("verifying key was malformed.".to_string()));
     }
 
-    let ret_val = if input.is_empty() {
-        Gt::identity()
-    } else {
-        let elements = input.len() / 288;
-        let mut vals = Vec::new();
-        for idx in 0..elements {
-            let a = G1Affine::from_uncompressed(
-                <&[u8; 96]>::try_from(&input[idx * 288..idx * 288 + 96])
-                    .map_err(|_| "point1 slice try_from &[u8;64] fail")?,
-            );
-            let a: G1Affine = Option::from(a).ok_or("Invalid a pairing G1Affine")?;
-            let b = G2Affine::from_uncompressed(
-                <&[u8; 192]>::try_from(&input[idx * 288 + 96..idx * 288 + 288])
-                    .map_err(|_| "point1 slice try_from &[u8;64] fail")?,
-            );
-            let b: G2Affine = Option::from(b).ok_or("Invalid a pairing G1Affine")?;
+    // First two fields are used as the sum
+    let mut acc: [u8; 48 * 2] = vk_gammaABC[0].try_into()?;
 
-            vals.push((a, G2Prepared::from(b)));
+    // Compute the linear combination vk_x
+    //  [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
+    // acc = sigma(i:0~l)* [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
+    for (i, b) in public_inputs.iter().zip(vk_gammaABC.iter().skip(1)) {
+        if BigUint::from_bytes_be(i)
+            >= BigUint::from_str_radix(BLS381_SCALAR_FIELD, 10).expect("wrong ")
+        {
+            return Err(Megaclite("Invalid public input!".to_string()));
         }
+        let mut mul_res = Vec::new();
+        mul_res.extend_from_slice(b);
+        mul_res.extend_from_slice(i);
 
-        multi_miller_loop(
-            &vals
-                .iter()
-                .map(|point| (&point.0, &point.1))
-                .collect::<Vec<_>>(),
-        )
-        .final_exponentiation()
-    };
-    Ok(ret_val == Gt::identity())
-}
+        let mul_ic = mul(&*mul_res)?;
 
-#[test]
-fn test_bls381_add() {
-    use rustc_hex::FromHex;
+        let mut acc_mul_ic = Vec::new();
+        acc_mul_ic.extend_from_slice(&acc);
+        acc_mul_ic.extend_from_slice(&mul_ic);
 
-    // Test identity add.
-    {
-        let a_hex = "400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
-        let a_uncompressed: Vec<u8> = a_hex.from_hex().unwrap();
-
-        let c_uncompressed =
-            bls381_add(a_uncompressed.repeat(2).as_ref()).expect("identity add failed");
-
-        let c = G1Affine::from_uncompressed(&c_uncompressed).unwrap();
-        assert!(bool::from(c.is_identity()));
-        assert!(bool::from(c.is_on_curve()));
+        acc = add(&*acc_mul_ic)?;
     }
-    {
-        let p1_hex = "17f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb08b3f481e3aaa0f1a09e30ed741d8ae4fcf5e095d5d00af600db18cb2c04b3edd03cc744a2888ae40caa232946c5e7e1";
-        let p1_uncompressed: Vec<u8> = p1_hex.from_hex().unwrap();
 
-        let p1_add_p1 = bls381_add(&p1_uncompressed.repeat(2)[..]).expect("add fail:");
+    // The original verification equation is:
+    // A * B = alpha * beta + acc * gamma + C * delta
+    // ... however, we rearrange it so that it is:
+    // A * B - acc * gamma - C * delta = alpha * beta
+    // or equivalently:
+    //    A   *    B    +  (-acc) * gamma +  (-C) * delta  +   (-alpha) * beta = 0
+    // [(g1_x, g1_y0, g2),(g1_x, g1_y0, g2),(g1_x, g1_y0, g2), (g1_x, g1_y0, g2)]
+    let pairings = [
+        (
+            &proof[0..BLS],
+            &proof[BLS..BLS * 2],
+            &proof[BLS * 2..BLS * 6],
+        ),
+        (
+            &acc[0..BLS],
+            &*negate_y(&acc[BLS..BLS * 2])?,
+            &vk[0..BLS * 4],
+        ),
+        (
+            &proof[BLS * 6..BLS * 7],
+            &*negate_y(&proof[BLS * 7..BLS * 8])?,
+            &vk[BLS * 4..BLS * 8],
+        ),
+        (
+            &vk[BLS * 8..BLS * 9],
+            &*negate_y(&vk[BLS * 9..BLS * 10])?,
+            &vk[BLS * 10..BLS * 14],
+        ),
+    ];
 
-        let p2_hex = "0572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62ae28f75bb8f1c7c42c39a8c5529bf0f4e166a9d8cabc673a322fda673779d8e3822ba3ecb8670e461f73bb9021d5fd76a4c56d9d4cd16bd1bba86881979749d28";
-        let p2_uncompressed: Vec<u8> = p2_hex.from_hex().unwrap();
-        assert_eq!(p2_uncompressed, p1_add_p1.to_vec());
-    }
+    let mut input = vec![0u8; BLS * 6 * 4];
+    pairings.iter().enumerate().for_each(|(i, (x, y, g2))| {
+        input[6 * i * BLS..(6 * i + 1) * BLS].copy_from_slice(x);
+        input[(6 * i + 1) * BLS..(6 * i + 2) * BLS].copy_from_slice(y);
+        input[(6 * i + 2) * BLS..(6 * i + 6) * BLS].copy_from_slice(g2);
+    });
+
+    // Return the result of computing the pairing check
+    // e(p1[0], p2[0]) *  .... * e(p1[n], p2[n]) == 1.
+    // For example pairing([P1(), P1().negate()], [P2(), P2()]) should return true.
+    pairing(&input[..])
 }
-#[test]
-fn test_bls381_mul() {}
-#[test]
-fn test_bls381_pairing() {}

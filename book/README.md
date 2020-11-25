@@ -1,9 +1,8 @@
 # Megaclite
 
-Megaclite is a zero-knowledge proof tool set building for the Polkadot ecology. 
+[Megaclite][book] is a zero-knowledge proof tool set building for the Polkadot ecology. 
 
-+ [The Megaclite Book](https://patractlabs.github.io/megaclite/)
-+ [Curves](https://patractlabs.github.io/megaclite/curves)
++ [Pairing](https://patractlabs.github.io/megaclite/pairing)
 + [Pallet Contracts](https://patractlabs.github.io/megaclite/pallet-contracts)
 + [Metis](https://patractlabs.github.io/megaclite/metis)
 
@@ -39,7 +38,7 @@ Ethereum has not yet supported it.
 
 Apache-2.0
 
-
+[book]: https://patractlabs.github.io/megaclite
 [zkSync]: https://zksync.io/
 [aztec]: https://aztec.network/
 [EIP196]: https://github.com/ethereum/EIPs/blob/master/EIPS/eip-196.md

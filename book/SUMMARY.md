@@ -4,7 +4,7 @@
 
 ---
 
-- [Curves](./curves.md)
+- [Pairing](./pairing.md)
 - [Pallet Contracts](./pallet-contracts.md)
 - [Metis](./metis.md)
 
