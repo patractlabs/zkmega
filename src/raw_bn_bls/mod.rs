@@ -52,15 +52,16 @@ pub fn verify_proof<'a, C: Curve<'a>>(
     // acc = sigma(i:0~l)* [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
     for (i, b) in public_inputs.iter().zip(vk_gammaABC.iter().skip(1)) {
         input_require_on_curve::<C>(i)?;
-        let mut mul = Vec::new();
-        mul.extend_from_slice(b);
-        mul.extend_from_slice(i);
 
-        let mul_ic = C::point_scalar_mul(&*mul)?;
+        let mut mul_res = vec![0u8; len * 2 + 32];
+        mul_res[0..len * 2].copy_from_slice(b);
+        mul_res[len * 2..len * 2 + 32].copy_from_slice(i);
 
-        let mut acc_mul_ic = Vec::new();
-        acc_mul_ic.extend_from_slice(acc.as_ref());
-        acc_mul_ic.extend_from_slice(mul_ic.as_ref());
+        let mul_ic = C::point_scalar_mul(&mul_res)?;
+
+        let mut acc_mul_ic = vec![0u8; len * 4];
+        acc_mul_ic[0..len * 2].copy_from_slice(acc.as_ref());
+        acc_mul_ic[len * 2..len * 4].copy_from_slice(mul_ic.as_ref());
 
         acc = C::point_add(&*acc_mul_ic)?;
     }
