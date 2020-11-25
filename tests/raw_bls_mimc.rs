@@ -294,21 +294,3 @@ fn test_mimc() {
         println!("verifying time: {:?} seconds", verifying_avg);
     }
 }
-
-// /// Write the proof to the bytes
-// pub fn proof_write(proof: &mut Proof<Bls12>, proof_encode:&mut Vec<u8>){
-//     proof_encode[0..48*2].copy_from_slice(proof.a.into_uncompressed().as_ref());
-//     proof_encode[48*2..48*6].copy_from_slice(proof.b.into_uncompressed().as_ref());
-//     proof_encode[48*6..48*8].copy_from_slice(proof.c.into_uncompressed().as_ref());
-//     println!("proof : {:?}", proof_encode);
-//     println!("proof_encode: {:?}", proof_encode.len());
-// }
-//
-// /// Write the verify key to the bytes
-// pub fn vk_write(vk_encode:&mut Vec<u8>,params:&Parameters<Bls12>){
-//     vk_encode[0..48*4].copy_from_slice(params.vk.gamma_g2.into_uncompressed().as_ref());
-//     vk_encode[48*4..48*8].copy_from_slice(params.vk.delta_g2.into_uncompressed().as_ref());
-//     vk_encode[48*8..48*10].copy_from_slice(params.vk.alpha_g1.into_uncompressed().as_ref());
-//     vk_encode[48*10..48*14].copy_from_slice(params.vk.beta_g2.into_uncompressed().as_ref());
-//     println!("vk.ic : {:?}", vk_encode.len());
-// }

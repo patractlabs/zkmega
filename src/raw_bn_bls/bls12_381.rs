@@ -105,7 +105,7 @@ fn test_bls381_add() {
         let a_uncompressed: Vec<u8> = a_hex.from_hex().unwrap();
 
         let c_uncompressed =
-            bls381_add(a_uncompressed.repeat(2).as_ref()).expect("identity add failed");
+            Bls381::point_add(a_uncompressed.repeat(2).as_ref()).expect("identity add failed");
 
         let c = G1Affine::from_uncompressed(&c_uncompressed).unwrap();
         assert!(bool::from(c.is_identity()));
@@ -118,7 +118,7 @@ fn test_bls381_add() {
                              00db18cb2c04b3edd03cc744a2888ae40caa232946c5e7e1";
         let p1_uncompressed: Vec<u8> = p1_hex.from_hex().unwrap();
 
-        let p1_add_p1 = bls381_add(&p1_uncompressed.repeat(2)[..]).expect("add fail:");
+        let p1_add_p1 = Bls381::point_add(&p1_uncompressed.repeat(2)[..]).expect("add fail:");
 
         let p2_hex = "0572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62ae28f75bb8f1c7c42c39a8c5529bf0f4e166a9d8cabc673a322fda673779d8e3822ba3ecb8670e461f73bb9021d5fd76a4c56d9d4cd16bd1bba86881979749d28";
         let p2_uncompressed: Vec<u8> = p2_hex.from_hex().unwrap();
@@ -128,7 +128,6 @@ fn test_bls381_add() {
 
 #[test]
 fn test_bls381_mul() {
-    use group::GroupEncoding;
     let g = G1Affine::generator();
 
     let a = Scalar::from_raw([
@@ -154,7 +153,7 @@ fn test_bls381_mul() {
     // (a·G)·b = (a * b)·G = c·G
     assert_eq!(
         G1Affine::from(G1Affine::from(g * a) * b).to_uncompressed(),
-        bls381_scalar_mul(&input).unwrap()
+        Bls381::point_scalar_mul(&input).unwrap()
     );
     assert_eq!(G1Affine::from(g * a) * b, g * c);
 }
@@ -191,6 +190,7 @@ fn test_bls381_pairing() {
     let expected = pairing(&a1, &b1) + pairing(&a2, &b2) + pairing(&a3, &b3) + pairing(&a4, &b4);
 
     let pairings = [(a1, b1), (a2, b2), (a3, b3), (a4, b4)];
+
     let mut input = [0u8; 288 * 4];
     pairings.iter().enumerate().for_each(|(i, (a, b))| {
         input[96 * (3 * i)..96 * (3 * i + 1)].copy_from_slice(&a.to_uncompressed());
@@ -200,5 +200,5 @@ fn test_bls381_pairing() {
     // e(a1*b1) + e(a2*b2) + e(-a1*b1) + e(-a2*b2) = 1
     assert_eq!(Gt::identity(), expected);
     // check e(a1*b1) + e(a2*b2) + e(-a1*b1) + e(-a2*b2) == 1 return true
-    assert!(bls381_pairing(&input[..]).unwrap_or(false));
+    assert!(Bls381::point_pairing(&input[..]).unwrap_or(false));
 }
