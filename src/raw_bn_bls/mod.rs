@@ -110,7 +110,7 @@ fn negate_y<'a, E: Curve<'a>>(y: &[u8]) -> Result<Vec<u8>, &'static str> {
     let negate_y = BigUint::from_bytes_be(y);
     let neg_y = match y.len() {
         32 => negate_y_based_curve(negate_y, E::PRIME_FIELD).to_bytes_be(),
-        48 => negate_y_based_curve(negate_y, E::PRIME_FIEL).to_bytes_be(),
+        48 => negate_y_based_curve(negate_y, E::PRIME_FIELD).to_bytes_be(),
         _ => return Err("Invalid y coordinate length!"),
     };
     // Because of randomness, Negate_y vector might not satisfy 32 or 48 bytes.
