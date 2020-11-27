@@ -268,7 +268,7 @@ fn test_mimc() {
             println!("{:?}", input[0].len());
 
             /// test verify_proof on the AltBn128 curve.
-            assert!(verify_proof::<AltBn128>(
+            assert!(verify_proof::<Bn256>(
                 &*vk_ic,
                 &*vk_encode,
                 &*proof_encode,

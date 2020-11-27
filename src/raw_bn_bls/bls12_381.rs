@@ -1,10 +1,9 @@
 use super::Curve;
+use bellman_ce::pairing::bls12_381::Bls12;
 use bls::{multi_miller_loop, G1Affine, G1Projective, G2Affine, G2Prepared, Gt, Scalar};
 use core::convert::TryFrom;
 
-pub struct Bls381;
-
-impl<'a> Curve<'a> for Bls381 {
+impl<'a> Curve<'a> for Bls12 {
     // curve parameters
     const SCALAR_FIELD: &'static str =
         "52435875175126190479447740508185965837690552500527637822603658699938581184513";

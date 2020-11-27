@@ -1,11 +1,10 @@
 use super::Curve;
+use bellman_ce::pairing::bn256::Bn256;
 use bn::arith::U256;
 use bn::{pairing_batch, AffineG1, AffineG2, Fq, Fq2, Group, Gt, G1, G2};
 use std::io::{self, Read};
 
-pub struct AltBn128;
-
-impl<'a> Curve<'a> for AltBn128 {
+impl<'a> Curve<'a> for Bn256 {
     // curve parameters
     const SCALAR_FIELD: &'static str =
         "21888242871839275222246405745257275088548364400416034343698204186575808495617";

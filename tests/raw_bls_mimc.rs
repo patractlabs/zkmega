@@ -268,7 +268,7 @@ fn test_mimc() {
             println!("{:?}", input[0].len());
 
             /// test verify_proof on the Bls12_381 curve.
-            assert!(verify_proof::<Bls381>(
+            assert!(verify_proof::<Bls12>(
                 &*vk_ic,
                 &*vk_encode,
                 &*proof_encode,

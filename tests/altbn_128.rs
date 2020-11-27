@@ -407,7 +407,7 @@ fn test_mimc() {
             // input encode
             let mut input = vec![[0u8; 32]; input_vec.len()];
             input_vec.iter().enumerate().for_each(|(i, scalar)| {
-                scalar.into_repr().write_be(&mut input[i][..]);
+                scalar.into_repr().write_be(&mut input[i][..]).unwrap();
             });
             let public_input = &input.iter().map(|x| &x[..]).collect::<Vec<_>>();
             println!("{:?}", input);
@@ -418,7 +418,7 @@ fn test_mimc() {
                 &*vk_ic, &*vk_encode,
                 &*proof_encode, public_input)
                     .expect("verify_proof fail"),
-            false);
+            true);
         }
 
         // Check the proof
