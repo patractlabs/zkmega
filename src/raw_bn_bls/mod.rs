@@ -5,23 +5,14 @@ use num_bigint::BigUint;
 use num_traits::Num;
 use std::convert::TryFrom;
 
-static BN256_SCALAR_FIELD: &'static str =
-    "21888242871839275222246405745257275088548364400416034343698204186575808495617";
-static BN256_PRIME_FIELD: &'static str =
-    "21888242871839275222246405745257275088696311157297823662689037894645226208583";
-
-static BLS381_SCALAR_FIELD: &'static str =
-    "52435875175126190479447740508185965837690552500527637822603658699938581184513";
-static BLS381_PRIME_FIELD: &'static str =
-    "4002409555221667393417789825735904156556882819939007885332058136124031650490837864442687629129015664037894272559787";
-
 pub trait Curve<'a> {
+    // curve parameters
+    const SCALAR_FIELD: &'static str;
+    const PRIME_FIELD: &'static str;
+    // Fq bytes length of different curves.
+    const FQ_BYTES_LENGTH: usize;
     // Byte array of input elliptic curve points.
     type Point: AsRef<[u8]> + TryFrom<&'a [u8]>;
-
-    // Fq bytes length of different curves.
-    fn fq_bytes_length() -> usize;
-
     // Add two points on an elliptic curve.
     fn point_add(input: &[u8]) -> Result<Self::Point, &'static str>;
 
@@ -38,7 +29,7 @@ pub fn verify_proof<'a, C: Curve<'a>>(
     proof: &[u8],
     public_inputs: &[&[u8]],
 ) -> Result<bool, &'static str> {
-    let len = C::fq_bytes_length();
+    let len = C::FQ_BYTES_LENGTH;
     if (public_inputs.len() + 1) != vk_gammaABC.len() {
         return Err("verifying key was malformed.");
     }
@@ -81,17 +72,17 @@ pub fn verify_proof<'a, C: Curve<'a>>(
         ),
         (
             &acc.as_ref()[0..len],
-            &*negate_y(&acc.as_ref()[len..len * 2])?,
+            &*negate_y::<C>(&acc.as_ref()[len..len * 2])?,
             &vk[0..len * 4],
         ),
         (
             &proof[len * 6..len * 7],
-            &*negate_y(&proof[len * 7..len * 8])?,
+            &*negate_y::<C>(&proof[len * 7..len * 8])?,
             &vk[len * 4..len * 8],
         ),
         (
             &vk[len * 8..len * 9],
-            &*negate_y(&vk[len * 9..len * 10])?,
+            &*negate_y::<C>(&vk[len * 9..len * 10])?,
             &vk[len * 10..len * 14],
         ),
     ];
@@ -115,11 +106,11 @@ fn negate_y_based_curve(y: BigUint, prime_field: &'static str) -> BigUint {
     q - y % q_clone
 }
 
-fn negate_y(y: &[u8]) -> Result<Vec<u8>, &'static str> {
+fn negate_y<'a, E: Curve<'a>>(y: &[u8]) -> Result<Vec<u8>, &'static str> {
     let negate_y = BigUint::from_bytes_be(y);
     let neg_y = match y.len() {
-        32 => negate_y_based_curve(negate_y, BN256_PRIME_FIELD).to_bytes_be(),
-        48 => negate_y_based_curve(negate_y, BLS381_PRIME_FIELD).to_bytes_be(),
+        32 => negate_y_based_curve(negate_y, E::PRIME_FIELD).to_bytes_be(),
+        48 => negate_y_based_curve(negate_y, E::PRIME_FIEL).to_bytes_be(),
         _ => return Err("Invalid y coordinate length!"),
     };
     // Because of randomness, Negate_y vector might not satisfy 32 or 48 bytes.
@@ -133,10 +124,10 @@ fn negate_y(y: &[u8]) -> Result<Vec<u8>, &'static str> {
 }
 
 fn input_require_on_curve<'a, E: Curve<'a>>(input: &[u8]) -> Result<(), &'static str> {
-    match E::fq_bytes_length() {
+    match E::FQ_BYTES_LENGTH {
         32 => {
             if BigUint::from_bytes_be(input)
-                >= BigUint::from_str_radix(BN256_SCALAR_FIELD, 10)
+                >= BigUint::from_str_radix(E::SCALAR_FIELD, 10)
                     .map_err(|_| "Parse BigUint wrong ")?
             {
                 return Err("Invalid public input!");
@@ -144,7 +135,7 @@ fn input_require_on_curve<'a, E: Curve<'a>>(input: &[u8]) -> Result<(), &'static
         }
         48 => {
             if BigUint::from_bytes_le(input)
-                >= BigUint::from_str_radix(BLS381_SCALAR_FIELD, 10)
+                >= BigUint::from_str_radix(E::SCALAR_FIELD, 10)
                     .map_err(|_| "Parse BigUint wrong ")?
             {
                 return Err("Invalid public input!");

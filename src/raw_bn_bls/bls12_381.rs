@@ -5,10 +5,14 @@ use core::convert::TryFrom;
 pub struct Bls381;
 
 impl<'a> Curve<'a> for Bls381 {
+    // curve parameters
+    const SCALAR_FIELD: &'static str =
+        "52435875175126190479447740508185965837690552500527637822603658699938581184513";
+    const PRIME_FIELD: &'static str =
+        "4002409555221667393417789825735904156556882819939007885332058136124031650490837864442687629129015664037894272559787";
+    const FQ_BYTES_LENGTH: usize = 48;
+
     type Point = [u8; 96];
-    fn fq_bytes_length() -> usize {
-        48
-    }
 
     // Point add on bls12_381 curve, return a point.
     fn point_add(input: &[u8]) -> Result<Self::Point, &'static str> {

@@ -3,7 +3,11 @@ use crate::{
     result::Result,
     scratch::{Bytes, Curve},
 };
-use bellman_ce::pairing::bn256::Bn256;
+use bellman_ce::pairing::{
+    bn256::{Bn256, Fr, G1},
+    ff::{PrimeField, PrimeFieldRepr},
+    CurveAffine, CurveProjective,
+};
 use core::convert::TryInto;
 use num_bigint::BigUint;
 use num_traits::Num;
@@ -79,4 +83,21 @@ pub fn bn256_verify_proof(
     // e(p1[0], p2[0]) *  .... * e(p1[n], p2[n]) == 1.
     // For example pairing([P1(), P1().negate()], [P2(), P2()]) should return true.
     pairing(&input[..])
+}
+
+#[test]
+fn test_base_point_addition_and_doubling() {
+    let mut a = G1::one().into_affine().into_uncompressed();
+    let mut b = G1::zero().into_affine().into_uncompressed();
+    let mut input = [0u8; 128];
+    input[0..64].copy_from_slice(a.as_ref());
+    input[64..].copy_from_slice(b.as_ref());
+
+    let scalar = Fr::from_str("2").unwrap();
+    let mut input2 = [0u8; 96];
+    input2[0..64].copy_from_slice(a.as_ref());
+    scalar.into_repr().write_be(&mut input2[64..]);
+
+    assert_eq!(a.as_ref(), add(&input).unwrap().as_ref());
+    // assert_eq!(mul(&input2).unwrap(), add(&input).unwrap());
 }
