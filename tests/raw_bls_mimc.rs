@@ -12,7 +12,7 @@ use bellman_ce::{
 };
 use megaclite::{
     parse::{proof_write, vk_write},
-    raw_bn_bls::{bls12_381::Bls381, verify_proof},
+    raw_bn_bls::verify_proof,
 };
 use rand::{thread_rng, Rng};
 use std::time::Instant;

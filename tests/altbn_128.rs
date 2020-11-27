@@ -418,7 +418,7 @@ fn test_mimc() {
                 &*vk_ic, &*vk_encode,
                 &*proof_encode, public_input)
                     .expect("verify_proof fail"),
-            true);
+            false);
         }
 
         // Check the proof

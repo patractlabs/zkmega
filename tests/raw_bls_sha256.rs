@@ -14,7 +14,7 @@ use crypto::digest::Digest;
 use crypto::sha2::Sha256;
 use megaclite::{
     parse::{proof_write, vk_write},
-    raw_bn_bls::{bls12_381::Bls381, verify_proof},
+    raw_bn_bls::verify_proof,
 };
 use rand::thread_rng;
 use rand::{Rng, SeedableRng, XorShiftRng};

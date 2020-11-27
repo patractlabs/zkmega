@@ -167,7 +167,7 @@ fn test_alt_bn128_add() {
 
         assert_eq!(
             &expected[..],
-            AltBn128::point_add(&input[..]).expect("Builtin should not fail")
+            Bn256::point_add(&input[..]).expect("Builtin should not fail")
         );
     }
 
@@ -182,7 +182,7 @@ fn test_alt_bn128_add() {
 
         assert_eq!(
             &expected[..],
-            AltBn128::point_add(&input[..]).expect("Builtin should not fail")
+            Bn256::point_add(&input[..]).expect("Builtin should not fail")
         );
     }
 
@@ -196,7 +196,7 @@ fn test_alt_bn128_add() {
 				1111111111111111111111111111111111111111111111111111111111111111"
         );
 
-        let res = AltBn128::point_add(&input[..]);
+        let res = Bn256::point_add(&input[..]);
         assert!(res.is_err(), "There should be built-in error here");
         println!("test add success!");
     }
@@ -221,7 +221,7 @@ fn test_alt_bn128_mul() {
 
         assert_eq!(
             &expected[..],
-            AltBn128::point_scalar_mul(&input[..]).expect("Builtin should not fail")
+            Bn256::point_scalar_mul(&input[..]).expect("Builtin should not fail")
         );
     }
 
@@ -234,7 +234,7 @@ fn test_alt_bn128_mul() {
 				0f00000000000000000000000000000000000000000000000000000000000000"
         );
 
-        let res = AltBn128::point_scalar_mul(&input[..]);
+        let res = Bn256::point_scalar_mul(&input[..]);
         assert!(res.is_err(), "There should be built-in error here");
     }
 }
