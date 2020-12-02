@@ -1,4 +1,4 @@
-use super::{all_curve_three_operations_test, test_pairings, CurveBasicOperations};
+use super::{test_pairings, CurveBasicOperations};
 use ark_bls12_377::Bls12_377;
 
 impl CurveBasicOperations for Bls12_377 {

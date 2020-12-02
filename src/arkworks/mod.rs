@@ -9,7 +9,7 @@ use ark_ff::{test_rng, FromBytes, One, PrimeField, ToBytes, UniformRand, Zero};
 use ark_serialize::SerializationError;
 use ark_std::{
     io::{Error, ErrorKind},
-    ops::{Mul, MulAssign, Neg},
+    ops::{MulAssign, Neg},
     str::FromStr,
     vec::Vec,
 };
@@ -101,6 +101,7 @@ type G1Projective<T> = <T as PairingEngine>::G1Projective;
 type G2Projective<T> = <T as PairingEngine>::G2Projective;
 type Fr<T> = <T as PairingEngine>::Fr;
 
+/// Test operations for all curves
 pub fn all_curve_three_operations_test<T>()
 where
     T: CurveBasicOperations + PairingEngine,
@@ -242,7 +243,8 @@ where
     }
 }
 
-fn test_pairings<T>()
+/// Test pairing for Curve `T`
+pub fn test_pairings<T>()
 where
     T: PairingEngine + CurveBasicOperations,
 {

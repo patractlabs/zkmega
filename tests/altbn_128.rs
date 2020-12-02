@@ -399,7 +399,10 @@ fn test_mimc() {
             vk_write(&mut vk_encode, &params);
 
             // vk_ic encode
-            let vk_not_prepared = params.vk.ic.iter()
+            let vk_not_prepared = params
+                .vk
+                .ic
+                .iter()
                 .map(|ic| ic.into_uncompressed().as_ref().to_vec())
                 .collect::<Vec<_>>();
             let vk_ic = vk_not_prepared.iter().map(|ic| &ic[..]).collect::<Vec<_>>();
@@ -414,11 +417,11 @@ fn test_mimc() {
             println!("{:?}", input[0].len());
 
             // TODO: There is an error that needs to be fixed
-            assert_eq!(bn256_verify_proof(
-                &*vk_ic, &*vk_encode,
-                &*proof_encode, public_input)
+            assert_eq!(
+                bn256_verify_proof(&*vk_ic, &*vk_encode, &*proof_encode, public_input)
                     .expect("verify_proof fail"),
-            false);
+                false
+            );
         }
 
         // Check the proof

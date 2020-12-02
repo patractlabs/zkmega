@@ -109,19 +109,28 @@ fn eval_sha256(num_bytes: usize) {
         vk_write(&mut vk_encode, &params);
 
         // vk_ic encode
-        let vk_not_prepared = params.vk.ic.iter().map(|ic| ic.into_uncompressed().as_ref().to_vec()).collect::<Vec<_>>();
+        let vk_not_prepared = params
+            .vk
+            .ic
+            .iter()
+            .map(|ic| ic.into_uncompressed().as_ref().to_vec())
+            .collect::<Vec<_>>();
         let vk_ic = vk_not_prepared.iter().map(|ic| &ic[..]).collect::<Vec<_>>();
 
         // input encode
         let mut input = vec![[0u8; 32]; inputs.len()];
-        inputs.iter().enumerate().for_each(|(i, scalar)| scalar.into_repr().write_le(&mut input[i][..]).unwrap());
+        inputs
+            .iter()
+            .enumerate()
+            .for_each(|(i, scalar)| scalar.into_repr().write_le(&mut input[i][..]).unwrap());
 
         assert!(verify_proof::<Bls12>(
             &*vk_ic,
             &*vk_encode,
             &*proof_encode,
-            &input.iter().map(|x| &x[..]).collect::<Vec<_>>())
-            .expect("verify_proof fail"));
+            &input.iter().map(|x| &x[..]).collect::<Vec<_>>()
+        )
+        .expect("verify_proof fail"));
     }
 
     /// Using bellman_ce verify_proof to check the proof

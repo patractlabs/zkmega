@@ -257,24 +257,29 @@ fn test_mimc() {
             vk_write(&mut vk_encode, &params);
 
             // vk_ic encode
-            let vk_not_prepared = params.vk.ic.iter().map(|ic| ic.into_uncompressed().as_ref().to_vec()).collect::<Vec<_>>();
+            let vk_not_prepared = params
+                .vk
+                .ic
+                .iter()
+                .map(|ic| ic.into_uncompressed().as_ref().to_vec())
+                .collect::<Vec<_>>();
             let vk_ic = vk_not_prepared.iter().map(|ic| &ic[..]).collect::<Vec<_>>();
 
             // input encode
             let mut input = vec![[0u8; 32]; input_vec.len()];
-            input_vec.iter().enumerate().for_each(|(i, scalar)| { scalar.into_repr().write_be(&mut input[i][..]); });
+            input_vec.iter().enumerate().for_each(|(i, scalar)| {
+                scalar.into_repr().write_be(&mut input[i][..]);
+            });
             let public_input = &input.iter().map(|x| &x[..]).collect::<Vec<_>>();
             println!("{:?}", input);
             println!("{:?}", input[0].len());
 
             let start = Instant::now();
             /// test verify_proof on the AltBn128 curve.
-            assert!(verify_proof::<Bn256>(
-                &*vk_ic,
-                &*vk_encode,
-                &*proof_encode,
-                public_input)
-                .expect("verify_proof fail"));
+            assert!(
+                verify_proof::<Bn256>(&*vk_ic, &*vk_encode, &*proof_encode, public_input)
+                    .expect("verify_proof fail")
+            );
             let total_verifying = start.elapsed();
             println!("verify_proof: {:?} seconds", total_verifying);
         }

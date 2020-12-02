@@ -1,4 +1,4 @@
-use super::{all_curve_three_operations_test, CurveBasicOperations};
+use super::{test_pairings, CurveBasicOperations};
 use ark_bw6_761::BW6_761;
 
 impl CurveBasicOperations for BW6_761 {
@@ -9,5 +9,5 @@ impl CurveBasicOperations for BW6_761 {
 
 #[test]
 fn test_bw6_761() {
-    all_curve_three_operations_test::<BW6_761>();
+    test_pairings::<BW6_761>();
 }

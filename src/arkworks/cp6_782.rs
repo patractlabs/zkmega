@@ -1,4 +1,4 @@
-use super::{all_curve_three_operations_test, CurveBasicOperations};
+use super::{test_pairings, CurveBasicOperations};
 use ark_cp6_782::CP6_782;
 
 impl CurveBasicOperations for CP6_782 {
@@ -9,5 +9,5 @@ impl CurveBasicOperations for CP6_782 {
 
 #[test]
 fn test_cp6_782() {
-    all_curve_three_operations_test::<CP6_782>();
+    test_pairings::<CP6_782>();
 }
