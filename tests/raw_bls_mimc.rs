@@ -1,3 +1,4 @@
+#![cfg(features = "std")]
 use bellman_ce::{
     groth16::{
         create_random_proof, generate_random_parameters, prepare_verifying_key,

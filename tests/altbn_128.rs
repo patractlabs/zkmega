@@ -1,3 +1,4 @@
+#![cfg(features = "std")]
 // #[test]
 // fn test_add() {
 //     // use pairing_ce::{
