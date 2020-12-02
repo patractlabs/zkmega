@@ -48,60 +48,61 @@
 //! [loopring]: https://loopring.org/
 //! [BLS curve]: https://electriccoin.co/blog/new-snark-curve/
 //! [PLONK algorithm]: https://eprint.iacr.org/2019/953/20190827:165656
+#![no_std]
 pub mod arkworks;
 
-#[cfg(features = "std")]
-pub mod altbn_128;
-#[cfg(features = "std")]
-pub mod bls12_381;
-#[cfg(features = "std")]
-pub mod parse;
-#[cfg(features = "std")]
-pub mod raw_bn_bls;
-#[cfg(features = "std")]
-pub mod result;
-#[cfg(features = "std")]
-mod scratch;
-#[cfg(features = "std")]
-use num_bigint::BigUint;
-#[cfg(features = "std")]
-use num_traits::Num;
-#[cfg(features = "std")]
-use result::{Error::Megaclite, Result};
+// #[cfg(features = "std")]
+// pub mod altbn_128;
+// #[cfg(features = "std")]
+// pub mod bls12_381;
+// #[cfg(features = "std")]
+// pub mod parse;
+// #[cfg(features = "std")]
+// pub mod raw_bn_bls;
+// #[cfg(features = "std")]
+// pub mod result;
+// #[cfg(features = "std")]
+// mod scratch;
+// #[cfg(features = "std")]
+// use num_bigint::BigUint;
+// #[cfg(features = "std")]
+// use num_traits::Num;
+// #[cfg(features = "std")]
+// use result::{Error::Megaclite, Result};
 
-static BN256_SCALAR_FIELD: &'static str =
-    "21888242871839275222246405745257275088548364400416034343698204186575808495617";
-
-static BN256_PRIME_FIELD: &'static str =
-    "21888242871839275222246405745257275088696311157297823662689037894645226208583";
-
-static BLS381_SCALAR_FIELD: &'static str =
-    "52435875175126190479447740508185965837690552500527637822603658699938581184513";
-
-static BLS381_PRIME_FIELD: &'static str =
-    "4002409555221667393417789825735904156556882819939007885332058136124031650490837864442687629129015664037894272559787";
-
-#[cfg(features = "std")]
-fn negate_y_based_curve(y: BigUint, prime_field: &'static str) -> Result<BigUint> {
-    let q = BigUint::from_str_radix(prime_field, 10)?;
-    let q_clone = q.clone();
-    Ok(q - y % q_clone)
-}
-
-#[cfg(features = "std")]
-fn negate_y(y: &[u8]) -> Result<Vec<u8>> {
-    let negate_y = BigUint::from_bytes_be(y);
-    let neg_y = match y.len() {
-        32 => negate_y_based_curve(negate_y, BN256_PRIME_FIELD)?.to_bytes_be(),
-        48 => negate_y_based_curve(negate_y, BLS381_PRIME_FIELD)?.to_bytes_be(),
-        _ => return Err(Megaclite("Invalid y coordinate length!".to_string())),
-    };
-    // Because of randomness, Negate_y vector might not satisfy 32 or 48 bytes.
-    let mut neg_y_fill_with_zero = vec![0u8; y.len()];
-    if neg_y.len() != y.len() {
-        neg_y_fill_with_zero[y.len() - neg_y.len()..y.len()].copy_from_slice(&*neg_y);
-    } else {
-        neg_y_fill_with_zero[0..y.len()].copy_from_slice(&*neg_y);
-    }
-    Ok(neg_y_fill_with_zero)
-}
+// static BN256_SCALAR_FIELD: &'static str =
+//     "21888242871839275222246405745257275088548364400416034343698204186575808495617";
+//
+// static BN256_PRIME_FIELD: &'static str =
+//     "21888242871839275222246405745257275088696311157297823662689037894645226208583";
+//
+// static BLS381_SCALAR_FIELD: &'static str =
+//     "52435875175126190479447740508185965837690552500527637822603658699938581184513";
+//
+// static BLS381_PRIME_FIELD: &'static str =
+//     "4002409555221667393417789825735904156556882819939007885332058136124031650490837864442687629129015664037894272559787";
+//
+// #[cfg(features = "std")]
+// fn negate_y_based_curve(y: BigUint, prime_field: &'static str) -> Result<BigUint> {
+//     let q = BigUint::from_str_radix(prime_field, 10)?;
+//     let q_clone = q.clone();
+//     Ok(q - y % q_clone)
+// }
+//
+// #[cfg(features = "std")]
+// fn negate_y(y: &[u8]) -> Result<Vec<u8>> {
+//     let negate_y = BigUint::from_bytes_be(y);
+//     let neg_y = match y.len() {
+//         32 => negate_y_based_curve(negate_y, BN256_PRIME_FIELD)?.to_bytes_be(),
+//         48 => negate_y_based_curve(negate_y, BLS381_PRIME_FIELD)?.to_bytes_be(),
+//         _ => return Err(Megaclite("Invalid y coordinate length!".to_string())),
+//     };
+//     // Because of randomness, Negate_y vector might not satisfy 32 or 48 bytes.
+//     let mut neg_y_fill_with_zero = vec![0u8; y.len()];
+//     if neg_y.len() != y.len() {
+//         neg_y_fill_with_zero[y.len() - neg_y.len()..y.len()].copy_from_slice(&*neg_y);
+//     } else {
+//         neg_y_fill_with_zero[0..y.len()].copy_from_slice(&*neg_y);
+//     }
+//     Ok(neg_y_fill_with_zero)
+// }

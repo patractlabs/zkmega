@@ -1,3 +1,5 @@
+//! Arkworks solution
+
 mod bls12_377;
 mod bls12_381;
 mod bn254;
@@ -16,12 +18,15 @@ use ark_serialize::SerializationError;
 use ark_std::{
     io::{Error, ErrorKind},
     ops::{MulAssign, Neg},
+    result::Result,
     str::FromStr,
     vec::Vec,
 };
 
+// pub type Result<T> = ArkResult<T, Error>;
+
 pub trait CurveBasicOperations: PairingEngine {
-    // G1 bytes length
+    // G1 bytes lengthp
     const G1_LEN: usize;
     // G2 bytes length
     const G2_LEN: usize;
@@ -30,7 +35,7 @@ pub trait CurveBasicOperations: PairingEngine {
 
     fn add(input: &[u8]) -> Result<Vec<u8>, SerializationError> {
         // g1 infinity is bool, so two g1s should be + 2 byte.
-        println!("{}", input.len());
+        // println!("{}", input.len());
         if input.len() != Self::G1_LEN * 2 {
             return Err(Error::new(
                 ErrorKind::Other,
@@ -123,7 +128,7 @@ where
 
         let res = T::add(&input[..]).unwrap();
         assert_eq!(&expected[..], &res[..]);
-        println!("test add1 success!");
+        // println!("test add1 success!");
     }
 
     // one-points additions
@@ -139,7 +144,7 @@ where
         let res1 = T::add(&input1[..]).unwrap();
         let res2 = T::scalar_mul(&input2[..]).unwrap();
         assert_eq!(res1, res2);
-        println!("test add2 success!");
+        // println!("test add2 success!");
     }
 
     // Prime subgroup generator additions check prime subgroup generator * 2(scalar_mul)
@@ -163,9 +168,9 @@ where
 
         // prime_subgroup_generator + prime_subgroup_generator = prime_subgroup_generator * 2
         assert_eq!(res1, res3);
-        println!("test add3 success!");
+        // println!("test add3 success!");
         assert_eq!(res2, res3);
-        println!("test scalar_mul1 success!");
+        // println!("test scalar_mul1 success!");
     }
 
     // test pairings
@@ -186,18 +191,18 @@ where
             // write sa sb to input
             let mut input = Vec::new();
             sa.into_affine().write(&mut input);
-            println!("random g1:{:?}", input.len());
+            // println!("random g1:{:?}", input.len());
             b.into_affine().write(&mut input);
-            println!("random g1:{:?}", input.len());
+            // println!("random g1:{:?}", input.len());
             // a get negative.
             a.into_affine().neg().write(&mut input);
-            println!("random g1:{:?}", input.len());
+            // println!("random g1:{:?}", input.len());
             sb.into_affine().write(&mut input);
-            println!("random g1:{:?}", input.len());
+            // println!("random g1:{:?}", input.len());
 
             // e(sa, b) = e(sb, a)
             assert!(T::pairings(&input[..]).expect("pairings failed"));
-            println!("test pairings{} success!", i + 1);
+            // println!("test pairings{} success!", i + 1);
         }
     }
 
@@ -245,7 +250,7 @@ where
 
         // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
         assert!(T::pairings(&input[..]).unwrap());
-        println!("test pairings e(a1*b1)*e(a2*b2)*e(-a1*b1)*e(-a2*b2) success!");
+        // println!("test pairings e(a1*b1)*e(a2*b2)*e(-a1*b1)*e(-a2*b2) success!");
     }
 }
 
@@ -298,6 +303,6 @@ where
 
         // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
         assert!(T::pairings(&input[..]).unwrap());
-        println!("test pairings e(a1*b1)*e(a2*b2)*e(-a1*b1)*e(-a2*b2) success!");
+        // println!("test pairings e(a1*b1)*e(a2*b2)*e(-a1*b1)*e(-a2*b2) success!");
     }
 }
