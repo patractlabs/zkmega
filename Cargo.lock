@@ -607,7 +607,7 @@ dependencies = [
  "num-bigint 0.3.1",
  "num-traits",
  "pairing_ce 0.24.2",
- "rand 0.7.3",
+ "rand 0.4.6",
  "rust-crypto",
  "rustc-hex",
  "sapling-crypto_ce",

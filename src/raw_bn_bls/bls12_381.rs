@@ -170,10 +170,10 @@ fn test_bls381_pairing() {
     let b1 = G2Affine::generator();
 
     let a2 = G1Affine::from(
-        G1Affine::generator() * Scalar::from_raw([1, 2, 3, 4]).invert().unwrap().square(),
+        G1Affine::generator() * Scalar::from_raw([0, 0, 0, 1234]).invert().unwrap().square(),
     );
     let b2 = G2Affine::from(
-        G2Affine::generator() * Scalar::from_raw([4, 2, 2, 4]).invert().unwrap().square(),
+        G2Affine::generator() * Scalar::from_raw([0, 0, 0, 4224]).invert().unwrap().square(),
     );
 
     // -a3
@@ -182,11 +182,11 @@ fn test_bls381_pairing() {
 
     // -a4
     let a4 = G1Affine::from(
-        G1Affine::generator() * Scalar::from_raw([1, 2, 3, 4]).invert().unwrap().square(),
+        G1Affine::generator() * Scalar::from_raw([0, 0, 0, 1234]).invert().unwrap().square(),
     )
     .neg();
     let b4 = G2Affine::from(
-        G2Affine::generator() * Scalar::from_raw([4, 2, 2, 4]).invert().unwrap().square(),
+        G2Affine::generator() * Scalar::from_raw([0, 0, 0, 4224]).invert().unwrap().square(),
     );
 
     // a1 * b1  + a2 * b2  + -a1 * b1  + -a2 * b2 = 0

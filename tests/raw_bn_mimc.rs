@@ -188,7 +188,7 @@ fn test_mimc() {
     let constants = (0..MIMC_ROUNDS).map(|_| rng.gen()).collect::<Vec<_>>();
 
     // Let's benchmark stuff!
-    const SAMPLES: u32 = 10;
+    const SAMPLES: u32 = 1;
     // Just a place to put the proof data, so we can
     // benchmark deserialization.
     let mut proof_vec = vec![];
@@ -267,6 +267,7 @@ fn test_mimc() {
             println!("{:?}", input);
             println!("{:?}", input[0].len());
 
+            let start = Instant::now();
             /// test verify_proof on the AltBn128 curve.
             assert!(verify_proof::<Bn256>(
                 &*vk_ic,
@@ -274,8 +275,10 @@ fn test_mimc() {
                 &*proof_encode,
                 public_input)
                 .expect("verify_proof fail"));
+            let total_verifying = start.elapsed();
+            println!("verify_proof: {:?} seconds", total_verifying);
         }
-
+        let start = Instant::now();
         /// Using bellman_ce verify_proof to check the proof
         assert!(raw_verify_proof(&pvk, &proof, &input_vec).unwrap());
 
