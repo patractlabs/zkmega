@@ -1,15 +1,18 @@
 use super::Curve;
+use bellman_ce::pairing::bn256::Bn256;
 use bn::arith::U256;
 use bn::{pairing_batch, AffineG1, AffineG2, Fq, Fq2, Group, Gt, G1, G2};
 use std::io::{self, Read};
 
-pub struct AltBn128;
+impl<'a> Curve<'a> for Bn256 {
+    // curve parameters
+    const SCALAR_FIELD: &'static str =
+        "21888242871839275222246405745257275088548364400416034343698204186575808495617";
+    const PRIME_FIELD: &'static str =
+        "21888242871839275222246405745257275088696311157297823662689037894645226208583";
+    const FQ_BYTES_LENGTH: usize = 32;
 
-impl<'a> Curve<'a> for AltBn128 {
     type Point = [u8; 64];
-    fn fq_bytes_length() -> usize {
-        32
-    }
 
     // Can fail if any of the 2 points does not belong the bn128 curve
     fn point_add(input: &[u8]) -> Result<Self::Point, &'static str> {
@@ -164,7 +167,7 @@ fn test_alt_bn128_add() {
 
         assert_eq!(
             &expected[..],
-            AltBn128::point_add(&input[..]).expect("Builtin should not fail")
+            Bn256::point_add(&input[..]).expect("Builtin should not fail")
         );
     }
 
@@ -179,7 +182,7 @@ fn test_alt_bn128_add() {
 
         assert_eq!(
             &expected[..],
-            AltBn128::point_add(&input[..]).expect("Builtin should not fail")
+            Bn256::point_add(&input[..]).expect("Builtin should not fail")
         );
     }
 
@@ -193,8 +196,9 @@ fn test_alt_bn128_add() {
 				1111111111111111111111111111111111111111111111111111111111111111"
         );
 
-        let res = AltBn128::point_add(&input[..]);
+        let res = Bn256::point_add(&input[..]);
         assert!(res.is_err(), "There should be built-in error here");
+        println!("test add success!");
     }
 }
 #[test]
@@ -217,7 +221,7 @@ fn test_alt_bn128_mul() {
 
         assert_eq!(
             &expected[..],
-            AltBn128::point_scalar_mul(&input[..]).expect("Builtin should not fail")
+            Bn256::point_scalar_mul(&input[..]).expect("Builtin should not fail")
         );
     }
 
@@ -230,7 +234,7 @@ fn test_alt_bn128_mul() {
 				0f00000000000000000000000000000000000000000000000000000000000000"
         );
 
-        let res = AltBn128::point_scalar_mul(&input[..]);
+        let res = Bn256::point_scalar_mul(&input[..]);
         assert!(res.is_err(), "There should be built-in error here");
     }
 }

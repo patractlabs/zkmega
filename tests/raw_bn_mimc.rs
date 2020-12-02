@@ -12,7 +12,7 @@ use bellman_ce::{
 };
 use megaclite::{
     parse::{proof_write, vk_write},
-    raw_bn_bls::{alt_bn128::AltBn128, verify_proof},
+    raw_bn_bls::verify_proof,
 };
 use rand::{thread_rng, Rng};
 use std::time::Instant;
@@ -267,15 +267,18 @@ fn test_mimc() {
             println!("{:?}", input);
             println!("{:?}", input[0].len());
 
+            let start = Instant::now();
             /// test verify_proof on the AltBn128 curve.
-            assert!(verify_proof::<AltBn128>(
+            assert!(verify_proof::<Bn256>(
                 &*vk_ic,
                 &*vk_encode,
                 &*proof_encode,
                 public_input)
                 .expect("verify_proof fail"));
+            let total_verifying = start.elapsed();
+            println!("verify_proof: {:?} seconds", total_verifying);
         }
-
+        let start = Instant::now();
         /// Using bellman_ce verify_proof to check the proof
         assert!(raw_verify_proof(&pvk, &proof, &input_vec).unwrap());
 

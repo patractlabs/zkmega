@@ -12,7 +12,7 @@ use bellman_ce::{
 };
 use megaclite::{
     parse::{proof_write, vk_write},
-    raw_bn_bls::{bls12_381::Bls381, verify_proof},
+    raw_bn_bls::verify_proof,
 };
 use rand::{thread_rng, Rng};
 use std::time::Instant;
@@ -266,14 +266,17 @@ fn test_mimc() {
             let public_input = &input.iter().map(|x| &x[..]).collect::<Vec<_>>();
             println!("{:?}", input);
             println!("{:?}", input[0].len());
-
+            let start = Instant::now();
             /// test verify_proof on the Bls12_381 curve.
-            assert!(verify_proof::<Bls381>(
+            assert!(verify_proof::<Bls12>(
                 &*vk_ic,
                 &*vk_encode,
                 &*proof_encode,
                 public_input)
                 .expect("verify_proof fail"));
+            let total_verifying = start.elapsed();
+            println!("verifying time: {:?} seconds", total_verifying);
+
         }
 
         /// Using bellman_ce verify_proof to check the proof

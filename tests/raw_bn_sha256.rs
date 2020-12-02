@@ -14,7 +14,7 @@ use crypto::digest::Digest;
 use crypto::sha2::Sha256;
 use megaclite::{
     parse::{proof_write, vk_write},
-    raw_bn_bls::{alt_bn128::AltBn128, verify_proof},
+    raw_bn_bls::verify_proof,
 };
 use rand::thread_rng;
 use rand::{Rng, SeedableRng, XorShiftRng};
@@ -117,7 +117,7 @@ fn eval_sha256(num_bytes: usize) {
         let mut input = vec![[0u8; 32]; inputs.len()];
         inputs.iter().enumerate().for_each(|(i, scalar)| scalar.into_repr().write_be(&mut input[i][..]).unwrap());
 
-        assert!(verify_proof::<AltBn128>(
+        assert!(verify_proof::<Bn256>(
             &*vk_ic,
             &*vk_encode,
             &*proof_encode,

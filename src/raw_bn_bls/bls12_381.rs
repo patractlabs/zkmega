@@ -1,14 +1,17 @@
 use super::Curve;
+use bellman_ce::pairing::bls12_381::Bls12;
 use bls::{multi_miller_loop, G1Affine, G1Projective, G2Affine, G2Prepared, Gt, Scalar};
 use core::convert::TryFrom;
 
-pub struct Bls381;
+impl<'a> Curve<'a> for Bls12 {
+    // curve parameters
+    const SCALAR_FIELD: &'static str =
+        "52435875175126190479447740508185965837690552500527637822603658699938581184513";
+    const PRIME_FIELD: &'static str =
+        "4002409555221667393417789825735904156556882819939007885332058136124031650490837864442687629129015664037894272559787";
+    const FQ_BYTES_LENGTH: usize = 48;
 
-impl<'a> Curve<'a> for Bls381 {
     type Point = [u8; 96];
-    fn fq_bytes_length() -> usize {
-        48
-    }
 
     // Point add on bls12_381 curve, return a point.
     fn point_add(input: &[u8]) -> Result<Self::Point, &'static str> {
@@ -105,7 +108,7 @@ fn test_bls381_add() {
         let a_uncompressed: Vec<u8> = a_hex.from_hex().unwrap();
 
         let c_uncompressed =
-            Bls381::point_add(a_uncompressed.repeat(2).as_ref()).expect("identity add failed");
+            Bls12::point_add(a_uncompressed.repeat(2).as_ref()).expect("identity add failed");
 
         let c = G1Affine::from_uncompressed(&c_uncompressed).unwrap();
         assert!(bool::from(c.is_identity()));
@@ -118,7 +121,7 @@ fn test_bls381_add() {
                              00db18cb2c04b3edd03cc744a2888ae40caa232946c5e7e1";
         let p1_uncompressed: Vec<u8> = p1_hex.from_hex().unwrap();
 
-        let p1_add_p1 = Bls381::point_add(&p1_uncompressed.repeat(2)[..]).expect("add fail:");
+        let p1_add_p1 = Bls12::point_add(&p1_uncompressed.repeat(2)[..]).expect("add fail:");
 
         let p2_hex = "0572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62ae28f75bb8f1c7c42c39a8c5529bf0f4e166a9d8cabc673a322fda673779d8e3822ba3ecb8670e461f73bb9021d5fd76a4c56d9d4cd16bd1bba86881979749d28";
         let p2_uncompressed: Vec<u8> = p2_hex.from_hex().unwrap();
@@ -153,7 +156,7 @@ fn test_bls381_mul() {
     // (a·G)·b = (a * b)·G = c·G
     assert_eq!(
         G1Affine::from(G1Affine::from(g * a) * b).to_uncompressed(),
-        Bls381::point_scalar_mul(&input).unwrap()
+        Bls12::point_scalar_mul(&input).unwrap()
     );
     assert_eq!(G1Affine::from(g * a) * b, g * c);
 }
@@ -167,10 +170,10 @@ fn test_bls381_pairing() {
     let b1 = G2Affine::generator();
 
     let a2 = G1Affine::from(
-        G1Affine::generator() * Scalar::from_raw([1, 2, 3, 4]).invert().unwrap().square(),
+        G1Affine::generator() * Scalar::from_raw([0, 0, 0, 1234]).invert().unwrap().square(),
     );
     let b2 = G2Affine::from(
-        G2Affine::generator() * Scalar::from_raw([4, 2, 2, 4]).invert().unwrap().square(),
+        G2Affine::generator() * Scalar::from_raw([0, 0, 0, 4224]).invert().unwrap().square(),
     );
 
     // -a3
@@ -179,11 +182,11 @@ fn test_bls381_pairing() {
 
     // -a4
     let a4 = G1Affine::from(
-        G1Affine::generator() * Scalar::from_raw([1, 2, 3, 4]).invert().unwrap().square(),
+        G1Affine::generator() * Scalar::from_raw([0, 0, 0, 1234]).invert().unwrap().square(),
     )
     .neg();
     let b4 = G2Affine::from(
-        G2Affine::generator() * Scalar::from_raw([4, 2, 2, 4]).invert().unwrap().square(),
+        G2Affine::generator() * Scalar::from_raw([0, 0, 0, 4224]).invert().unwrap().square(),
     );
 
     // a1 * b1  + a2 * b2  + -a1 * b1  + -a2 * b2 = 0
@@ -200,5 +203,5 @@ fn test_bls381_pairing() {
     // e(a1*b1) + e(a2*b2) + e(-a1*b1) + e(-a2*b2) = 1
     assert_eq!(Gt::identity(), expected);
     // check e(a1*b1) + e(a2*b2) + e(-a1*b1) + e(-a2*b2) == 1 return true
-    assert!(Bls381::point_pairing(&input[..]).unwrap_or(false));
+    assert!(Bls12::point_pairing(&input[..]).unwrap_or(false));
 }
