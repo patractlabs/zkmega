@@ -7,7 +7,6 @@ use ark_std::{
     ops::{MulAssign, Neg},
     vec::Vec,
 };
-use rand::Rng;
 
 impl CurveBasicOperations for Bn254 {
     const G1_LEN: usize = 65;

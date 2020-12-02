@@ -48,17 +48,25 @@
 //! [loopring]: https://loopring.org/
 //! [BLS curve]: https://electriccoin.co/blog/new-snark-curve/
 //! [PLONK algorithm]: https://eprint.iacr.org/2019/953/20190827:165656
-mod scratch;
+pub mod arkworks;
 
+#[cfg(features = "std")]
 pub mod altbn_128;
-mod arkworks;
+#[cfg(features = "std")]
 pub mod bls12_381;
+#[cfg(features = "std")]
 pub mod parse;
+#[cfg(features = "std")]
 pub mod raw_bn_bls;
+#[cfg(features = "std")]
 pub mod result;
-
+#[cfg(features = "std")]
+mod scratch;
+#[cfg(features = "std")]
 use num_bigint::BigUint;
+#[cfg(features = "std")]
 use num_traits::Num;
+#[cfg(features = "std")]
 use result::{Error::Megaclite, Result};
 
 static BN256_SCALAR_FIELD: &'static str =
@@ -73,12 +81,14 @@ static BLS381_SCALAR_FIELD: &'static str =
 static BLS381_PRIME_FIELD: &'static str =
     "4002409555221667393417789825735904156556882819939007885332058136124031650490837864442687629129015664037894272559787";
 
+#[cfg(features = "std")]
 fn negate_y_based_curve(y: BigUint, prime_field: &'static str) -> Result<BigUint> {
     let q = BigUint::from_str_radix(prime_field, 10)?;
     let q_clone = q.clone();
     Ok(q - y % q_clone)
 }
 
+#[cfg(features = "std")]
 fn negate_y(y: &[u8]) -> Result<Vec<u8>> {
     let negate_y = BigUint::from_bytes_be(y);
     let neg_y = match y.len() {

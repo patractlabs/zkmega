@@ -5,18 +5,22 @@ authors = ["Megaclite <https://github.com/patractlabs/megaclite>"]
 edition = "2018"
 
 [dependencies]
-bellman_ce = { version = "0.3.0", default-features = false }
+# bellman solution
+bellman_ce = { version = "0.3.0", default-features = false, optional = true }
 
-bls = { package = "bls12_381", version = "0.3.1" }
-bn = { git = "https://github.com/paritytech/bn", default-features = false }
-num-bigint = "0.3"
-num-traits = "0.2"
-group = "0.8.0"
+# the original solution
+bls = { package = "bls12_381", version = "0.3.1", optional = true }
+bn = { git = "https://github.com/paritytech/bn", default-features = false, optional = true }
+num-bigint = { version = "0.3", optional = true }
+num-traits = { version = "0.2", optional = true }
+group = { version = "0.8.0", optional = true }
 
-sapling_crypto_ce = { package = "sapling-crypto_ce", git = "https://github.com/matter-labs/sapling-crypto", branch = "master" }
-rust-crypto = "0.2.36"
-pairing_ce = "0.24.2"
+sapling_crypto_ce = { package = "sapling-crypto_ce", git = "https://github.com/matter-labs/sapling-crypto", branch = "master", optional = true }
+rust-crypto = { version = "0.2.36", optional = true }
+pairing_ce = { version = "0.24.2", optional = true }
+rand = { version = "0.4", optional = true }
 
+# arkworks solution
 ark-bls12-377 = { git = "https://github.com/arkworks-rs/curves", default-features = false, features = ["curve"] }
 ark-bls12-381 = { git = "https://github.com/arkworks-rs/curves", default-features = false, features = ["curve"] }
 ark-bn254 = { git = "https://github.com/arkworks-rs/curves", default-features = false, features = ["curve"] }
@@ -27,14 +31,22 @@ ark-ec = { git = "https://github.com/arkworks-rs/algebra", default-features = fa
 ark-std = { git = "https://github.com/arkworks-rs/utils", default-features = false }
 ark-serialize = { git = "https://github.com/arkworks-rs/algebra", default-features = false }
 
-[dependencies.rand]
-version = "0.4"
-#rand = { version = "0.7", default-features = false }
-
-
 [dev-dependencies]
 hex-literal = "0.2.1"
 rustc-hex = { version = "2", default-features = false }
+
+[features]
+std = [
+  "bellman_ce",
+  "bls",
+  "bn",
+  "num-bigint",
+  "num-traits",
+  "group",
+  "sapling_crypto_ce",
+  "rust-crypto",
+  "pairing_ce",
+]
 
 # Local CI
 [dev-dependencies.cargo-husky]
