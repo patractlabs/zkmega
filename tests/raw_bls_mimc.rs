@@ -10,12 +10,11 @@ use bellman_ce::{
     },
     Circuit, ConstraintSystem, SynthesisError,
 };
-use megaclite::{
-    parse::{proof_write, vk_write},
-    raw_bn_bls::verify_proof,
-};
+use bn_bls_curve::verify_proof;
+use megaclite::parse::{proof_write, vk_write};
+
 use rand::{thread_rng, Rng};
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 const MIMC_ROUNDS: usize = 1;
 const MIMC_STEP: usize = 1;
@@ -188,10 +187,13 @@ fn test_mimc() {
     let constants = (0..MIMC_ROUNDS).map(|_| rng.gen()).collect::<Vec<_>>();
 
     // Let's benchmark stuff!
-    const SAMPLES: u32 = 1;
+    const SAMPLES: u32 = 10;
     // Just a place to put the proof data, so we can
     // benchmark deserialization.
     let mut proof_vec = vec![];
+
+    let mut total_proving = Duration::new(0, 0);
+    let mut total_verifying = Duration::new(0, 0);
 
     for sample_idx in 0..SAMPLES {
         /// Proof production process
@@ -242,7 +244,7 @@ fn test_mimc() {
             proof.write(&mut proof_vec).unwrap();
         }
 
-        let total_proving = start.elapsed();
+        total_proving += start.elapsed();
         let start = Instant::now();
 
         let mut proof = Proof::read(&proof_vec[..]).unwrap();
@@ -282,18 +284,17 @@ fn test_mimc() {
         /// Using bellman_ce verify_proof to check the proof
         assert!(raw_verify_proof(&pvk, &proof, &input_vec).unwrap());
 
-        let total_verifying = start.elapsed();
-
-        let proving_avg = total_proving;
-        let proving_avg =
-            proving_avg.subsec_nanos() as f64 / 1_000_000_000f64 + (proving_avg.as_secs() as f64);
-
-        let verifying_avg = total_verifying;
-        let verifying_avg = verifying_avg.subsec_nanos() as f64 / 1_000_000_000f64
-            + (verifying_avg.as_secs() as f64);
-
-        println!("applying MiMC cipher: {:?} times", num_repetitions);
-        println!("proving time: {:?} seconds", proving_avg);
-        println!("verifying time: {:?} seconds", verifying_avg);
+        total_verifying += start.elapsed();
     }
+    let proving_avg = total_proving / SAMPLES;
+    let proving_avg =
+        proving_avg.subsec_nanos() as f64 / 1_000_000_000f64 + (proving_avg.as_secs() as f64);
+
+    let verifying_avg = total_verifying / SAMPLES;
+    let verifying_avg =
+        verifying_avg.subsec_nanos() as f64 / 1_000_000_000f64 + (verifying_avg.as_secs() as f64);
+
+    // println!("applying MiMC cipher: {:?} times", num_repetitions);
+    println!("proving time: {:?} seconds", proving_avg);
+    println!("verifying time: {:?} seconds", verifying_avg);
 }

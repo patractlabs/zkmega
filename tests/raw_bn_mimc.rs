@@ -10,10 +10,8 @@ use bellman_ce::{
     },
     Circuit, ConstraintSystem, SynthesisError,
 };
-use megaclite::{
-    parse::{proof_write, vk_write},
-    raw_bn_bls::verify_proof,
-};
+use bn_bls_curve::verify_proof;
+use megaclite::parse::{proof_write, vk_write};
 use rand::{thread_rng, Rng};
 use std::time::Instant;
 
@@ -188,7 +186,7 @@ fn test_mimc() {
     let constants = (0..MIMC_ROUNDS).map(|_| rng.gen()).collect::<Vec<_>>();
 
     // Let's benchmark stuff!
-    const SAMPLES: u32 = 1;
+    const SAMPLES: u32 = 10;
     // Just a place to put the proof data, so we can
     // benchmark deserialization.
     let mut proof_vec = vec![];

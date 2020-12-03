@@ -1,0 +1,21 @@
+[package]
+name = "arkworks-curve"
+version = "0.1.0"
+authors = ["Megaclite <https://github.com/patractlabs/megaclite>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ark-bls12-377 = { git = "https://github.com/arkworks-rs/curves", default-features = false, features = ["curve"] }
+ark-bls12-381 = { git = "https://github.com/arkworks-rs/curves", default-features = false, features = ["curve"] }
+ark-bn254 = { git = "https://github.com/arkworks-rs/curves", default-features = false, features = ["curve"] }
+ark-bw6-761 = { git = "https://github.com/arkworks-rs/curves", default-features = false }
+ark-cp6-782 = { git = "https://github.com/arkworks-rs/curves", default-features = false }
+ark-ff = { git = "https://github.com/arkworks-rs/algebra", default-features = false }
+ark-ec = { git = "https://github.com/arkworks-rs/algebra", default-features = false }
+ark-std = { git = "https://github.com/arkworks-rs/utils", default-features = false }
+ark-serialize = { git = "https://github.com/arkworks-rs/algebra", default-features = false }
+rustc-hex = { version = "2", default-features = false }
+
+rand = { version = "0.7", default-features = false }
