@@ -43,17 +43,11 @@ fn test_bls12_377_additional() {
         let input1:Vec<u8> = FromHex::from_hex(
             "efe91bb26eb1b9ea4e39cdff121548d55ccb37bdc8828218bb419daa2c1e958554ff87bf2562fcc8670a74fede488800a68e9c5555de82fd1a59a934363dfec20523b84fd42a186dd9523eca48b37fbdc4eeaf305d4f671fff2e10c5694a910100efe91bb26eb1b9ea4e39cdff121548d55ccb37bdc8828218bb419daa2c1e958554ff87bf2562fcc8670a74fede488800a68e9c5555de82fd1a59a934363dfec20523b84fd42a186dd9523eca48b37fbdc4eeaf305d4f671fff2e10c5694a910100").unwrap();
 
-        // one-point mul 2 encode
-        let input2:Vec<u8> = FromHex::from_hex(
-            "efe91bb26eb1b9ea4e39cdff121548d55ccb37bdc8828218bb419daa2c1e958554ff87bf2562fcc8670a74fede488800a68e9c5555de82fd1a59a934363dfec20523b84fd42a186dd9523eca48b37fbdc4eeaf305d4f671fff2e10c5694a9101000200000000000000000000000000000000000000000000000000000000000000").unwrap();
-
         let res1 = Bls12_377::add(&input1[..]).unwrap();
-        let res2 = Bls12_377::scalar_mul(&input2[..]).unwrap();
 
         let expected :Vec<u8> = FromHex::from_hex(
             "9063416a6ded7a8590dc816765610688551930a2c9970ee97e4b2addf3f7617eed52544b5adb6e05919e93413145ed00edc7d727875edde2a75ced75563fa2d67944c635f1120be8ca61c542aecd99ad37131713186004aee5c87b71b9b0cf0000").unwrap();
         assert_eq!(res1, expected);
-        assert_eq!(res2, expected);
         println!("test add2 success!");
     }
 }
