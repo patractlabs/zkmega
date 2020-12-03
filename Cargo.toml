@@ -6,8 +6,8 @@ edition = "2018"
 
 [dependencies]
 bellman_ce = { version = "0.3.0", default-features = false }
-arkworks_curve = { package = "arkworks-curve", path = "arkworks_curve"}
-bn_bls_curve = { package = "bn-bls_curve", path = "bn_bls_curve"}
+arkworks_curve = { package = "arkworks-curve", path = "crates/arkworks"}
+bn_bls_curve = { package = "zcash-curve", path = "crates/zcash"}
 
 num-bigint = "0.3"
 num-traits = "0.2"
@@ -21,17 +21,18 @@ rustc-hex = { version = "2", default-features = false }
 [dev-dependencies]
 hex-literal = "0.2.1"
 
+[workspace]
+members = [
+    "crates/arkworks",
+    "crates/zcash",
+    "crates/matter-labs",
+]
+
 # Local CI
 [dev-dependencies.cargo-husky]
 version = "1"
 features = ["user-hooks"]
 default-features = false
-
-[workspace]
-members = [
-    "arkworks_curve",
-    "bn_bls_curve",
-]
 
 [profile.test]
 opt-level = 3
