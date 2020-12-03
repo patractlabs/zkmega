@@ -1,19 +1,20 @@
+use crate::matter_labs::parse::{proof_write, vk_write};
 use bellman_ce::{
     groth16::{
         create_random_proof, generate_random_parameters, prepare_verifying_key,
-        verify_proof as raw_verify_proof, Proof,
+        verify_proof as raw_verify_proof, Parameters, Proof,
     },
     pairing::{
-        bn256::Bn256,
-        ff::{Field, PrimeField, PrimeFieldRepr},
+        bls12_381::Bls12,
+        ff::{Field, PrimeField, PrimeFieldDecodingError, PrimeFieldRepr},
         CurveAffine, Engine,
     },
     Circuit, ConstraintSystem, SynthesisError,
 };
-use bn_bls_curve::verify_proof;
-use megaclite::parse::{proof_write, vk_write};
+use zcash::verify_proof;
+
 use rand::{thread_rng, Rng};
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 const MIMC_ROUNDS: usize = 1;
 const MIMC_STEP: usize = 1;
@@ -191,6 +192,9 @@ fn test_mimc() {
     // benchmark deserialization.
     let mut proof_vec = vec![];
 
+    let mut total_proving = Duration::new(0, 0);
+    let mut total_verifying = Duration::new(0, 0);
+
     for sample_idx in 0..SAMPLES {
         /// Proof production process
         println!("Creating parameters...");
@@ -198,7 +202,7 @@ fn test_mimc() {
 
         // Create parameters for our circuit
         let params = {
-            let c = MiMCDemo::<Bn256> {
+            let c = MiMCDemo::<Bls12> {
                 repetitions: num_repetitions,
                 x: None,
                 k: None,
@@ -220,7 +224,7 @@ fn test_mimc() {
         let mut input_vec = vec![];
 
         for _ in 0..num_repetitions {
-            input_vec.push(mimc::<Bn256>(x, k, &constants));
+            input_vec.push(mimc::<Bls12>(x, k, &constants));
         }
         println!("{}", input_vec.len());
         proof_vec.truncate(0);
@@ -240,7 +244,7 @@ fn test_mimc() {
             proof.write(&mut proof_vec).unwrap();
         }
 
-        let total_proving = start.elapsed();
+        total_proving += start.elapsed();
         let start = Instant::now();
 
         let mut proof = Proof::read(&proof_vec[..]).unwrap();
@@ -248,50 +252,53 @@ fn test_mimc() {
         /// Using our own verify_proof implementation to check the proof
         {
             // proof encode
-            let mut proof_encode = vec![0u8; 32 * 8];
+            let mut proof_encode = vec![0u8; 48 * 8];
             proof_write(&mut proof, &mut proof_encode);
             // vk encode
-            let mut vk_encode = vec![0u8; 32 * 14];
+            let mut vk_encode = vec![0u8; 48 * 14];
             vk_write(&mut vk_encode, &params);
 
             // vk_ic encode
-            let vk_not_prepared = params.vk.ic.iter().map(|ic| ic.into_uncompressed().as_ref().to_vec()).collect::<Vec<_>>();
+            let vk_not_prepared = params
+                .vk
+                .ic
+                .iter()
+                .map(|ic| ic.into_uncompressed().as_ref().to_vec())
+                .collect::<Vec<_>>();
             let vk_ic = vk_not_prepared.iter().map(|ic| &ic[..]).collect::<Vec<_>>();
 
             // input encode
             let mut input = vec![[0u8; 32]; input_vec.len()];
-            input_vec.iter().enumerate().for_each(|(i, scalar)| { scalar.into_repr().write_be(&mut input[i][..]); });
+            input_vec.iter().enumerate().for_each(|(i, scalar)| {
+                scalar.into_repr().write_le(&mut input[i][..]);
+            });
             let public_input = &input.iter().map(|x| &x[..]).collect::<Vec<_>>();
             println!("{:?}", input);
             println!("{:?}", input[0].len());
-
             let start = Instant::now();
-            /// test verify_proof on the AltBn128 curve.
-            assert!(verify_proof::<Bn256>(
-                &*vk_ic,
-                &*vk_encode,
-                &*proof_encode,
-                public_input)
-                .expect("verify_proof fail"));
+            /// test verify_proof on the Bls12_381 curve.
+            assert!(
+                verify_proof::<Bls12>(&*vk_ic, &*vk_encode, &*proof_encode, public_input)
+                    .expect("verify_proof fail")
+            );
             let total_verifying = start.elapsed();
-            println!("verify_proof: {:?} seconds", total_verifying);
+            println!("verifying time: {:?} seconds", total_verifying);
         }
-        let start = Instant::now();
+
         /// Using bellman_ce verify_proof to check the proof
         assert!(raw_verify_proof(&pvk, &proof, &input_vec).unwrap());
 
-        let total_verifying = start.elapsed();
-
-        let proving_avg = total_proving;
-        let proving_avg =
-            proving_avg.subsec_nanos() as f64 / 1_000_000_000f64 + (proving_avg.as_secs() as f64);
-
-        let verifying_avg = total_verifying;
-        let verifying_avg = verifying_avg.subsec_nanos() as f64 / 1_000_000_000f64
-            + (verifying_avg.as_secs() as f64);
-
-        println!("applying MiMC cipher: {:?} times", num_repetitions);
-        println!("proving time: {:?} seconds", proving_avg);
-        println!("verifying time: {:?} seconds", verifying_avg);
+        total_verifying += start.elapsed();
     }
+    let proving_avg = total_proving / SAMPLES;
+    let proving_avg =
+        proving_avg.subsec_nanos() as f64 / 1_000_000_000f64 + (proving_avg.as_secs() as f64);
+
+    let verifying_avg = total_verifying / SAMPLES;
+    let verifying_avg =
+        verifying_avg.subsec_nanos() as f64 / 1_000_000_000f64 + (verifying_avg.as_secs() as f64);
+
+    // println!("applying MiMC cipher: {:?} times", num_repetitions);
+    println!("proving time: {:?} seconds", proving_avg);
+    println!("verifying time: {:?} seconds", verifying_avg);
 }

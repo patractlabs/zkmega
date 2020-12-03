@@ -1,3 +1,8 @@
+use super::{
+    parse::{proof_write, vk_write},
+    verify::bn256_verify_proof,
+};
+
 use bellman_ce::{
     groth16::{
         create_random_proof, generate_random_parameters, prepare_verifying_key, verify_proof, Proof,
@@ -8,10 +13,6 @@ use bellman_ce::{
         CurveAffine, Engine,
     },
     Circuit, ConstraintSystem, SynthesisError,
-};
-use megaclite::{
-    altbn_128::bn256_verify_proof,
-    parse::{proof_write, vk_write},
 };
 use rand::{thread_rng, Rng};
 use std::time::Instant;
@@ -245,7 +246,7 @@ fn test_mimc() {
 
         let mut proof = Proof::read(&proof_vec[..]).unwrap();
 
-        /// Using our own verify_proof implementation to check the proof
+        // Using our own verify_proof implementation to check the proof
         {
             // proof encode
             let mut proof_encode = vec![0u8; 32 * 8];
@@ -255,7 +256,10 @@ fn test_mimc() {
             vk_write(&mut vk_encode, &params);
 
             // vk_ic encode
-            let vk_not_prepared = params.vk.ic.iter()
+            let vk_not_prepared = params
+                .vk
+                .ic
+                .iter()
                 .map(|ic| ic.into_uncompressed().as_ref().to_vec())
                 .collect::<Vec<_>>();
             let vk_ic = vk_not_prepared.iter().map(|ic| &ic[..]).collect::<Vec<_>>();
@@ -270,11 +274,11 @@ fn test_mimc() {
             println!("{:?}", input[0].len());
 
             // TODO: There is an error that needs to be fixed
-            assert_eq!(bn256_verify_proof(
-                &*vk_ic, &*vk_encode,
-                &*proof_encode, public_input)
+            assert_eq!(
+                bn256_verify_proof(&*vk_ic, &*vk_encode, &*proof_encode, public_input)
                     .expect("verify_proof fail"),
-            false);
+                false
+            );
         }
 
         // Check the proof
