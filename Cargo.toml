@@ -7,7 +7,7 @@ edition = "2018"
 [dependencies]
 bellman_ce = { version = "0.3.0", default-features = false }
 arkworks_curve = { package = "arkworks-curve", path = "crates/arkworks"}
-bn_bls_curve = { package = "zcash-curve", path = "crates/zcash"}
+bn_bls_curve = { package = "megaclite-zcash", path = "crates/zcash"}
 
 num-bigint = "0.3"
 num-traits = "0.2"
@@ -26,6 +26,7 @@ members = [
     "crates/arkworks",
     "crates/zcash",
     "crates/matter-labs",
+    "crates/tests",
 ]
 
 [profile.test]
