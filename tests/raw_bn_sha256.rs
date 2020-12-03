@@ -10,12 +10,10 @@ use bellman_ce::{
     },
     Circuit, ConstraintSystem, SynthesisError,
 };
+use bn_bls_curve::verify_proof;
 use crypto::digest::Digest;
 use crypto::sha2::Sha256;
-use megaclite::{
-    parse::{proof_write, vk_write},
-    raw_bn_bls::verify_proof,
-};
+use megaclite::parse::{proof_write, vk_write};
 use rand::thread_rng;
 use rand::{Rng, SeedableRng, XorShiftRng};
 use sapling_crypto_ce::circuit::{

@@ -87,7 +87,7 @@ pub fn vector_fr<E: Engine + ScalarEngine>(
     Ok(vfr)
 }
 
-/// Write the proof to the bytes
+// Write the proof to the bytes
 pub fn proof_write<E: Engine>(proof: &mut Proof<E>, proof_encode: &mut Vec<u8>) {
     let len = proof_encode.len() / 8;
     proof_encode[0..len * 2].copy_from_slice(proof.a.into_uncompressed().as_ref());
@@ -96,7 +96,7 @@ pub fn proof_write<E: Engine>(proof: &mut Proof<E>, proof_encode: &mut Vec<u8>) 
     println!("proof : {:?}", proof_encode);
 }
 
-/// Write the verify key to the bytes
+// Write the verify key to the bytes
 pub fn vk_write<E: Engine>(vk_encode: &mut Vec<u8>, params: &Parameters<E>) {
     let len = vk_encode.len() / 14;
     vk_encode[0..len * 4].copy_from_slice(params.vk.gamma_g2.into_uncompressed().as_ref());

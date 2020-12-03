@@ -6,35 +6,20 @@ edition = "2018"
 
 [dependencies]
 bellman_ce = { version = "0.3.0", default-features = false }
+arkworks_curve = { package = "arkworks-curve", path = "arkworks_curve"}
+bn_bls_curve = { package = "bn-bls_curve", path = "bn_bls_curve"}
 
-bls = { package = "bls12_381", version = "0.3.1" }
-bn = { git = "https://github.com/paritytech/bn", default-features = false }
 num-bigint = "0.3"
 num-traits = "0.2"
+rand = "0.4"
 group = "0.8.0"
 
-sapling_crypto_ce = { package = "sapling-crypto_ce", git = "https://github.com/matter-labs/sapling-crypto", branch = "master" }
 rust-crypto = "0.2.36"
-pairing_ce = "0.24.2"
-
-ark-bls12-377 = { git = "https://github.com/arkworks-rs/curves", default-features = false, features = ["curve"] }
-ark-bls12-381 = { git = "https://github.com/arkworks-rs/curves", default-features = false, features = ["curve"] }
-ark-bn254 = { git = "https://github.com/arkworks-rs/curves", default-features = false, features = ["curve"] }
-ark-bw6-761 = { git = "https://github.com/arkworks-rs/curves", default-features = false }
-ark-cp6-782 = { git = "https://github.com/arkworks-rs/curves", default-features = false }
-ark-ff = { git = "https://github.com/arkworks-rs/algebra", default-features = false }
-ark-ec = { git = "https://github.com/arkworks-rs/algebra", default-features = false }
-ark-std = { git = "https://github.com/arkworks-rs/utils", default-features = false }
-ark-serialize = { git = "https://github.com/arkworks-rs/algebra", default-features = false }
-
-[dependencies.rand]
-version = "0.4"
-#rand = { version = "0.7", default-features = false }
-
+sapling_crypto_ce = { package = "sapling-crypto_ce", git = "https://github.com/matter-labs/sapling-crypto", branch = "master" }
+rustc-hex = { version = "2", default-features = false }
 
 [dev-dependencies]
 hex-literal = "0.2.1"
-rustc-hex = { version = "2", default-features = false }
 
 # Local CI
 [dev-dependencies.cargo-husky]
@@ -42,3 +27,15 @@ version = "1"
 features = ["user-hooks"]
 default-features = false
 
+[workspace]
+members = [
+    "arkworks_curve",
+    "bn_bls_curve",
+]
+
+[profile.test]
+opt-level = 3
+lto = "thin"
+incremental = true
+debug-assertions = true
+debug = true

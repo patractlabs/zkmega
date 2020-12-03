@@ -10,10 +10,8 @@ use bellman_ce::{
     },
     Circuit, ConstraintSystem, SynthesisError,
 };
-use megaclite::{
-    parse::{proof_write, vk_write},
-    raw_bn_bls::verify_proof,
-};
+use bn_bls_curve::verify_proof;
+use megaclite::parse::{proof_write, vk_write};
 use rand::{thread_rng, Rng};
 use std::time::Instant;
 

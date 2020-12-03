@@ -51,10 +51,8 @@
 mod scratch;
 
 pub mod altbn_128;
-mod arkworks;
 pub mod bls12_381;
 pub mod parse;
-pub mod raw_bn_bls;
 pub mod result;
 
 use num_bigint::BigUint;

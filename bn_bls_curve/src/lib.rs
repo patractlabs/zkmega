@@ -3,6 +3,7 @@ pub mod bls12_381;
 
 use num_bigint::BigUint;
 use num_traits::Num;
+use pairing_ce::Engine;
 use std::convert::TryFrom;
 
 pub trait Curve<'a> {
