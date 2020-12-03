@@ -102,23 +102,6 @@ version = "0.1.0"
 source = "git+https://github.com/arkworks-rs/utils#f6974ac72f59339b7ab798a728a84c5a7b8bac45"
 
 [[package]]
-name = "arkworks-curve"
-version = "0.1.0"
-dependencies = [
- "ark-bls12-377",
- "ark-bls12-381",
- "ark-bn254",
- "ark-bw6-761",
- "ark-cp6-782",
- "ark-ec",
- "ark-ff",
- "ark-serialize",
- "ark-std",
- "rand 0.7.3",
- "rustc-hex",
-]
-
-[[package]]
 name = "arrayvec"
 version = "0.4.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -600,17 +583,26 @@ checksum = "60302e4db3a61da70c0cb7991976248362f30319e88850c487b9b95bbf059e00"
 name = "megaclite"
 version = "0.1.0"
 dependencies = [
- "arkworks-curve",
- "bellman_ce",
- "group",
- "hex-literal",
+ "megaclite-arkworks",
+ "megaclite-matter-labs",
  "megaclite-zcash",
- "num-bigint 0.3.1",
- "num-traits",
- "rand 0.4.6",
- "rust-crypto",
+]
+
+[[package]]
+name = "megaclite-arkworks"
+version = "0.1.0"
+dependencies = [
+ "ark-bls12-377",
+ "ark-bls12-381",
+ "ark-bn254",
+ "ark-bw6-761",
+ "ark-cp6-782",
+ "ark-ec",
+ "ark-ff",
+ "ark-serialize",
+ "ark-std",
+ "rand 0.7.3",
  "rustc-hex",
- "sapling-crypto_ce",
 ]
 
 [[package]]

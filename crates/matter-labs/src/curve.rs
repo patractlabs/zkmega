@@ -7,6 +7,7 @@ use bellman_ce::pairing::{
 
 /// Custom bytes
 pub trait Bytes: AsRef<[u8]> + AsMut<[u8]> {
+    /// Empty bytes
     fn default() -> Self;
 }
 
@@ -19,6 +20,7 @@ pub fn curve_affine<C: CurveAffine>(input: &[u8]) -> C::Uncompressed {
 
 /// Pairing-Friendly Curve
 pub trait Curve: Engine + ScalarEngine {
+    /// Canonical ouput
     type Output: Bytes;
 
     /// Add operation for all Pairing-Friendly Engines

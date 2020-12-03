@@ -1,3 +1,5 @@
+//! Matter Labs Curves
+#![deny(missing_docs)]
 pub mod curve;
 pub mod result;
 
