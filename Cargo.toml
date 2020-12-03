@@ -13,7 +13,7 @@ members = [
     "crates/arkworks",
     "crates/zcash",
     "crates/matter-labs",
-    "crates/tests",
+    "tests",
 ]
 
 [dependencies.arkworks-curve]

@@ -5,8 +5,8 @@ authors = ["clearloop <udtrokia@gmail.com>"]
 edition = "2018"
 
 [dev-dependencies]
-matter_labs = { package = "megaclite-matter-labs", path = "../matter-labs" }
-zcash = { package = "megaclite-zcash", path = "../zcash" }
+matter_labs = { package = "megaclite-matter-labs", path = "../crates/matter-labs" }
+zcash = { package = "megaclite-zcash", path = "../crates/zcash" }
 bellman_ce = { version = "0.3.0", default-features = false }
 num-bigint = "0.3"
 num-traits = "0.2"
