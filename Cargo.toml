@@ -4,6 +4,10 @@ version = "0.1.0"
 authors = ["Megaclite <https://github.com/patractlabs/megaclite>"]
 edition = "2018"
 
+[lib]
+name = "megaclite"
+path = "megaclite.rs"
+
 [workspace]
 members = [
     "crates/arkworks",
