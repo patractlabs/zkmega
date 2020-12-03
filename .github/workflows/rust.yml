@@ -12,6 +12,11 @@ jobs:
     steps:
       - name: Checkout the source code
         uses: actions/checkout@v1
+      - name: Set nightly toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
       - name: Cache Rust Outputs
         uses: actions/cache@v1
         env:
