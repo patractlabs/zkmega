@@ -1,8 +1,8 @@
-use super::{all_curve_three_operations_test, CurveBasicOperations};
+use super::CurveBasicOperations;
 use ark_bls12_381::{Bls12_381, Fq12, Fr, G1Projective, G2Projective};
 use ark_ec::PairingEngine;
 use ark_ff::{test_rng, Field, One, PrimeField};
-use ark_std::ops::MulAssign;
+use ark_std::{ops::MulAssign, vec::Vec};
 use rand::Rng;
 use rustc_hex::FromHex;
 
@@ -35,7 +35,6 @@ fn test_bls12_381_additional() {
                     000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001").unwrap();
 
         assert_eq!(&expected[..], &res[..]);
-        println!("test add1 success!");
     }
 
     // one-points additions
@@ -54,7 +53,6 @@ fn test_bls12_381_additional() {
                     9d7479198886ba1bbd16cdd4d9564c6ad75f1d02b93bf761e47086cb3eba22388e9d7773a6fd22a373c6ab8c9d6a1600").unwrap();
 
         assert_eq!(res1, expected);
-        println!("test add2 success!");
     }
 }
 
@@ -73,7 +71,6 @@ fn test_bls12_381_scalar_mul() {
                 9d7479198886ba1bbd16cdd4d9564c6ad75f1d02b93bf761e47086cb3eba22388e9d7773a6fd22a373c6ab8c9d6a1600").unwrap();
 
     assert_eq!(res2, expected);
-    println!("test add2 success!");
 }
 
 // 30 times pairings
@@ -100,7 +97,6 @@ fn test_bls12_381_pairing() {
             // e(sa, b) = e(sb, a)
             // e(sa, b) * e(-sb, a) = 1
             assert!(Bls12_381::pairings(&input[..]).expect("pairings failed"));
-            println!("test pairings{} success!", i + 1);
         }
 
         // check pairings
@@ -135,7 +131,6 @@ fn test_bls12_381_pairing() {
 
             // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
             assert!(Bls12_381::pairings(&input[..]).unwrap());
-            println!("test pairings e(a1*b1)*e(a2*b2)*e(-a1*b1)*e(-a2*b2) success!");
         }
     }
 }

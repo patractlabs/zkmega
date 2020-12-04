@@ -1,8 +1,8 @@
-use super::{all_curve_three_operations_test, CurveBasicOperations};
+use super::CurveBasicOperations;
 use ark_bw6_761::{Fq6, Fr, G1Projective, G2Projective, BW6_761};
 use ark_ec::PairingEngine;
 use ark_ff::{test_rng, Field, One, PrimeField};
-use ark_std::ops::MulAssign;
+use ark_std::{ops::MulAssign, vec::Vec};
 use rand::Rng;
 use rustc_hex::FromHex;
 
@@ -12,10 +12,6 @@ impl CurveBasicOperations for BW6_761 {
     const SCALAR_LEN: usize = 48;
 }
 
-#[test]
-fn test_bw6_761() {
-    all_curve_three_operations_test::<BW6_761>();
-}
 #[test]
 fn test_bw6_761_additional() {
     // zero-points additions
@@ -43,7 +39,6 @@ fn test_bw6_761_additional() {
         let expected :Vec<u8> = FromHex::from_hex(
             "1ae80b765e09a7bf87f4b2023abea11d37181e0c78db8e28e88a401acb8808ec34e9dc4dae4501219771ec5f13830e413b3d08f4505a8d71fdceb2fcc539d31d2a136e49dba3cb8e8c66551aea983759853ab88b0d83d07d47574a7c18d3bd002adf2f6db69dc19d17a54df5a6db30710eeb0d97c0b58de174e915018ba823ab03aab81282a66148bf8308dbd821b318c8849baec50d824af6151af31bac63910304c02e7abfadbae8ee5f939e4e35698f6750f0c4ee1703560d5454f513940000").unwrap();
         assert_eq!(res1, expected);
-        println!("test add2 success!");
     }
 }
 
@@ -59,7 +54,6 @@ fn test_bw6_761_scalar_mul() {
         "1ae80b765e09a7bf87f4b2023abea11d37181e0c78db8e28e88a401acb8808ec34e9dc4dae4501219771ec5f13830e413b3d08f4505a8d71fdceb2fcc539d31d2a136e49dba3cb8e8c66551aea983759853ab88b0d83d07d47574a7c18d3bd002adf2f6db69dc19d17a54df5a6db30710eeb0d97c0b58de174e915018ba823ab03aab81282a66148bf8308dbd821b318c8849baec50d824af6151af31bac63910304c02e7abfadbae8ee5f939e4e35698f6750f0c4ee1703560d5454f513940000").unwrap();
 
     assert_eq!(res2, expected);
-    println!("test add2 success!");
 }
 
 // 30 times pairings
@@ -75,7 +69,6 @@ fn test_bw6_761_pairing() {
             // e(sa, b) = e(sb, a)
             // e(sa, b) * e(-sb, a) = 1
             assert!(BW6_761::pairings(&input[..]).expect("pairings failed"));
-            println!("test pairings{} success!", i + 1);
         }
 
         // check pairings
@@ -87,7 +80,6 @@ fn test_bw6_761_pairing() {
 
             // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
             assert!(BW6_761::pairings(&input[..]).unwrap());
-            println!("test pairings e(a1*b1)*e(a2*b2)*e(-a1*b1)*e(-a2*b2) success!");
         }
     }
 }

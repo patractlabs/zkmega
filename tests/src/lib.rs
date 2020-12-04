@@ -6,5 +6,6 @@
 #![allow(unused_variables)]
 #![allow(unused_must_use)]
 #![allow(non_snake_case)]
+mod arkworks;
 mod matter_labs;
 mod zcash;

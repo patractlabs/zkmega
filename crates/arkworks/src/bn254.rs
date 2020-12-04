@@ -1,8 +1,8 @@
-use super::{all_curve_three_operations_test, CurveBasicOperations};
+use super::CurveBasicOperations;
 use ark_bn254::{Bn254, Fq12, Fr, G1Projective, G2Projective};
 use ark_ec::PairingEngine;
 use ark_ff::{test_rng, Field, One, PrimeField};
-use ark_std::ops::MulAssign;
+use ark_std::{ops::MulAssign, vec::Vec};
 use rand::Rng;
 use rustc_hex::FromHex;
 
@@ -10,12 +10,6 @@ impl CurveBasicOperations for Bn254 {
     const G1_LEN: usize = 65;
     const G2_LEN: usize = 129;
     const SCALAR_LEN: usize = 32;
-}
-
-#[test]
-fn test_bn256() {
-    all_curve_three_operations_test::<Bn254>();
-    // test_pairings::<Bn254>();
 }
 
 #[test]
@@ -31,7 +25,6 @@ fn test_bn256_additional() {
             "0000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001").unwrap();
 
         assert_eq!(&expected[..], &res[..]);
-        println!("test add1 success!");
     }
 
     // one-points additions
@@ -45,7 +38,6 @@ fn test_bn256_additional() {
         let expected :Vec<u8> = FromHex::from_hex(
             "d3cf876dc108c2d3a81c8716a91678d9851518685b04859b021a132ee7440603c4a2185a7abf3effc78f53e349a4a6680a9caeb2965f84e7927c0a0e8c73ed1500").unwrap();
         assert_eq!(res1, expected);
-        println!("test add2 success!");
     }
 }
 
@@ -61,7 +53,6 @@ fn test_bn256_scalar_mul() {
         "d3cf876dc108c2d3a81c8716a91678d9851518685b04859b021a132ee7440603c4a2185a7abf3effc78f53e349a4a6680a9caeb2965f84e7927c0a0e8c73ed1500").unwrap();
 
     assert_eq!(res2, expected);
-    println!("test add2 success!");
 }
 
 // 30 times pairings
@@ -77,7 +68,6 @@ fn test_bn256_pairing() {
             // e(sa, b) = e(sb, a)
             // e(sa, b) * e(-sb, a) = 1
             assert!(Bn254::pairings(&input[..]).expect("pairings failed"));
-            println!("test pairings{} success!", i + 1);
         }
 
         // check pairings
@@ -89,7 +79,6 @@ fn test_bn256_pairing() {
 
             // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
             assert!(Bn254::pairings(&input[..]).unwrap());
-            println!("test pairings e(a1*b1)*e(a2*b2)*e(-a1*b1)*e(-a2*b2) success!");
         }
     }
 }

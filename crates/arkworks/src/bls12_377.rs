@@ -1,11 +1,11 @@
-use super::{all_curve_three_operations_test, CurveBasicOperations};
+use super::CurveBasicOperations;
 use ark_bls12_377::{Bls12_377, Fq12, Fr, G1Projective, G2Projective};
 use ark_ec::PairingEngine;
 use ark_ff::{
     fields::{Field, PrimeField},
     test_rng, One,
 };
-use ark_std::ops::MulAssign;
+use ark_std::{ops::MulAssign, vec::Vec};
 use rand::Rng;
 use rustc_hex::FromHex;
 
@@ -15,11 +15,11 @@ impl CurveBasicOperations for Bls12_377 {
     const SCALAR_LEN: usize = 32;
 }
 
-#[test]
-fn test_bls12_377() {
-    all_curve_three_operations_test::<Bls12_377>();
-    // test_pairings::<Bls12_377>();
-}
+// #[test]
+// fn test_bls12_377() {
+//     all_curve_three_operations_test::<Bls12_377>();
+//     // test_pairings::<Bls12_377>();
+// }
 
 #[test]
 fn test_bls12_377_additional() {
@@ -34,7 +34,6 @@ fn test_bls12_377_additional() {
             "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001").unwrap();
 
         assert_eq!(&expected[..], &res[..]);
-        println!("test add1 success!");
     }
 
     // one-points additions
@@ -48,7 +47,6 @@ fn test_bls12_377_additional() {
         let expected :Vec<u8> = FromHex::from_hex(
             "9063416a6ded7a8590dc816765610688551930a2c9970ee97e4b2addf3f7617eed52544b5adb6e05919e93413145ed00edc7d727875edde2a75ced75563fa2d67944c635f1120be8ca61c542aecd99ad37131713186004aee5c87b71b9b0cf0000").unwrap();
         assert_eq!(res1, expected);
-        println!("test add2 success!");
     }
 }
 
@@ -64,7 +62,6 @@ fn test_bls12_377_scalar_mul() {
         "9063416a6ded7a8590dc816765610688551930a2c9970ee97e4b2addf3f7617eed52544b5adb6e05919e93413145ed00edc7d727875edde2a75ced75563fa2d67944c635f1120be8ca61c542aecd99ad37131713186004aee5c87b71b9b0cf0000").unwrap();
 
     assert_eq!(res2, expected);
-    println!("test add2 success!");
 }
 
 // 30 times pairings
@@ -80,7 +77,6 @@ fn test_bls12_377_pairing() {
             // e(sa, b) = e(sb, a)
             // e(sa, b) * e(-sb, a) = 1
             assert!(Bls12_377::pairings(&input[..]).expect("pairings failed"));
-            println!("test pairings{} success!", i + 1);
         }
 
         // check pairings
@@ -92,7 +88,6 @@ fn test_bls12_377_pairing() {
 
             // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
             assert!(Bls12_377::pairings(&input[..]).unwrap());
-            println!("test pairings e(a1*b1)*e(a2*b2)*e(-a1*b1)*e(-a2*b2) success!");
         }
     }
 }
