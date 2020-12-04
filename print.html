@@ -303,7 +303,8 @@ mod altbn128 {
 and <a href="https://github.com/patractlabs/megaclite/tree/master/crates/arkworks">arkworks</a>, all of the curves megaclite implements contain <code>add</code>, <code>mul</code> 
 and <code>pairing</code>, including <code>verify</code>.</p>
 <h1><a class="header" href="#benchmark" id="benchmark">Benchmark</a></h1>
-<p>We have constructed <a href="https://github.com/patractlabs/megaclite/tree/master/crates/arkworks/src/tests">the tests of megaclite curves</a> in <a href="https://github.com/patractlabs/substrate/blob/features/curve-benchmark/bin/node-template/pallets/template/src/lib.rs">pallet-template</a> which imports the curves from megaclite directly(<em>Wasm</em>) and with <code>runtime-interface</code>(<em>Native</em>).</p>
+<p>We have constructed <a href="https://github.com/patractlabs/megaclite/tree/master/crates/arkworks/src/tests">the tests of megaclite curves</a> in <a href="https://github.com/patractlabs/substrate/blob/features/curve-benchmark/bin/node-template/pallets/template/src/lib.rs">pallet-template</a> which imports the 
+curves from megaclite directly(<em>Wasm</em>) and with <a href="https://github.com/patractlabs/substrate/blob/features/curve-benchmark/bin/node-template/io/src/lib.rs">runtime-interface</a>(<em>Native</em>).</p>
 <h2><a class="header" href="#building" id="building">Building</a></h2>
 <pre><code class="language-bash"># Clone the branch `curve-benchmark` of our fork
 git clone https://github.com/patractlabs/substrate.git \
