@@ -1,6 +1,7 @@
 # Benchmark
 
-We have constructed [the tests of megaclite curves][tests] in [pallet-template][benchmark] which imports the curves from megaclite directly(*Wasm*) and with `runtime-interface`(*Native*).
+We have constructed [the tests of megaclite curves][tests] in [pallet-template][benchmark] which imports the 
+curves from megaclite directly(*Wasm*) and with [runtime-interface][runtime-interface](*Native*).
 
 
 ## Building
@@ -58,4 +59,5 @@ sh ./benchmark.sh
 
 
 [benchmark]: https://github.com/patractlabs/substrate/blob/features/curve-benchmark/bin/node-template/pallets/template/src/lib.rs
+[runtime-interface]: https://github.com/patractlabs/substrate/blob/features/curve-benchmark/bin/node-template/io/src/lib.rs
 [tests]: https://github.com/patractlabs/megaclite/tree/master/crates/arkworks/src/tests
