@@ -2,46 +2,26 @@ use crate::{curves::Bls12_381, CurveBasicOperations};
 use ark_std::{ops::MulAssign, vec::Vec};
 use rustc_hex::FromHex;
 
-#[test]
-fn test_bls12_381_additional() {
-    // zero-points additions
-    {
-        let input:Vec<u8> = FromHex::from_hex(
-            "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
-                    000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
-                    00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
-                    000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001").unwrap();
+/// BLS12_381 ADD
+pub fn bls12_381_add() {
+    // two one-points add encode
+    let input1:Vec<u8> = FromHex::from_hex(
+        "bbc622db0af03afbef1a7af93fe8556c58ac1b173f3a4ea105b974974f8c68c30faca94f8c63952694d79731a7d3f117e1\
+         e7c5462923aa0ce48a88a244c73cd0edb3042ccb18db00f60ad0d595e0f5fce48a1d74ed309ea0f1a0aae381f4b30800\
+         bbc622db0af03afbef1a7af93fe8556c58ac1b173f3a4ea105b974974f8c68c30faca94f8c63952694d79731a7d3f117e1\
+         e7c5462923aa0ce48a88a244c73cd0edb3042ccb18db00f60ad0d595e0f5fce48a1d74ed309ea0f1a0aae381f4b30800").unwrap();
 
-        let res = Bls12_381::add(&input[..]).unwrap();
+    let res1 = Bls12_381::add(&input1[..]).unwrap();
 
-        let expected :Vec<u8> = FromHex::from_hex(
-            "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
-                    000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001").unwrap();
+    let expected :Vec<u8> = FromHex::from_hex(
+        "4e0fbf29558c9ac3427c1c8fbb758fe22aa658c30a2d90432501289130db21970c45a950ebc8088846674d90eacb720528\
+         9d7479198886ba1bbd16cdd4d9564c6ad75f1d02b93bf761e47086cb3eba22388e9d7773a6fd22a373c6ab8c9d6a1600").unwrap();
 
-        assert_eq!(&expected[..], &res[..]);
-    }
-
-    // one-points additions
-    {
-        // two one-points add encode
-        let input1:Vec<u8> = FromHex::from_hex(
-            "bbc622db0af03afbef1a7af93fe8556c58ac1b173f3a4ea105b974974f8c68c30faca94f8c63952694d79731a7d3f117e1\
-                    e7c5462923aa0ce48a88a244c73cd0edb3042ccb18db00f60ad0d595e0f5fce48a1d74ed309ea0f1a0aae381f4b30800\
-                   bbc622db0af03afbef1a7af93fe8556c58ac1b173f3a4ea105b974974f8c68c30faca94f8c63952694d79731a7d3f117e1\
-                    e7c5462923aa0ce48a88a244c73cd0edb3042ccb18db00f60ad0d595e0f5fce48a1d74ed309ea0f1a0aae381f4b30800").unwrap();
-
-        let res1 = Bls12_381::add(&input1[..]).unwrap();
-
-        let expected :Vec<u8> = FromHex::from_hex(
-            "4e0fbf29558c9ac3427c1c8fbb758fe22aa658c30a2d90432501289130db21970c45a950ebc8088846674d90eacb720528\
-                    9d7479198886ba1bbd16cdd4d9564c6ad75f1d02b93bf761e47086cb3eba22388e9d7773a6fd22a373c6ab8c9d6a1600").unwrap();
-
-        assert_eq!(res1, expected);
-    }
+    assert_eq!(res1, expected);
 }
 
-#[test]
-fn test_bls12_381_scalar_mul() {
+/// BLS12_381 MUL
+pub fn bls12_381_mul() {
     // one-point mul 2 encode
     let input2:Vec<u8> = FromHex::from_hex(
         "bbc622db0af03afbef1a7af93fe8556c58ac1b173f3a4ea105b974974f8c68c30faca94f8c63952694d79731a7d3f117e1\
@@ -59,14 +39,10 @@ fn test_bls12_381_scalar_mul() {
     assert_eq!(res2, expected);
 }
 
-// 30 times pairings
-#[test]
-fn test_bls12_381_pairing() {
-    for i in 0..5 {
-        // test pairings
-        {
-            // vec![sa,b,-sb,a]
-            let input: Vec<u8> = FromHex::from_hex(
+/// BLS12_381 PAIRING
+pub fn bls12_381_pairing() {
+    // vec![sa,b,-sb,a]
+    let input: Vec<u8> = FromHex::from_hex(
                 "0b198686e7b0d46c9857744a328590a0a4368724b79e3c747df05f90ef692a36dbef2f5643a3789c29f536d58068cb162e\
                  586c47ee9fc22748c5b6ca5e125dcf758bb3899a581e58c0fa5bc8c6be87edeb1bd21125524eb45c750da4a9d278030009\
                  c3078d5c5886fb948bbda03027f17c5a4d807fe558c5651578eb4f72038408ca45da26f19066f74c656542cf161507eee2\
@@ -81,15 +57,22 @@ fn test_bls12_381_pairing() {
                  75f9d4e6e779016ede8e63ef4396fd7ad4318ed5561290ca7dcd2288a2ae8894c9c7339e8186681100"
             ).unwrap();
 
-            // e(sa, b) = e(sb, a)
-            // e(sa, b) * e(-sb, a) = 1
-            assert!(Bls12_381::pairings(&input[..]).expect("pairings failed"));
-        }
+    // e(sa, b) = e(sb, a)
+    // e(sa, b) * e(-sb, a) = 1
+    assert!(Bls12_381::pairings(&input[..]).expect("pairings failed"));
+}
 
-        // check pairings
-        {
-            // hex![(a1, b1), (a2, b2), (-a1, b1), (-a2, b2)];
-            let pairings_encoded =
+/// BLS12_381 PAIRING SIX
+pub fn bls12_381_pairing_six() {
+    // test pairings
+    {
+        bls12_381_pairing();
+    }
+
+    // check pairings
+    {
+        // hex![(a1, b1), (a2, b2), (-a1, b1), (-a2, b2)];
+        let pairings_encoded =
                 "bbc622db0af03afbef1a7af93fe8556c58ac1b173f3a4ea105b974974f8c68c30faca94f8c63952694d79731a7d3f117e1\
                  e7c5462923aa0ce48a88a244c73cd0edb3042ccb18db00f60ad0d595e0f5fce48a1d74ed309ea0f1a0aae381f4b30800b8\
                  bd21c1c85680d4efbb05a82603ac0b77d1e37a640b51b4023b40fad47ae4c65110c52d27050826910a8ff0b2a24a027e2b\
@@ -115,10 +98,44 @@ fn test_bls12_381_pairing() {
                  b7fe9c27f4751bbd1ebdcfd0aa1898ef915ecdb2c9586f05e8faba135d0b64fd0d3610a6e94eb220c3523519374e582f03\
                  d08a8a51f7e452b7a3b7bf6cc8492e01b8c7b79b8929157a18b51ed5c3e26c0a00";
 
-            let input: Vec<u8> = FromHex::from_hex(pairings_encoded).unwrap();
+        let input: Vec<u8> = FromHex::from_hex(pairings_encoded).unwrap();
 
-            // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
-            assert!(Bls12_381::pairings(&input[..]).unwrap());
-        }
+        // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
+        assert!(Bls12_381::pairings(&input[..]).unwrap());
+    }
+}
+
+#[test]
+fn test_bls12_381_additional() {
+    // zero-points additions
+    {
+        let input:Vec<u8> = FromHex::from_hex(
+            "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+                    000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+                    00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+                    000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001").unwrap();
+
+        let res = Bls12_381::add(&input[..]).unwrap();
+
+        let expected :Vec<u8> = FromHex::from_hex(
+            "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
+                    000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001").unwrap();
+
+        assert_eq!(&expected[..], &res[..]);
+    }
+
+    bls12_381_add();
+}
+
+#[test]
+fn test_bls12_381_scalar_mul() {
+    bls12_381_mul();
+}
+
+// 30 times pairings
+#[test]
+fn test_bls12_381_pairing() {
+    for i in 0..5 {
+        bls12_381_pairing_six();
     }
 }
