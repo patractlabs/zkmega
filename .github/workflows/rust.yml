@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: "! contains(toJSON(github.event.commits.*.message), 'ci(skip)')"
+    if: "! contains(toJSON(github.event.commits.head_commit.message), 'ci(skip)')"
     steps:
       - name: Checkout the source code
         uses: actions/checkout@v1
