@@ -168,7 +168,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1><a class="header" href="#benchmark" id="benchmark">Benchmark</a></h1>
-<p>We have constructed [the tests of megaclite curves][tests] in [pallet-template][benchmark] which imports the curves from megaclite directly(<em>Wasm</em>) and with <code>runtime-interface</code>(<em>Native</em>).</p>
+<p>We have constructed <a href="https://github.com/patractlabs/megaclite/tree/master/crates/arkworks/src/tests">the tests of megaclite curves</a> in <a href="https://github.com/patractlabs/substrate/blob/features/curve-benchmark/bin/node-template/pallets/template/src/lib.rs">pallet-template</a> which imports the curves from megaclite directly(<em>Wasm</em>) and with <code>runtime-interface</code>(<em>Native</em>).</p>
 <h2><a class="header" href="#building" id="building">Building</a></h2>
 <pre><code class="language-bash"># Clone the branch `curve-benchmark` of our fork
 git clone https://github.com/patractlabs/substrate.git \
@@ -184,9 +184,7 @@ cargo build -p node-template --all-features --release
 
 </code></pre>
 <h2><a class="header" href="#result" id="result">Result</a></h2>
-<blockquote>
 <p>Extrinsics listed below are ready to test</p>
-</blockquote>
 <table><thead><tr><th>Curve</th><th>Native</th><th>Time</th><th>Wasm</th><th>Time</th></tr></thead><tbody>
 <tr><td>bls12_377</td><td>native_bls12_377_add</td><td></td><td>wasm_bls12_377_add</td><td></td></tr>
 <tr><td></td><td>native_bls12_377_mul</td><td></td><td>wasm_bls12_377_mul</td><td></td></tr>
