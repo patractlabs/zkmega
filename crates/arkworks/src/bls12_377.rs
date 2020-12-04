@@ -15,12 +15,6 @@ impl CurveBasicOperations for Bls12_377 {
     const SCALAR_LEN: usize = 32;
 }
 
-// #[test]
-// fn test_bls12_377() {
-//     all_curve_three_operations_test::<Bls12_377>();
-//     // test_pairings::<Bls12_377>();
-// }
-
 #[test]
 fn test_bls12_377_additional() {
     // zero-points additions
@@ -77,6 +71,7 @@ fn test_bls12_377_pairing() {
             // e(sa, b) = e(sb, a)
             // e(sa, b) * e(-sb, a) = 1
             assert!(Bls12_377::pairings(&input[..]).expect("pairings failed"));
+            // println!("test pairings{} success!", i + 1);
         }
 
         // check pairings
@@ -88,6 +83,7 @@ fn test_bls12_377_pairing() {
 
             // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
             assert!(Bls12_377::pairings(&input[..]).unwrap());
+            // println!("test pairings e(a1*b1)*e(a2*b2)*e(-a1*b1)*e(-a2*b2) success!");
         }
     }
 }

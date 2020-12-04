@@ -13,12 +13,6 @@ impl CurveBasicOperations for Bls12_381 {
 }
 
 #[test]
-fn test_bls12_381() {
-    all_curve_three_operations_test::<Bls12_381>();
-    // test_pairings::<Bls12_381>();
-}
-
-#[test]
 fn test_bls12_381_additional() {
     // zero-points additions
     {

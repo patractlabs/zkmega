@@ -11,6 +11,7 @@ use ark_std::{
     vec::Vec,
 };
 use arkworks::CurveBasicOperations;
+use rand::Rng;
 use rustc_hex::ToHex;
 
 type G1Affine<T> = <T as PairingEngine>::G1Affine;
