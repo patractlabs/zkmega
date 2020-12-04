@@ -22,7 +22,7 @@ cargo build -p node-template --all-features --release
 
 ## Result
 
-> Extrinsics listed below are ready to test
+Extrinsics listed below are ready to test
 
 | Curve      | Native                           | Time | Wasm                           | Time |
 |------------|----------------------------------|------|--------------------------------|------|
@@ -55,3 +55,7 @@ cargo build -p node-template --all-features --release
 # 2. Has compiled node-template
 sh ./benchmark.sh
 ```
+
+
+[benchmark]: https://github.com/patractlabs/substrate/blob/features/curve-benchmark/bin/node-template/pallets/template/src/lib.rs
+[tests]: https://github.com/patractlabs/megaclite/tree/master/crates/arkworks/src/tests
