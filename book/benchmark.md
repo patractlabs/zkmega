@@ -1,8 +1,6 @@
 # Benchmark
 
-The `benchmark` of [megaclite curves](./curve) are constructed in `pallet-template` of the `node-template` in 
-[patractlabs/substrate][benchmark],  which imports the curves both from `runtime-interface`(**native**) and the 
-megaclite library(**wasm**).
+We have constructed [the tests of megaclite curves][tests] in [pallet-template][benchmark] which imports the curves from megaclite directly(*Wasm*) and with `runtime-interface`(*Native*).
 
 
 ## Building
@@ -14,7 +12,7 @@ git clone https://github.com/patractlabs/substrate.git \
     --depth =1
 
 # Build the template
-cargo build -p node-teamplate --all-features --release
+cargo build -p node-template --all-features --release
 
 # Check the command benchmark works fine
 # ./target/release/node-teamplate benchmark -p template -e wasm_bls_12_381_add
@@ -22,9 +20,9 @@ cargo build -p node-teamplate --all-features --release
 
 ```
 
-## Run
+## Result
 
-Extrinsics listed below are ready to test
+> Extrinsics listed below are ready to test
 
 | Curve      | Native                           | Time | Wasm                           | Time |
 |------------|----------------------------------|------|--------------------------------|------|
@@ -57,9 +55,3 @@ Extrinsics listed below are ready to test
 # 2. Has compiled node-template
 sh ./benchmark.sh
 ```
-
-## Result
-
-> WIP
-
-[benchmark]: https://github.com/patractlabs/substrate/tree/features/curve-benchmark
