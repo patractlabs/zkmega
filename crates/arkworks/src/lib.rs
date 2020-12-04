@@ -9,6 +9,7 @@ mod bls12_381;
 mod bn254;
 mod bw6_761;
 mod cp6_782;
+pub mod tests;
 
 use ark_ec::{AffineCurve, PairingEngine, ProjectiveCurve};
 use ark_ff::{test_rng, FromBytes, One, PrimeField, ToBytes, UniformRand, Zero};
@@ -19,7 +20,6 @@ use ark_std::{
     str::FromStr,
     vec::Vec,
 };
-use rustc_hex::ToHex;
 
 /// Re-export curves
 pub mod curves {
