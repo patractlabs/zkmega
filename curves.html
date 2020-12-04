@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Curve - The Megaclite Book</title>
+        <title>Curves - The Megaclite Book</title>
         
         
 
@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><div><strong aria-hidden="true">1.</strong> Arch</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="pairing.html"><strong aria-hidden="true">1.1.</strong> Pairing</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html"><strong aria-hidden="true">1.2.</strong> Pallet Contracts</a></li></ol></li><li class="chapter-item expanded "><a href="curve.html" class="active"><strong aria-hidden="true">2.</strong> Curve</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> Substrate</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="benchmark.html"><strong aria-hidden="true">3.1.</strong> Benchmark</a></li></ol></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">4.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><div><strong aria-hidden="true">1.</strong> Arch</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="pairing.html"><strong aria-hidden="true">1.1.</strong> Pairing</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html"><strong aria-hidden="true">1.2.</strong> Pallet Contracts</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">2.</strong> Solution</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="curves.html" class="active"><strong aria-hidden="true">2.1.</strong> Curves</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> Substrate</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="benchmark.html"><strong aria-hidden="true">3.1.</strong> Benchmark</a></li></ol></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">4.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -167,7 +167,15 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1><a class="header" href="#curve" id="curve">Curve</a></h1>
+                        <h1><a class="header" href="#curves" id="curves">Curves</a></h1>
+<table><thead><tr><th></th><th>bls12_377</th><th>bls12_381</th><th>bn254</th><th>bw6_761</th><th>cp6_782</th></tr></thead><tbody>
+<tr><td>arkworks</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td></tr>
+<tr><td>matter-labs</td><td></td><td>x</td><td>x</td><td></td><td></td></tr>
+<tr><td>zcash</td><td></td><td></td><td>x</td><td></td><td></td></tr>
+</tbody></table>
+<p>We implement megaclite curves based on <a href="https://github.com/patractlabs/megaclite/tree/master/crates/zcash">zcash</a>, <a href="https://github.com/patractlabs/megaclite/tree/master/crates/matter-labs">matter-labs</a> 
+and <a href="https://github.com/patractlabs/megaclite/tree/master/crates/arkworks">arkworks</a>, all of the curves megaclite implements contain <code>add</code>, <code>mul</code> 
+and <code>pairing</code>, including <code>verify</code>.</p>
 
                     </main>
 

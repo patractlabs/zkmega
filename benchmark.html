@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><div><strong aria-hidden="true">1.</strong> Arch</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="pairing.html"><strong aria-hidden="true">1.1.</strong> Pairing</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html"><strong aria-hidden="true">1.2.</strong> Pallet Contracts</a></li></ol></li><li class="chapter-item expanded "><a href="curve.html"><strong aria-hidden="true">2.</strong> Curve</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> Substrate</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="benchmark.html" class="active"><strong aria-hidden="true">3.1.</strong> Benchmark</a></li></ol></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">4.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><div><strong aria-hidden="true">1.</strong> Arch</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="pairing.html"><strong aria-hidden="true">1.1.</strong> Pairing</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html"><strong aria-hidden="true">1.2.</strong> Pallet Contracts</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">2.</strong> Solution</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="curves.html"><strong aria-hidden="true">2.1.</strong> Curves</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> Substrate</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="benchmark.html" class="active"><strong aria-hidden="true">3.1.</strong> Benchmark</a></li></ol></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">4.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -168,9 +168,7 @@
                 <div id="content" class="content">
                     <main>
                         <h1><a class="header" href="#benchmark" id="benchmark">Benchmark</a></h1>
-<p>The <code>benchmark</code> of <a href="./curve">megaclite curves</a> are constructed in <code>pallet-template</code> of the <code>node-template</code> in 
-<a href="https://github.com/patractlabs/substrate/tree/features/curve-benchmark">patractlabs/substrate</a>,  which imports the curves both from <code>runtime-interface</code>(<strong>native</strong>) and the 
-megaclite library(<strong>wasm</strong>).</p>
+<p>We have constructed [the tests of megaclite curves][tests] in [pallet-template][benchmark] which imports the curves from megaclite directly(<em>Wasm</em>) and with <code>runtime-interface</code>(<em>Native</em>).</p>
 <h2><a class="header" href="#building" id="building">Building</a></h2>
 <pre><code class="language-bash"># Clone the branch `curve-benchmark` of our fork
 git clone https://github.com/patractlabs/substrate.git \
@@ -178,15 +176,17 @@ git clone https://github.com/patractlabs/substrate.git \
     --depth =1
 
 # Build the template
-cargo build -p node-teamplate --all-features --release
+cargo build -p node-template --all-features --release
 
 # Check the command benchmark works fine
 # ./target/release/node-teamplate benchmark -p template -e wasm_bls_12_381_add
 ./target/release/node-teamplate benchmark -p template -e native_bls_12_381_add
 
 </code></pre>
-<h2><a class="header" href="#run" id="run">Run</a></h2>
+<h2><a class="header" href="#result" id="result">Result</a></h2>
+<blockquote>
 <p>Extrinsics listed below are ready to test</p>
+</blockquote>
 <table><thead><tr><th>Curve</th><th>Native</th><th>Time</th><th>Wasm</th><th>Time</th></tr></thead><tbody>
 <tr><td>bls12_377</td><td>native_bls12_377_add</td><td></td><td>wasm_bls12_377_add</td><td></td></tr>
 <tr><td></td><td>native_bls12_377_mul</td><td></td><td>wasm_bls12_377_mul</td><td></td></tr>
@@ -216,17 +216,13 @@ cargo build -p node-teamplate --all-features --release
 # 2. Has compiled node-template
 sh ./benchmark.sh
 </code></pre>
-<h2><a class="header" href="#result" id="result">Result</a></h2>
-<blockquote>
-<p>WIP</p>
-</blockquote>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="curve.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="curves.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
@@ -244,7 +240,7 @@ sh ./benchmark.sh
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="curve.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="curves.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
