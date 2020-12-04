@@ -1043,7 +1043,17 @@ dependencies = [
 name = "tests"
 version = "0.1.0"
 dependencies = [
+ "ark-bls12-377",
+ "ark-bls12-381",
+ "ark-bn254",
+ "ark-bw6-761",
+ "ark-cp6-782",
+ "ark-ec",
+ "ark-ff",
+ "ark-serialize",
+ "ark-std",
  "bellman_ce",
+ "megaclite-arkworks",
  "megaclite-matter-labs",
  "megaclite-zcash",
  "num-bigint 0.3.1",
