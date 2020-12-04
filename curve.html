@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Pairing - The Megaclite Book</title>
+        <title>Curve - The Megaclite Book</title>
         
         
 
@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><div><strong aria-hidden="true">1.</strong> Arch</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="pairing.html" class="active"><strong aria-hidden="true">1.1.</strong> Pairing</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html"><strong aria-hidden="true">1.2.</strong> Pallet Contracts</a></li></ol></li><li class="chapter-item expanded "><a href="curve.html"><strong aria-hidden="true">2.</strong> Curve</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> Substrate</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="benchmark.html"><strong aria-hidden="true">3.1.</strong> Benchmark</a></li></ol></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">4.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><div><strong aria-hidden="true">1.</strong> Arch</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="pairing.html"><strong aria-hidden="true">1.1.</strong> Pairing</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html"><strong aria-hidden="true">1.2.</strong> Pallet Contracts</a></li></ol></li><li class="chapter-item expanded "><a href="curve.html" class="active"><strong aria-hidden="true">2.</strong> Curve</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> Substrate</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="benchmark.html"><strong aria-hidden="true">3.1.</strong> Benchmark</a></li></ol></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">4.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -167,56 +167,20 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h2><a class="header" href="#pairing-friendly-curves" id="pairing-friendly-curves">Pairing-Friendly Curves</a></h2>
-<blockquote>
-<p>In Progress</p>
-</blockquote>
-<p>Here we provide <a href="https://github.com/patractlabs/megaclite/blob/master/src/alt_bn128.rs">alt_bn128</a> and <a href="https://github.com/patractlabs/megaclite/blob/master/src/bls12_381.rs">bls12_381</a> curves for the 
-<a href="https://tools.ietf.org/id/draft-yonezawa-pairing-friendly-curves-02.html">pairing-friendly curves</a>, both of them contain <code>add</code>, <code>mul</code> and <code>pairing</code> functions, 
-for helping devlopers trying and testing the curves, we provide <a href="http://www.zeroknowledgeblog.com/index.php/groth16">groth16</a> for
-<code>verifaction</code>.</p>
-<h2><a class="header" href="#interfaces" id="interfaces">Interfaces</a></h2>
-<p>We follow the format of the contracts that ethereum pre-compiled.</p>
-<pre><code class="language-rust ignore">/// Pairing-Friendly Curves
-trait Curve {
-    type VK;
-    type Proof;
-    
-    // Integrate addition
-    fn add(input: &amp;[u8]) -&gt; [u8; G1_LENGTH];
-    
-    // Scalar multiplication
-    fn mul(input: &amp;[u8]) -&gt; [u8; G1_LENGTH];
-    
-    // Pairing
-    fn pairing(input: &amp;[u8]) -&gt; bool;
-    
-    // Verifiy BLS
-    fn verify(
-        in_vk: VK,
-        vk_gammaABC: &amp;[u8],
-        in_proof: Proof,
-        proof_inputs: &amp;[u8],
-    ) -&gt; bool;
-}
-
-
-impl Curve for Bls12_381 {}
-impl Curve for AltBn_128 {}
-</code></pre>
+                        <h1><a class="header" href="#curve" id="curve">Curve</a></h1>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="pallet-contracts.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
                         
-                            <a rel="next" href="pallet-contracts.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="benchmark.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -228,13 +192,13 @@ impl Curve for AltBn_128 {}
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="pallet-contracts.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a rel="next" href="pallet-contracts.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="benchmark.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 

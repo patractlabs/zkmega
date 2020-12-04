@@ -97,7 +97,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="pairing.html"><strong aria-hidden="true">1.</strong> Pairing</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html"><strong aria-hidden="true">2.</strong> Pallet Contracts</a></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">3.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><div><strong aria-hidden="true">1.</strong> Arch</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="pairing.html"><strong aria-hidden="true">1.1.</strong> Pairing</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html"><strong aria-hidden="true">1.2.</strong> Pallet Contracts</a></li></ol></li><li class="chapter-item expanded "><a href="curve.html"><strong aria-hidden="true">2.</strong> Curve</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> Substrate</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="benchmark.html"><strong aria-hidden="true">3.1.</strong> Benchmark</a></li></ol></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">4.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -293,6 +293,60 @@ mod altbn128 {
     }
 }
 </code></pre>
+<h1><a class="header" href="#curve" id="curve">Curve</a></h1>
+<h1><a class="header" href="#benchmark" id="benchmark">Benchmark</a></h1>
+<p>The <code>benchmark</code> of <a href="./curve">megaclite curves</a> are constructed in <code>pallet-template</code> of the <code>node-template</code> in 
+<a href="https://github.com/patractlabs/substrate/tree/features/curve-benchmark">patractlabs/substrate</a>,  which imports the curves both from <code>runtime-interface</code>(<strong>native</strong>) and the 
+megaclite library(<strong>wasm</strong>).</p>
+<h2><a class="header" href="#building" id="building">Building</a></h2>
+<pre><code class="language-bash"># Clone the branch `curve-benchmark` of our fork
+git clone https://github.com/patractlabs/substrate.git \
+    --branch features/curve-benchmark \
+    --depth =1
+
+# Build the template
+cargo build -p node-teamplate --all-features --release
+
+# Check the command benchmark works fine
+# ./target/release/node-teamplate benchmark -p template -e wasm_bls_12_381_add
+./target/release/node-teamplate benchmark -p template -e native_bls_12_381_add
+
+</code></pre>
+<h2><a class="header" href="#run" id="run">Run</a></h2>
+<p>Extrinsics listed below are ready to test</p>
+<table><thead><tr><th>Curve</th><th>Native</th><th>Time</th><th>Wasm</th><th>Time</th></tr></thead><tbody>
+<tr><td>bls12_377</td><td>native_bls12_377_add</td><td></td><td>wasm_bls12_377_add</td><td></td></tr>
+<tr><td></td><td>native_bls12_377_mul</td><td></td><td>wasm_bls12_377_mul</td><td></td></tr>
+<tr><td></td><td>native_bls12_377_pairing_two</td><td></td><td>wasm_bls12_377_pairing_two</td><td></td></tr>
+<tr><td></td><td>native_bls12_377_pairing_six</td><td></td><td>wasm_bls12_377_pairing_six</td><td></td></tr>
+<tr><td>------------</td><td>----------------------------------</td><td>------</td><td>--------------------------------</td><td>------</td></tr>
+<tr><td>bls12_381</td><td>native_bls12_381_add</td><td></td><td>wasm_bls12_381_add</td><td></td></tr>
+<tr><td></td><td>native_bls12_381_mul</td><td></td><td>wasm_bls12_381_mul</td><td></td></tr>
+<tr><td></td><td>native_bls12_381_pairing_two</td><td></td><td>wasm_bls12_381_pairing_two</td><td></td></tr>
+<tr><td></td><td>native_bls12_381_pairing_six</td><td></td><td>wasm_bls12_381_pairing_six</td><td></td></tr>
+<tr><td>------------</td><td>----------------------------------</td><td>------</td><td>--------------------------------</td><td>------</td></tr>
+<tr><td>bn254</td><td>native_bn254_add</td><td></td><td>wasm_bn254_add</td><td></td></tr>
+<tr><td></td><td>native_bn254_mul</td><td></td><td>wasm_bn254_mul</td><td></td></tr>
+<tr><td></td><td>native_bn254_pairing_two</td><td></td><td>wasm_bn254_pairing_two</td><td></td></tr>
+<tr><td></td><td>native_bn254_pairing_six</td><td></td><td>wasm_bn254_pairing_six</td><td></td></tr>
+<tr><td>------------</td><td>----------------------------------</td><td>------</td><td>--------------------------------</td><td>------</td></tr>
+<tr><td>bw6_761</td><td>native_bw6_761_add</td><td></td><td>wasm_bw6_761_add</td><td></td></tr>
+<tr><td></td><td>native_bw6_761_mul</td><td></td><td>wasm_bw6_761_mul</td><td></td></tr>
+<tr><td></td><td>native_bw6_761_pairing_two</td><td></td><td>wasm_bw6_761_pairing_two</td><td></td></tr>
+<tr><td></td><td>native_bw6_761_pairing_six</td><td></td><td>wasm_bw6_761_pairing_six</td><td></td></tr>
+<tr><td>cp6_782</td><td>native_cp6_782_add</td><td></td><td>wasm_cp6_782_add</td><td></td></tr>
+<tr><td></td><td>native_cp6_782_mul</td><td></td><td>wasm_cp6_782_mul</td><td></td></tr>
+<tr><td></td><td>native_cp6_782_pairing_two</td><td></td><td>wasm_cp6_782_pairing_two</td><td></td></tr>
+<tr><td></td><td>native_cp6_782_pairing_six</td><td></td><td>wasm_cp6_782_pairing_six</td><td></td></tr>
+</tbody></table>
+<pre><code class="language-bash"># 1. Under the jupiter repo
+# 2. Has compiled node-template
+sh ./benchmark.sh
+</code></pre>
+<h2><a class="header" href="#result" id="result">Result</a></h2>
+<blockquote>
+<p>WIP</p>
+</blockquote>
 <h1><a class="header" href="#metis" id="metis">Metis</a></h1>
 <blockquote>
 <p>TODO</p>
