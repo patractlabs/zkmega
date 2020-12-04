@@ -4,34 +4,35 @@ version = "0.1.0"
 authors = ["Megaclite <https://github.com/patractlabs/megaclite>"]
 edition = "2018"
 
-[dependencies]
-bellman_ce = { version = "0.3.0", default-features = false }
-arkworks_curve = { package = "arkworks-curve", path = "arkworks_curve"}
-bn_bls_curve = { package = "bn-bls_curve", path = "bn_bls_curve"}
-
-num-bigint = "0.3"
-num-traits = "0.2"
-rand = "0.4"
-group = "0.8.0"
-
-rust-crypto = "0.2.36"
-sapling_crypto_ce = { package = "sapling-crypto_ce", git = "https://github.com/matter-labs/sapling-crypto", branch = "master" }
-rustc-hex = { version = "2", default-features = false }
-
-[dev-dependencies]
-hex-literal = "0.2.1"
-
-# Local CI
-[dev-dependencies.cargo-husky]
-version = "1"
-features = ["user-hooks"]
-default-features = false
-
 [workspace]
 members = [
-    "arkworks_curve",
-    "bn_bls_curve",
+    "crates/arkworks",
+    "crates/zcash",
+    "crates/matter-labs",
+    "crates/tests",
 ]
+
+[dependencies.arkworks-curve]
+package = "megaclite-arkworks"
+path = "crates/arkworks"
+optional = true
+
+[dependencies.matter-labs-curve]
+package = "megaclite-matter-labs"
+path = "crates/matter-labs"
+optional = true
+
+[dependencies.zcash-curve]
+package = "megaclite-zcash"
+path = "crates/zcash"
+optional = true
+
+[features]
+default = ["arkworks"]
+arkworks = ["arkworks-curve"]
+matter-labs = ["matter-labs-curve"]
+zcash = ["zcash-curve"]
+
 
 [profile.test]
 opt-level = 3

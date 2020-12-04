@@ -1,9 +1,13 @@
+#![allow(unused_doc_comments)]
+#![allow(unused_imports)]
+#![allow(unused_variables)]
+#![allow(unused_must_use)]
+#![allow(non_snake_case)]
 pub mod alt_bn128;
 pub mod bls12_381;
 
 use num_bigint::BigUint;
 use num_traits::Num;
-use pairing_ce::Engine;
 use std::convert::TryFrom;
 
 pub trait Curve<'a> {
@@ -25,24 +29,24 @@ pub trait Curve<'a> {
 }
 
 pub fn verify_proof<'a, C: Curve<'a>>(
-    vk_gammaABC: &[&'a [u8]],
+    vk_gamma_abc: &[&'a [u8]],
     vk: &[u8],
     proof: &[u8],
     public_inputs: &[&[u8]],
 ) -> Result<bool, &'static str> {
     let len = C::FQ_BYTES_LENGTH;
-    if (public_inputs.len() + 1) != vk_gammaABC.len() {
+    if (public_inputs.len() + 1) != vk_gamma_abc.len() {
         return Err("verifying key was malformed.");
     }
 
     // First two fields are used as the sum
     let mut acc =
-        C::Point::try_from(vk_gammaABC[0]).map_err(|_| "vk_gammaABC slice try_from fail")?;
+        C::Point::try_from(vk_gamma_abc[0]).map_err(|_| "vk_gamma_abc slice try_from fail")?;
 
     // Compute the linear combination vk_x
     //  [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
     // acc = sigma(i:0~l)* [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
-    for (i, b) in public_inputs.iter().zip(vk_gammaABC.iter().skip(1)) {
+    for (i, b) in public_inputs.iter().zip(vk_gamma_abc.iter().skip(1)) {
         input_require_on_curve::<C>(i)?;
 
         let mut mul_res = vec![0u8; len * 2 + 32];

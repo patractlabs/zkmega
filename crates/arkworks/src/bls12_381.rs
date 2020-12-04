@@ -52,6 +52,7 @@ fn test_bls12_381_additional() {
         let expected :Vec<u8> = FromHex::from_hex(
             "4e0fbf29558c9ac3427c1c8fbb758fe22aa658c30a2d90432501289130db21970c45a950ebc8088846674d90eacb720528\
                     9d7479198886ba1bbd16cdd4d9564c6ad75f1d02b93bf761e47086cb3eba22388e9d7773a6fd22a373c6ab8c9d6a1600").unwrap();
+
         assert_eq!(res1, expected);
         println!("test add2 success!");
     }

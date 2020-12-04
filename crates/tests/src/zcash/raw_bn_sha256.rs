@@ -1,19 +1,18 @@
+use crate::matter_labs::parse::{proof_write, vk_write};
 use bellman_ce::{
     groth16::{
         create_random_proof, generate_random_parameters, prepare_verifying_key,
         verify_proof as raw_verify_proof,
     },
     pairing::{
-        bls12_381::Bls12,
+        bn256::Bn256,
         ff::{PrimeField, PrimeFieldRepr},
         CurveAffine,
     },
     Circuit, ConstraintSystem, SynthesisError,
 };
-use bn_bls_curve::verify_proof;
 use crypto::digest::Digest;
 use crypto::sha2::Sha256;
-use megaclite::parse::{proof_write, vk_write};
 use rand::thread_rng;
 use rand::{Rng, SeedableRng, XorShiftRng};
 use sapling_crypto_ce::circuit::{
@@ -21,13 +20,14 @@ use sapling_crypto_ce::circuit::{
     multipack,
     sha256::sha256,
 };
+use zcash::verify_proof;
 
 struct Sha256Demo {
     input_data: Vec<u8>,
 }
 
-impl Circuit<Bls12> for Sha256Demo {
-    fn synthesize<CS: ConstraintSystem<Bls12>>(
+impl Circuit<Bn256> for Sha256Demo {
+    fn synthesize<CS: ConstraintSystem<Bn256>>(
         self,
         mut cs: &mut CS,
     ) -> Result<(), SynthesisError> {
@@ -95,31 +95,41 @@ fn eval_sha256(num_bytes: usize) {
     );
 
     let hash_bits = multipack::bytes_to_bits(r1);
-    let inputs = multipack::compute_multipacking::<Bls12>(&hash_bits);
+    let inputs = multipack::compute_multipacking::<Bn256>(&hash_bits);
 
     /// Using our own verify_proof implementation to check the proof
     {
         // proof encode
-        let mut proof_encode = vec![0u8; 48 * 8];
+        let mut proof_encode = vec![0u8; 32 * 8];
         proof_write(&mut proof, &mut proof_encode);
         // vk encode
-        let mut vk_encode = vec![0u8; 48 * 14];
+        let mut vk_encode = vec![0u8; 32 * 14];
         vk_write(&mut vk_encode, &params);
 
         // vk_ic encode
-        let vk_not_prepared = params.vk.ic.iter().map(|ic| ic.into_uncompressed().as_ref().to_vec()).collect::<Vec<_>>();
+        let vk_not_prepared = params
+            .vk
+            .ic
+            .iter()
+            .map(|ic| ic.into_uncompressed().as_ref().to_vec())
+            .collect::<Vec<_>>();
         let vk_ic = vk_not_prepared.iter().map(|ic| &ic[..]).collect::<Vec<_>>();
 
         // input encode
-        let mut input = vec![[0u8; 32]; inputs.len()];
-        inputs.iter().enumerate().for_each(|(i, scalar)| scalar.into_repr().write_le(&mut input[i][..]).unwrap());
 
-        assert!(verify_proof::<Bls12>(
+        let mut input = vec![[0u8; 32]; inputs.len()];
+        inputs
+            .iter()
+            .enumerate()
+            .for_each(|(i, scalar)| scalar.into_repr().write_be(&mut input[i][..]).unwrap());
+
+        assert!(verify_proof::<Bn256>(
             &*vk_ic,
             &*vk_encode,
             &*proof_encode,
-            &input.iter().map(|x| &x[..]).collect::<Vec<_>>())
-            .expect("verify_proof fail"));
+            &input.iter().map(|x| &x[..]).collect::<Vec<_>>()
+        )
+        .expect("verify_proof fail"));
     }
 
     /// Using bellman_ce verify_proof to check the proof

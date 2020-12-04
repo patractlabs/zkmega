@@ -1,5 +1,5 @@
 [package]
-name = "arkworks-curve"
+name = "megaclite-arkworks"
 version = "0.1.0"
 authors = ["Megaclite <https://github.com/patractlabs/megaclite>"]
 edition = "2018"
