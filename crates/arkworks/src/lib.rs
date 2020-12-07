@@ -37,7 +37,15 @@ pub trait CurveBasicOperations: PairingEngine {
     const G2_LEN: usize;
     // Scalar bytes length
     const SCALAR_LEN: usize;
+    // Function ID
+    const CURVE_ID: usize;
 
+    #[cfg(feature = "ink")]
+    fn add(input: &[u8]) -> Result<Vec<u8>, SerializationError> {
+        ink_env::zk_snarks::add(ID, input)
+    }
+
+    #[cfg(not(feature = "ink"))]
     fn add(input: &[u8]) -> Result<Vec<u8>, SerializationError> {
         // g1 infinity is bool, so two g1s should be + 2 byte.
         if input.len() != Self::G1_LEN * 2 {
@@ -58,7 +66,13 @@ pub trait CurveBasicOperations: PairingEngine {
         Ok(output)
     }
 
-    fn scalar_mul(input: &[u8]) -> Result<Vec<u8>, SerializationError> {
+    #[cfg(feature = "ink")]
+    fn mul(input: &[u8]) -> Result<Vec<u8>, SerializationError> {
+        ink_env::zk_snarks::mul(CURVE_ID, input)
+    }
+
+    #[cfg(not(feature = "ink"))]
+    fn mul(input: &[u8]) -> Result<Vec<u8>, SerializationError> {
         // g1 infinity is bool, so + 1 byte.
         if input.len() != Self::G1_LEN + Self::SCALAR_LEN {
             return Err(Error::new(
@@ -76,7 +90,13 @@ pub trait CurveBasicOperations: PairingEngine {
         Ok(output)
     }
 
-    fn pairings(input: &[u8]) -> Result<bool, SerializationError> {
+    #[cfg(feature = "ink")]
+    fn pairing(input: &[u8]) -> Result<Vec<u8>, SerializationError> {
+        ink_env::zk_snarks::pairing(CURVE_ID, input)
+    }
+
+    #[cfg(not(feature = "ink"))]
+    fn pairing(input: &[u8]) -> Result<bool, SerializationError> {
         // g1 infinity is bool, so + 1 byte.
         let g1_len = Self::G1_LEN;
         // ditto, g1 g2 + 2.

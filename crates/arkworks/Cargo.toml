@@ -20,7 +20,9 @@ ark-serialize = { git = "https://github.com/arkworks-rs/algebra", default-featur
 rustc-hex = { version = "2", default-features = false }
 rand = { version = "0.7", default-features = false }
 
+ink_env = { version = "3.0.0-rc2", optional = true }
+
 [features]
 default = []
 tests = []
-ink = []
+ink = [ "ink_env" ]

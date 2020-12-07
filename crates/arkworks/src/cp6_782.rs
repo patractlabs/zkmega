@@ -10,6 +10,7 @@ impl CurveBasicOperations for CP6_782 {
     const G1_LEN: usize = 209;
     const G2_LEN: usize = 625;
     const SCALAR_LEN: usize = 48;
+    const CURVE_ID: usize = 0x2d;
 }
 
 #[test]

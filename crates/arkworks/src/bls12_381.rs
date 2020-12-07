@@ -10,6 +10,7 @@ impl CurveBasicOperations for Bls12_381 {
     const G1_LEN: usize = 97;
     const G2_LEN: usize = 193;
     const SCALAR_LEN: usize = 32;
+    const CURVE_ID: usize = 0x2b;
 }
 
 #[test]

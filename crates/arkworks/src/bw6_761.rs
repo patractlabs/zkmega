@@ -10,6 +10,7 @@ impl CurveBasicOperations for BW6_761 {
     const G1_LEN: usize = 193;
     const G2_LEN: usize = 193;
     const SCALAR_LEN: usize = 48;
+    const CURVE_ID: usize = 0x2d;
 }
 
 #[test]

@@ -10,6 +10,7 @@ impl CurveBasicOperations for Bn254 {
     const G1_LEN: usize = 65;
     const G2_LEN: usize = 129;
     const SCALAR_LEN: usize = 32;
+    const CURVE_ID: usize = 0x2c;
 }
 
 #[test]

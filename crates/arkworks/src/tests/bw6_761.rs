@@ -37,7 +37,7 @@ pub fn bw6_761_pairing() {
 
     // e(sa, b) = e(sb, a)
     // e(sa, b) * e(-sb, a) = 1
-    assert!(BW6_761::pairings(&input[..]).expect("pairings failed"));
+    assert!(BW6_761::pairing(&input[..]).expect("pairings failed"));
 }
 
 /// BW6_761 PAIRING SIX
@@ -52,7 +52,7 @@ pub fn bw6_761_pairing_six() {
         let input: Vec<u8> = FromHex::from_hex(pairings_encoded).unwrap();
 
         // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
-        assert!(BW6_761::pairings(&input[..]).unwrap());
+        assert!(BW6_761::pairing(&input[..]).unwrap());
     }
 }
 
