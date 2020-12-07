@@ -55,7 +55,7 @@ pub fn bls12_381_pairing() {
 
     // e(sa, b) = e(sb, a)
     // e(sa, b) * e(-sb, a) = 1
-    assert!(Bls12_381::pairing(&input[..]).expect("pairings failed"));
+    assert!(Bls12_381::pairings(&input[..]).expect("pairings failed"));
 }
 
 /// BLS12_381 PAIRING SIX
@@ -97,7 +97,7 @@ pub fn bls12_381_pairing_six() {
         let input: Vec<u8> = FromHex::from_hex(pairings_encoded).unwrap();
 
         // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
-        assert!(Bls12_381::pairing(&input[..]).unwrap());
+        assert!(Bls12_381::pairings(&input[..]).unwrap());
     }
 }
 
