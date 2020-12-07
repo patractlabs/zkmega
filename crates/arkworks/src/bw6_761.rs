@@ -10,6 +10,7 @@ impl CurveBasicOperations for BW6_761 {
     const G1_LEN: usize = 193;
     const G2_LEN: usize = 193;
     const SCALAR_LEN: usize = 48;
+    const CURVE_ID: usize = 0x2d;
 }
 
 #[test]
@@ -24,9 +25,9 @@ fn test_wasm_pairing() {
     let mut sb = b;
     sb.mul_assign(s);
 
-    let ans1 = BW6_761::pairing(sa, b);
-    let ans2 = BW6_761::pairing(a, sb);
-    let ans3 = BW6_761::pairing(a, b).pow(s.into_repr());
+    let ans1 = <BW6_761 as PairingEngine>::pairing(sa, b);
+    let ans2 = <BW6_761 as PairingEngine>::pairing(a, sb);
+    let ans3 = <BW6_761 as PairingEngine>::pairing(a, b).pow(s.into_repr());
 
     assert_eq!(ans1, ans2);
     assert_eq!(ans2, ans3);

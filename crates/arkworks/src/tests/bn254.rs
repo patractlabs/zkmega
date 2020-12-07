@@ -21,7 +21,7 @@ pub fn bn254_mul() {
     let input2:Vec<u8> = FromHex::from_hex(
         "01000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000").unwrap();
 
-    let res2 = Bn254::scalar_mul(&input2[..]).unwrap();
+    let res2 = Bn254::mul(&input2[..]).unwrap();
 
     let expected :Vec<u8> = FromHex::from_hex(
         "d3cf876dc108c2d3a81c8716a91678d9851518685b04859b021a132ee7440603c4a2185a7abf3effc78f53e349a4a6680a9caeb2965f84e7927c0a0e8c73ed1500").unwrap();
@@ -37,7 +37,7 @@ pub fn bn254_pairing() {
 
     // e(sa, b) = e(sb, a)
     // e(sa, b) * e(-sb, a) = 1
-    assert!(Bn254::pairings(&input[..]).expect("pairings failed"));
+    assert!(Bn254::pairing(&input[..]).expect("pairings failed"));
 }
 
 /// BN254 PAIRING SIX
@@ -52,7 +52,7 @@ pub fn bn254_pairing_six() {
         let input: Vec<u8> = FromHex::from_hex(pairings_encoded).unwrap();
 
         // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
-        assert!(Bn254::pairings(&input[..]).unwrap());
+        assert!(Bn254::pairing(&input[..]).unwrap());
     }
 }
 

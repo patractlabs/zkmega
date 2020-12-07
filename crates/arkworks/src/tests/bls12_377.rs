@@ -20,7 +20,7 @@ pub fn bls12_377_mul() {
     let input2:Vec<u8> = FromHex::from_hex(
         "efe91bb26eb1b9ea4e39cdff121548d55ccb37bdc8828218bb419daa2c1e958554ff87bf2562fcc8670a74fede488800a68e9c5555de82fd1a59a934363dfec20523b84fd42a186dd9523eca48b37fbdc4eeaf305d4f671fff2e10c5694a9101000200000000000000000000000000000000000000000000000000000000000000").unwrap();
 
-    let res2 = Bls12_377::scalar_mul(&input2[..]).unwrap();
+    let res2 = Bls12_377::mul(&input2[..]).unwrap();
 
     let expected :Vec<u8> = FromHex::from_hex(
         "9063416a6ded7a8590dc816765610688551930a2c9970ee97e4b2addf3f7617eed52544b5adb6e05919e93413145ed00edc7d727875edde2a75ced75563fa2d67944c635f1120be8ca61c542aecd99ad37131713186004aee5c87b71b9b0cf0000").unwrap();
@@ -36,7 +36,7 @@ pub fn bls12_377_pairing() {
 
     // e(sa, b) = e(sb, a)
     // e(sa, b) * e(-sb, a) = 1
-    assert!(Bls12_377::pairings(&input[..]).expect("pairings failed"));
+    assert!(Bls12_377::pairing(&input[..]).expect("pairings failed"));
     // println!("test pairings{} success!", i + 1);
 }
 
@@ -53,7 +53,7 @@ pub fn bls12_377_pairing_six() {
         let input: Vec<u8> = FromHex::from_hex(pairings_encoded).unwrap();
 
         // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
-        assert!(Bls12_377::pairings(&input[..]).unwrap());
+        assert!(Bls12_377::pairing(&input[..]).unwrap());
         // println!("test pairings e(a1*b1)*e(a2*b2)*e(-a1*b1)*e(-a2*b2) success!");
     }
 }

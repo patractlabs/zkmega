@@ -21,7 +21,7 @@ pub fn cp6_782_mul() {
     let input2:Vec<u8> = FromHex::from_hex(
         "0ec0176973190029442be14ed3d59b6b1c5edffbedf5b325e3fb4e8e5727390f66efebabe9aded0d53477fe7a8ced0db437cb6e580654119be0eeaa2f31a367d77f44a71c686fba448b83603ce76796e1518038ba606749b019a7571c78096d2dd0d0000000000002b42bf978df0e1d22d7a68c07530a308108f3553075f36664c3e9d38d2375cf59cc2f53f6071068df86635195fcd48f4e8ab36594b22a4111433ca6beb550372f11c2e640fc4e07a7b403ba124037fc81719ddd5aaf43a88f443a4735b09eaf5e81300000000000000020000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000").unwrap();
 
-    let res2 = CP6_782::scalar_mul(&input2[..]).unwrap();
+    let res2 = CP6_782::mul(&input2[..]).unwrap();
 
     let expected :Vec<u8> = FromHex::from_hex(
         "8a59e8337302d1f3a944462db081110246cfd825ce906197c9364af95a814ae6037909493d0393630581887019acd8c771040cdd0a13e44c6f0ebcb6c9a00c0aad9604e635acef8f8fdb7a348e91085053f3761f8f245e2a3f5c9621d1da78adbe160000000000002cf9422ee038952d966beba7a3aabeae5cf313be40a4f275e04f820c7c58c94900b9ff11f7584564761f40b431525239175742d2b9a01c64cc66a86cabc6b098594879203aea9f9c4d9ee5b74b9ea6c1c58084ab4564c153a15fe89ff5f8405cdd1700000000000000").unwrap();
@@ -37,7 +37,7 @@ pub fn cp6_782_pairing() {
 
     // e(sa, b) = e(sb, a)
     // e(sa, b) * e(-sb, a) = 1
-    assert!(CP6_782::pairings(&input[..]).expect("pairings failed"));
+    assert!(CP6_782::pairing(&input[..]).expect("pairings failed"));
     // println!("test pairings{} success!", i + 1);
 }
 
@@ -56,7 +56,7 @@ pub fn cp6_782_pairing_six() {
         let input: Vec<u8> = FromHex::from_hex(pairings_encoded).unwrap();
 
         // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
-        assert!(CP6_782::pairings(&input[..]).unwrap());
+        assert!(CP6_782::pairing(&input[..]).unwrap());
         // println!("test pairings e(a1*b1)*e(a2*b2)*e(-a1*b1)*e(-a2*b2) success!");
     }
 }

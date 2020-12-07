@@ -53,7 +53,7 @@ where
         println!("2 input2: {}", input2.to_hex::<String>());
 
         let res1 = T::add(&input1[..]).unwrap();
-        let res2 = T::scalar_mul(&input2[..]).unwrap();
+        let res2 = T::mul(&input2[..]).unwrap();
         println!("2 res1: {}", res1.to_hex::<String>());
         println!("2 res2: {}", res2.to_hex::<String>());
 
@@ -73,7 +73,7 @@ where
         println!("3 input2: {}", input2.to_hex::<String>());
 
         let res1 = T::add(&input1.repeat(2)[..]).expect("Generator add failed");
-        let res2 = T::scalar_mul(&input2[..]).expect("Generator scalar_mul 2 failed");
+        let res2 = T::mul(&input2[..]).expect("Generator scalar_mul 2 failed");
 
         let mut res3 = Vec::new();
         <G1Affine<T> as AffineCurve>::prime_subgroup_generator()
@@ -121,7 +121,7 @@ where
             println!("4 input: {}", input.to_hex::<String>());
 
             // e(sa, b) = e(sb, a)
-            assert!(T::pairings(&input[..]).expect("pairings failed"));
+            assert!(<T as CurveBasicOperations>::pairing(&input[..]).expect("pairings failed"));
             println!("test pairings{} success!", i + 1);
         }
     }
@@ -155,8 +155,10 @@ where
             .into_affine();
 
         // a1 * b1  + a2 * b2  + -a1 * b1  + -a2 * b2 = 0
-        let expected =
-            T::pairing(a1, b1) * &T::pairing(a2, b2) * &T::pairing(a3, b3) * &T::pairing(a4, b4);
+        let expected = <T as PairingEngine>::pairing(a1, b1)
+            * &<T as PairingEngine>::pairing(a2, b2)
+            * &<T as PairingEngine>::pairing(a3, b3)
+            * &<T as PairingEngine>::pairing(a4, b4);
         // e(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) = 1
         assert_eq!(<T as PairingEngine>::Fqk::one(), expected);
 
@@ -170,7 +172,7 @@ where
         println!("5 input: {}", input.to_hex::<String>());
 
         // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
-        assert!(T::pairings(&input[..]).unwrap());
+        assert!(<T as CurveBasicOperations>::pairing(&input[..]).unwrap());
         println!("test pairings e(a1*b1)*e(a2*b2)*e(-a1*b1)*e(-a2*b2) success!");
     }
 }
