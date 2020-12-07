@@ -7,6 +7,8 @@ use rand::Rng;
 use rustc_hex::FromHex;
 
 impl CurveBasicOperations for CP6_782 {
+    const SCALAR_FIELD: &'static str = "";
+    const PRIME_FIELD: &'static str = "";
     const G1_LEN: usize = 209;
     const G2_LEN: usize = 625;
     const SCALAR_LEN: usize = 48;

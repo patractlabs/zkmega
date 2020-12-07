@@ -1,41 +1,44 @@
 //! Groth16 Verify
-#![cfg(features = "arkworks")]
-use arkworks_curve::CurveBasicOperations;
-use big_uint::BigUint;
+use arkworks_curve::{CurveBasicOperations, Error, ErrorKind, SerializationError};
+use num_bigint::BigUint;
+use num_traits::Num;
 
 /// Groth16 verification
-pub fn verify<'a, C: Curve<'a>>(
-    vk_gamma_abc: &[&'a [u8]],
+pub fn verify<C: CurveBasicOperations>(
+    vk_gamma_abc: &[&[u8]],
     vk: &[u8],
     proof: &[u8],
     public_inputs: &[&[u8]],
-) -> Result<bool, &'static str> {
-    let len = C::FQ_BYTES_LENGTH;
+) -> Result<bool, SerializationError> {
+    let g1_len = C::G1_LEN;
+    let g2_len = C::G2_LEN;
+    let g1_g2_len = C::G2_LEN + C::G1_LEN;
+    let scalar_len = C::SCALAR_LEN;
+
     if (public_inputs.len() + 1) != vk_gamma_abc.len() {
-        return Err("verifying key was malformed.");
+        return Err(Error::new(ErrorKind::Other, "Verifying key was malformed"))?;
     }
 
     // First two fields are used as the sum
-    let mut acc =
-        C::Point::try_from(vk_gamma_abc[0]).map_err(|_| "vk_gamma_abc slice try_from fail")?;
+    let mut acc = vk_gamma_abc[0].to_vec();
 
     // Compute the linear combination vk_x
     //  [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
     // acc = sigma(i:0~l)* [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
     for (i, b) in public_inputs.iter().zip(vk_gamma_abc.iter().skip(1)) {
-        input_require_on_curve::<C>(i)?;
+        public_input_require_on_curve::<C>(i).map_err(|e| Error::new(ErrorKind::Other, e))?;
 
-        let mut mul_res = vec![0u8; len * 2 + 32];
-        mul_res[0..len * 2].copy_from_slice(b);
-        mul_res[len * 2..len * 2 + 32].copy_from_slice(i);
+        let mut mul_input = vec![0u8; g1_len + scalar_len];
+        mul_input[0..g1_len].copy_from_slice(b);
+        mul_input[g1_len..g1_len + scalar_len].copy_from_slice(i);
 
-        let mul_ic = C::point_scalar_mul(&mul_res)?;
+        let mul_ic = C::mul(&mul_input)?;
 
-        let mut acc_mul_ic = vec![0u8; len * 4];
-        acc_mul_ic[0..len * 2].copy_from_slice(acc.as_ref());
-        acc_mul_ic[len * 2..len * 4].copy_from_slice(mul_ic.as_ref());
+        let mut acc_mul_ic = vec![0u8; g1_len * 2];
+        acc_mul_ic[0..g1_len].copy_from_slice(acc.as_ref());
+        acc_mul_ic[g1_len..g1_len * 2].copy_from_slice(mul_ic.as_ref());
 
-        acc = C::point_add(&*acc_mul_ic)?;
+        acc = C::add(&*acc_mul_ic)?;
     }
 
     // The original verification equation is:
@@ -44,56 +47,60 @@ pub fn verify<'a, C: Curve<'a>>(
     // A * B - acc * gamma - C * delta = alpha * beta
     // or equivalently:
     //    A   *    B    +  (-acc) * gamma +  (-C) * delta  +   (-alpha) * beta = 0
-    // [(g1_x, g1_y0, g2),(g1_x, g1_y0, g2),(g1_x, g1_y0, g2), (g1_x, g1_y0, g2)]
     let pairings = [
         (
-            &proof[0..len],
-            &proof[len..len * 2],
-            &proof[len * 2..len * 6],
+            &proof[0..g1_len / 2],           // G1 x
+            &proof[g1_len / 2..g1_len - 1],  // G1 y
+            &proof[g1_len - 1..g1_len],      // G1 infinity
+            &proof[g1_len..g1_len + g2_len], // G2
         ),
         (
-            &acc.as_ref()[0..len],
-            &*negate_y::<C>(&acc.as_ref()[len..len * 2])?,
-            &vk[0..len * 4],
+            &acc[0..g1_len / 2],
+            &*negate_y::<C>(&acc[g1_len / 2..g1_len - 1])
+                .map_err(|e| Error::new(ErrorKind::Other, e))?,
+            &acc[g1_len - 1..g1_len],
+            &vk[0..g2_len],
         ),
         (
-            &proof[len * 6..len * 7],
-            &*negate_y::<C>(&proof[len * 7..len * 8])?,
-            &vk[len * 4..len * 8],
+            &proof[g1_g2_len..g1_g2_len + g1_len / 2],
+            &*negate_y::<C>(&proof[g1_g2_len + g1_len / 2..g1_g2_len + g1_len - 1])
+                .map_err(|e| Error::new(ErrorKind::Other, e))?,
+            &proof[g1_g2_len + g1_len - 1..g1_g2_len + g1_len],
+            &vk[g2_len..g2_len * 2],
         ),
         (
-            &vk[len * 8..len * 9],
-            &*negate_y::<C>(&vk[len * 9..len * 10])?,
-            &vk[len * 10..len * 14],
+            &vk[g2_len * 2..g2_len * 2 + g1_len / 2],
+            &*negate_y::<C>(&vk[g2_len * 2 + g1_len / 2..g2_len * 2 + g1_len - 1])
+                .map_err(|e| Error::new(ErrorKind::Other, e))?,
+            &vk[g2_len * 2 + g1_len - 1..g2_len * 2 + g1_len],
+            &vk[g2_len * 2 + g1_len..g2_len * 3 + g1_len],
         ),
     ];
 
-    let mut input = vec![0u8; len * 6 * 4];
-    pairings.iter().enumerate().for_each(|(i, (x, y, g2))| {
-        input[6 * i * len..(6 * i + 1) * len].copy_from_slice(x);
-        input[(6 * i + 1) * len..(6 * i + 2) * len].copy_from_slice(y);
-        input[(6 * i + 2) * len..(6 * i + 6) * len].copy_from_slice(g2);
+    let mut input = Vec::with_capacity((g1_len + g2_len) * 4);
+    pairings.iter().for_each(|(x, y, infinity, g2)| {
+        input.extend_from_slice(x);
+        input.extend_from_slice(y);
+        input.extend_from_slice(infinity);
+        input.extend_from_slice(g2);
     });
 
     // Return the result of computing the pairing check
     // e(p1[0], p2[0]) *  .... * e(p1[n], p2[n]) == 1.
     // For example pairing([P1(), P1().negate()], [P2(), P2()]) should return true.
-    C::point_pairing(&input[..])
+    C::pairings(&input[..])
 }
 
-fn negate_y_based_curve(y: BigUint, prime_field: &'static str) -> BigUint {
-    let q = BigUint::from_str_radix(prime_field, 10).expect("Wrong BigUint");
+fn negate_y_based_curve(y: BigUint, prime_field: &'static str) -> Result<BigUint, &'static str> {
+    let q = BigUint::from_str_radix(prime_field, 10)
+        .map_err(|_| "Wrong curve parameter:PRIME_FIELD")?;
     let q_clone = q.clone();
-    q - y % q_clone
+    Ok(q - y % q_clone)
 }
 
-fn negate_y<'a, E: Curve<'a>>(y: &[u8]) -> Result<Vec<u8>, &'static str> {
-    let negate_y = BigUint::from_bytes_be(y);
-    let neg_y = match y.len() {
-        32 => negate_y_based_curve(negate_y, E::PRIME_FIELD).to_bytes_be(),
-        48 => negate_y_based_curve(negate_y, E::PRIME_FIELD).to_bytes_be(),
-        _ => return Err("Invalid y coordinate length!"),
-    };
+fn negate_y<C: CurveBasicOperations>(y: &[u8]) -> Result<Vec<u8>, &'static str> {
+    let neg_y = negate_y_based_curve(BigUint::from_bytes_be(y), C::PRIME_FIELD)?.to_bytes_be();
+
     // Because of randomness, Negate_y vector might not satisfy 32 or 48 bytes.
     let mut neg_y_fill_with_zero = vec![0u8; y.len()];
     if neg_y.len() != y.len() {
@@ -104,27 +111,14 @@ fn negate_y<'a, E: Curve<'a>>(y: &[u8]) -> Result<Vec<u8>, &'static str> {
     Ok(neg_y_fill_with_zero)
 }
 
-fn input_require_on_curve<'a, E: Curve<'a>>(input: &[u8]) -> Result<(), &'static str> {
-    match E::FQ_BYTES_LENGTH {
-        32 => {
-            if BigUint::from_bytes_be(input)
-                >= BigUint::from_str_radix(E::SCALAR_FIELD, 10)
-                    .map_err(|_| "Parse BigUint wrong ")?
-            {
-                return Err("Invalid public input!");
-            }
-        }
-        48 => {
-            if BigUint::from_bytes_le(input)
-                >= BigUint::from_str_radix(E::SCALAR_FIELD, 10)
-                    .map_err(|_| "Parse BigUint wrong ")?
-            {
-                return Err("Invalid public input!");
-            }
-        }
-        _ => return Err(
-            "The length of fq does not exist, perhaps here you need to add your own curve require",
-        ),
+fn public_input_require_on_curve<C: CurveBasicOperations>(
+    input: &[u8],
+) -> Result<(), &'static str> {
+    if BigUint::from_bytes_be(input)
+        >= BigUint::from_str_radix(C::SCALAR_FIELD, 10)
+            .map_err(|_| "Parse wrong: public input to BigUint.")?
+    {
+        return Err("public input is invalid.");
     }
     Ok(())
 }

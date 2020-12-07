@@ -121,7 +121,7 @@ where
             println!("4 input: {}", input.to_hex::<String>());
 
             // e(sa, b) = e(sb, a)
-            assert!(<T as CurveBasicOperations>::pairing(&input[..]).expect("pairings failed"));
+            assert!(<T as CurveBasicOperations>::pairings(&input[..]).expect("pairings failed"));
             println!("test pairings{} success!", i + 1);
         }
     }
@@ -172,7 +172,7 @@ where
         println!("5 input: {}", input.to_hex::<String>());
 
         // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
-        assert!(<T as CurveBasicOperations>::pairing(&input[..]).unwrap());
+        assert!(<T as CurveBasicOperations>::pairings(&input[..]).unwrap());
         println!("test pairings e(a1*b1)*e(a2*b2)*e(-a1*b1)*e(-a2*b2) success!");
     }
 }

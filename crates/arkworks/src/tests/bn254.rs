@@ -17,14 +17,13 @@ pub fn bn254_add() {
 
 /// BN254 MUL
 pub fn bn254_mul() {
-    // one-point mul 2 encode
     let input2:Vec<u8> = FromHex::from_hex(
-        "01000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000").unwrap();
+        "0100000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000308f03188746cbabf2f9329f32e6af3c1030c494557ec38d53380f9f5df6d10c").unwrap();
 
     let res2 = Bn254::mul(&input2[..]).unwrap();
 
     let expected :Vec<u8> = FromHex::from_hex(
-        "d3cf876dc108c2d3a81c8716a91678d9851518685b04859b021a132ee7440603c4a2185a7abf3effc78f53e349a4a6680a9caeb2965f84e7927c0a0e8c73ed1500").unwrap();
+        "1b67a829f225fa2dfd826ed9dfb6c63fbcb52bba72f01dd9dd84e4b426590e2a7a5f8b601e91a6d52374c844ece03b83757aabb9f093d411393febc5e827372200").unwrap();
 
     assert_eq!(res2, expected);
 }
@@ -37,7 +36,7 @@ pub fn bn254_pairing() {
 
     // e(sa, b) = e(sb, a)
     // e(sa, b) * e(-sb, a) = 1
-    assert!(Bn254::pairing(&input[..]).expect("pairings failed"));
+    assert!(Bn254::pairings(&input[..]).expect("pairings failed"));
 }
 
 /// BN254 PAIRING SIX
@@ -52,7 +51,7 @@ pub fn bn254_pairing_six() {
         let input: Vec<u8> = FromHex::from_hex(pairings_encoded).unwrap();
 
         // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
-        assert!(Bn254::pairing(&input[..]).unwrap());
+        assert!(Bn254::pairings(&input[..]).unwrap());
     }
 }
 

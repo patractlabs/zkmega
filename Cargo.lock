@@ -788,6 +788,7 @@ dependencies = [
  "megaclite-matter-labs",
  "megaclite-zcash",
  "num-bigint 0.3.1",
+ "num-traits",
 ]
 
 [[package]]
@@ -1376,6 +1377,7 @@ dependencies = [
  "ark-serialize",
  "ark-std",
  "bellman_ce",
+ "megaclite",
  "megaclite-arkworks",
  "megaclite-matter-labs",
  "megaclite-zcash",

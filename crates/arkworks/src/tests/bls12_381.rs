@@ -22,18 +22,14 @@ pub fn bls12_381_add() {
 
 /// BLS12_381 MUL
 pub fn bls12_381_mul() {
-    // one-point mul 2 encode
-    let input2:Vec<u8> = FromHex::from_hex(
-        "bbc622db0af03afbef1a7af93fe8556c58ac1b173f3a4ea105b974974f8c68c30faca94f8c63952694d79731a7d3f117e1\
-         e7c5462923aa0ce48a88a244c73cd0edb3042ccb18db00f60ad0d595e0f5fce48a1d74ed309ea0f1a0aae381f4b308000\
-         200000000000000000000000000000000000000000000000000000000000000"
+    let input:Vec<u8> = FromHex::from_hex(
+        "bbc622db0af03afbef1a7af93fe8556c58ac1b173f3a4ea105b974974f8c68c30faca94f8c63952694d79731a7d3f117e1e7c5462923aa0ce48a88a244c73cd0edb3042ccb18db00f60ad0d595e0f5fce48a1d74ed309ea0f1a0aae381f4b3080029833b7bbb804ef963d8b7ad8bc2b8f618f7d002103309d09ad6f3ac351a0c06"
     ).unwrap();
 
-    let res2 = Bls12_381::mul(&input2[..]).unwrap();
+    let res2 = Bls12_381::mul(&input[..]).unwrap();
 
     let expected :Vec<u8> = FromHex::from_hex(
-        "4e0fbf29558c9ac3427c1c8fbb758fe22aa658c30a2d90432501289130db21970c45a950ebc8088846674d90eacb720528\
-         9d7479198886ba1bbd16cdd4d9564c6ad75f1d02b93bf761e47086cb3eba22388e9d7773a6fd22a373c6ab8c9d6a1600"
+        "c8315497236f5373dea887756f63ebc5487c07a40cb4c086e9b08c2130229d3740d5610745636296b01eabd0f1265f1233e03378baf08d5bd6e386631d1b143694ebaa70481b86dba120e8dbc1cbf392dbd3718a8af4ad38d4de77bb2b37790900"
     ).unwrap();
 
     assert_eq!(res2, expected);
@@ -59,7 +55,7 @@ pub fn bls12_381_pairing() {
 
     // e(sa, b) = e(sb, a)
     // e(sa, b) * e(-sb, a) = 1
-    assert!(Bls12_381::pairing(&input[..]).expect("pairings failed"));
+    assert!(Bls12_381::pairings(&input[..]).expect("pairings failed"));
 }
 
 /// BLS12_381 PAIRING SIX
@@ -101,7 +97,7 @@ pub fn bls12_381_pairing_six() {
         let input: Vec<u8> = FromHex::from_hex(pairings_encoded).unwrap();
 
         // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
-        assert!(Bls12_381::pairing(&input[..]).unwrap());
+        assert!(Bls12_381::pairings(&input[..]).unwrap());
     }
 }
 
