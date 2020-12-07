@@ -11,7 +11,7 @@ use bellman_ce::{
     },
     Circuit, ConstraintSystem, SynthesisError,
 };
-
+use megaclite::groth16::verify::arkworks::verify;
 use rand::{thread_rng, Rng};
 use std::time::{Duration, Instant};
 
@@ -277,7 +277,7 @@ fn test_mimc() {
             let start = Instant::now();
             /// test verify_proof on the Bls12_381 curve.
             assert!(
-                verify_proof::<Bls12>(&*vk_ic, &*vk_encode, &*proof_encode, public_input)
+                verify::<Bls12>(&*vk_ic, &*vk_encode, &*proof_encode, public_input)
                     .expect("verify_proof fail")
             );
             let total_verifying = start.elapsed();

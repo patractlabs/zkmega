@@ -11,10 +11,10 @@ mod bw6_761;
 mod cp6_782;
 pub mod tests;
 
-use ark_ec::{AffineCurve, PairingEngine, ProjectiveCurve};
-use ark_ff::{test_rng, FromBytes, One, PrimeField, ToBytes, UniformRand, Zero};
-use ark_serialize::SerializationError;
-use ark_std::{
+pub use ark_ec::{AffineCurve, PairingEngine, ProjectiveCurve};
+pub use ark_ff::{test_rng, FromBytes, One, PrimeField, ToBytes, UniformRand, Zero};
+pub use ark_serialize::SerializationError;
+pub use ark_std::{
     io::{Error, ErrorKind},
     ops::{MulAssign, Neg},
     str::FromStr,
@@ -31,6 +31,9 @@ pub mod curves {
 }
 
 pub trait CurveBasicOperations: PairingEngine {
+    // curve basic parameters
+    const SCALAR_FIELD: &'static str;
+    const PRIME_FIELD: &'static str;
     // G1 bytes length
     const G1_LEN: usize;
     // G2 bytes length
@@ -91,12 +94,12 @@ pub trait CurveBasicOperations: PairingEngine {
     }
 
     #[cfg(feature = "ink")]
-    fn pairing(input: &[u8]) -> Result<Vec<u8>, SerializationError> {
+    fn pairings(input: &[u8]) -> Result<bool, SerializationError> {
         ink_env::zk_snarks::pairing(CURVE_ID, input)
     }
 
     #[cfg(not(feature = "ink"))]
-    fn pairing(input: &[u8]) -> Result<bool, SerializationError> {
+    fn pairings(input: &[u8]) -> Result<bool, SerializationError> {
         // g1 infinity is bool, so + 1 byte.
         let g1_len = Self::G1_LEN;
         // ditto, g1 g2 + 2.

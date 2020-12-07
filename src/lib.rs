@@ -55,4 +55,4 @@ pub use matter_labs_curve::*;
 #[cfg(feature = "zcash")]
 pub use zcash_curve::*;
 
-mod groth16;
+pub mod groth16;

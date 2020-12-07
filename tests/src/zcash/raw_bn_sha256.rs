@@ -20,7 +20,7 @@ use sapling_crypto_ce::circuit::{
     multipack,
     sha256::sha256,
 };
-use zcash::verify_proof;
+use megaclite::groth16::verify::arkworks::verify;
 
 struct Sha256Demo {
     input_data: Vec<u8>,
@@ -123,7 +123,7 @@ fn eval_sha256(num_bytes: usize) {
             .enumerate()
             .for_each(|(i, scalar)| scalar.into_repr().write_be(&mut input[i][..]).unwrap());
 
-        assert!(verify_proof::<Bn256>(
+        assert!(verify::<Bn256>(
             &*vk_ic,
             &*vk_encode,
             &*proof_encode,
