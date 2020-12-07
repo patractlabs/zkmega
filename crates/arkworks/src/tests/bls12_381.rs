@@ -29,7 +29,7 @@ pub fn bls12_381_mul() {
          200000000000000000000000000000000000000000000000000000000000000"
     ).unwrap();
 
-    let res2 = Bls12_381::scalar_mul(&input2[..]).unwrap();
+    let res2 = Bls12_381::mul(&input2[..]).unwrap();
 
     let expected :Vec<u8> = FromHex::from_hex(
         "4e0fbf29558c9ac3427c1c8fbb758fe22aa658c30a2d90432501289130db21970c45a950ebc8088846674d90eacb720528\
@@ -59,7 +59,7 @@ pub fn bls12_381_pairing() {
 
     // e(sa, b) = e(sb, a)
     // e(sa, b) * e(-sb, a) = 1
-    assert!(Bls12_381::pairings(&input[..]).expect("pairings failed"));
+    assert!(Bls12_381::pairing(&input[..]).expect("pairings failed"));
 }
 
 /// BLS12_381 PAIRING SIX
@@ -101,7 +101,7 @@ pub fn bls12_381_pairing_six() {
         let input: Vec<u8> = FromHex::from_hex(pairings_encoded).unwrap();
 
         // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
-        assert!(Bls12_381::pairings(&input[..]).unwrap());
+        assert!(Bls12_381::pairing(&input[..]).unwrap());
     }
 }
 

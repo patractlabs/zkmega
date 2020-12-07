@@ -11,7 +11,6 @@ use bellman_ce::{
     },
     Circuit, ConstraintSystem, SynthesisError,
 };
-use zcash::verify_proof;
 
 use rand::{thread_rng, Rng};
 use std::time::{Duration, Instant};

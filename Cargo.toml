@@ -4,10 +4,6 @@ version = "0.1.0"
 authors = ["Megaclite <https://github.com/patractlabs/megaclite>"]
 edition = "2018"
 
-[lib]
-name = "megaclite"
-path = "megaclite.rs"
-
 [workspace]
 members = [
     "crates/arkworks",
@@ -15,6 +11,9 @@ members = [
     "crates/matter-labs",
     "tests",
 ]
+
+[dependencies]
+num-bigint = "0.3"
 
 [dependencies.arkworks-curve]
 package = "megaclite-arkworks"
@@ -36,6 +35,8 @@ default = ["arkworks"]
 arkworks = ["arkworks-curve"]
 matter-labs = ["matter-labs-curve"]
 zcash = ["zcash-curve"]
+tests = [ "arkworks-curve/tests" ]
+ink = [ "arkworks-curve/ink" ]
 
 
 [profile.test]
