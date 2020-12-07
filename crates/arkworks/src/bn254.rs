@@ -25,9 +25,9 @@ fn test_wasm_pairing() {
     let mut sb = b;
     sb.mul_assign(s);
 
-    let ans1 = Bn254::pairing(sa, b);
-    let ans2 = Bn254::pairing(a, sb);
-    let ans3 = Bn254::pairing(a, b).pow(s.into_repr());
+    let ans1 = <Bn254 as PairingEngine>::pairing(sa, b);
+    let ans2 = <Bn254 as PairingEngine>::pairing(a, sb);
+    let ans3 = <Bn254 as PairingEngine>::pairing(a, b).pow(s.into_repr());
 
     assert_eq!(ans1, ans2);
     assert_eq!(ans2, ans3);
