@@ -586,6 +586,7 @@ dependencies = [
  "megaclite-arkworks",
  "megaclite-matter-labs",
  "megaclite-zcash",
+ "num-bigint 0.3.1",
 ]
 
 [[package]]
