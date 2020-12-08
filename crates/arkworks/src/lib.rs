@@ -87,7 +87,7 @@ pub trait CurveBasicOperations: PairingEngine {
             <<Self as PairingEngine>::G1Affine as FromBytes>::read(&input[0..Self::G1_LEN])?;
         let scalar = <<Self as PairingEngine>::Fr as FromBytes>::read(&input[Self::G1_LEN..])?;
 
-        let mul_res = point.into_projective().mul(scalar);
+        let mul_res = point.into_projective().mul(scalar.into_repr());
         let mut output = Vec::new();
         mul_res.into_affine().write(&mut output)?;
         Ok(output)
