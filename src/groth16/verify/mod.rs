@@ -1,4 +1,4 @@
-pub mod arkworks;
+mod arkworks;
 
-#[cfg(features = "arkworks")]
+#[cfg(feature = "arkworks")]
 pub use arkworks::verify;

@@ -1,4 +1,4 @@
 //! Groth16 verifaction
-pub mod verify;
+mod verify;
 
-pub use verify::*;
+pub use verify::verify;
