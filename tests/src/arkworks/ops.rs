@@ -1,5 +1,5 @@
 use super::all_curve_three_operations_test;
-use arkworks::curves::{Bls12_377, Bls12_381, Bn254, BW6_761, CP6_782};
+use arkworks::curve::{Bls12_377, Bls12_381, Bn254, BW6_761, CP6_782};
 
 #[test]
 fn test_bls12_381() {

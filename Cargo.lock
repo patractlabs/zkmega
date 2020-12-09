@@ -893,8 +893,6 @@ dependencies = [
  "megaclite-arkworks",
  "megaclite-matter-labs",
  "megaclite-zcash",
- "num-bigint 0.3.1",
- "num-traits",
 ]
 
 [[package]]
@@ -908,9 +906,14 @@ dependencies = [
  "ark-cp6-782",
  "ark-ec",
  "ark-ff",
+ "ark-groth16",
+ "ark-relations",
  "ark-serialize",
  "ark-std",
  "ink_env",
+ "num-bigint 0.3.1",
+ "num-traits",
+ "paste",
  "rand 0.7.3",
  "rustc-hex",
 ]

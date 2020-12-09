@@ -1,5 +1,6 @@
-//! Groth16 Verify
-use arkworks_curve::{CurveBasicOperations, Error, ErrorKind, SerializationError};
+//! Groth16 verifaction
+use crate::{CurveBasicOperations, Error, ErrorKind, SerializationError};
+use ark_std::vec::Vec;
 use num_bigint::BigUint;
 use num_traits::Num;
 
@@ -28,13 +29,13 @@ pub fn verify<C: CurveBasicOperations>(
     for (i, b) in public_inputs.iter().zip(vk_gamma_abc.iter().skip(1)) {
         public_input_require_on_curve::<C>(i).map_err(|e| Error::new(ErrorKind::Other, e))?;
 
-        let mut mul_input = vec![0u8; g1_len + scalar_len];
+        let mut mul_input = Vec::with_capacity(g1_len + scalar_len);
         mul_input[0..g1_len].copy_from_slice(b);
         mul_input[g1_len..g1_len + scalar_len].copy_from_slice(i);
 
         let mul_ic = C::mul(&mul_input)?;
 
-        let mut acc_mul_ic = vec![0u8; g1_len * 2];
+        let mut acc_mul_ic = Vec::with_capacity(g1_len * 2);
         acc_mul_ic[0..g1_len].copy_from_slice(acc.as_ref());
         acc_mul_ic[g1_len..g1_len * 2].copy_from_slice(mul_ic.as_ref());
 
@@ -102,7 +103,7 @@ fn negate_y<C: CurveBasicOperations>(y: &[u8]) -> Result<Vec<u8>, &'static str> 
     let neg_y = negate_y_based_curve(BigUint::from_bytes_be(y), C::PRIME_FIELD)?.to_bytes_be();
 
     // Because of randomness, Negate_y vector might not satisfy 32 or 48 bytes.
-    let mut neg_y_fill_with_zero = vec![0u8; y.len()];
+    let mut neg_y_fill_with_zero = Vec::with_capacity(y.len());
     if neg_y.len() != y.len() {
         neg_y_fill_with_zero[y.len() - neg_y.len()..y.len()].copy_from_slice(&*neg_y);
     } else {
