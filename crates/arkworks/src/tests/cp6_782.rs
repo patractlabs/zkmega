@@ -1,4 +1,4 @@
-use crate::{curves::CP6_782, CurveBasicOperations};
+use crate::{curve::CP6_782, CurveBasicOperations};
 use ark_std::{ops::MulAssign, vec::Vec};
 use rustc_hex::FromHex;
 

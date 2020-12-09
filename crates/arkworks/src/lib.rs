@@ -6,11 +6,11 @@
 #![no_std]
 mod derive;
 
-mod bls12_377;
-mod bls12_381;
-mod bn254;
-mod bw6_761;
-mod cp6_782;
+// mod bls12_377;
+// mod bls12_381;
+// mod bn254;
+// mod bw6_761;
+// mod cp6_782;
 pub mod ops;
 pub mod tests;
 
@@ -20,6 +20,7 @@ use ark_std::{ops::MulAssign, vec::Vec};
 pub use ops::CurveBasicOperations;
 
 /// Vector Addition
+#[cfg(not(feature = "ink"))]
 pub fn add(curve_id: i32, input: &[u8]) -> Result<Vec<u8>, SerializationError> {
     match curve_id {
         0x2a => <ark_bls12_377::Bls12_377 as CurveBasicOperations>::add(input),
@@ -30,7 +31,13 @@ pub fn add(curve_id: i32, input: &[u8]) -> Result<Vec<u8>, SerializationError> {
     }
 }
 
+#[cfg(feature = "ink")]
+pub fn add(input: &[u8]) -> Result<bool, SerializationError> {
+    ink_env::zk_snarks::add(CURVE_ID, input)
+}
+
 /// Scalar MulAssign
+#[cfg(not(feature = "ink"))]
 pub fn mul(curve_id: i32, input: &[u8]) -> Result<Vec<u8>, SerializationError> {
     match curve_id {
         0x2a => <ark_bls12_377::Bls12_377 as CurveBasicOperations>::mul(input),
@@ -41,7 +48,13 @@ pub fn mul(curve_id: i32, input: &[u8]) -> Result<Vec<u8>, SerializationError> {
     }
 }
 
+#[cfg(feature = "ink")]
+pub fn mul(input: &[u8]) -> Result<bool, SerializationError> {
+    ink_env::zk_snarks::add(CURVE_ID, input)
+}
+
 /// Pairing
+#[cfg(not(feature = "ink"))]
 pub fn pairing(curve_id: i32, input: &[u8]) -> Result<Vec<u8>, SerializationError> {
     match curve_id {
         0x2a => <ark_bls12_377::Bls12_377 as CurveBasicOperations>::mul(input),
@@ -50,6 +63,11 @@ pub fn pairing(curve_id: i32, input: &[u8]) -> Result<Vec<u8>, SerializationErro
         0x2d => <ark_cp6_782::CP6_782 as CurveBasicOperations>::mul(input),
         _ => Err(Error::new(ErrorKind::Other, "Invalid curve id"))?,
     }
+}
+
+#[cfg(feature = "ink")]
+pub fn pairing(input: &[u8]) -> Result<bool, SerializationError> {
+    ink_env::zk_snarks::add(CURVE_ID, input)
 }
 
 /// Re-export curves
