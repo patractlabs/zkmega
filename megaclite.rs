@@ -54,5 +54,3 @@ pub use arkworks_curve::*;
 pub use matter_labs_curve::*;
 #[cfg(feature = "zcash")]
 pub use zcash_curve::*;
-
-pub mod groth16;

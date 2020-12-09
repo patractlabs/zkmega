@@ -17,6 +17,10 @@ ark-ec = { git = "https://github.com/arkworks-rs/algebra", default-features = fa
 ark-std = { git = "https://github.com/arkworks-rs/utils", default-features = false }
 ark-serialize = { git = "https://github.com/arkworks-rs/algebra", default-features = false }
 
+ark-relations = { git = "https://github.com/arkworks-rs/snark", default-features = false, optional = true }
+ark-groth16 = { git = "https://github.com/arkworks-rs/groth16", default-features = false, optional = true }
+paste = { version = "1.0.3", optional = true }
+
 num-bigint = "0.3"
 num-traits = "0.2"
 rand = { version = "0.7", default-features = false }
@@ -26,5 +30,5 @@ ink_env = { version = "3.0.0-rc2", optional = true }
 
 [features]
 default = []
-tests = []
+tests = ["ark-relations", "ark-groth16"]
 ink = [ "ink_env" ]

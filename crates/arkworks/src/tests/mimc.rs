@@ -1,14 +1,9 @@
-mod mimc_bls12_377;
-mod mimc_bls12_381;
-mod mimc_bn254;
-mod mimc_bw6_761;
-mod mimc_cp6_782;
-
+//! Groth16 MIMC DEMO
 // For randomness (during paramgen and proof generation)
 use rand::Rng;
 
 // For benchmarking
-use std::time::{Duration, Instant};
+use ark_std::{time::Duration, vec::Vec};
 
 use ark_ff::{test_rng, Field, FromBytes, ToBytes, UniformRand};
 
@@ -33,7 +28,7 @@ const MIMC_ROUNDS: usize = 322;
 /// See http://eprint.iacr.org/2016/492 for more
 /// information about this construction.
 ///
-/// ```
+/// ```text
 /// function LongsightF322p3(xL ⦂ Fp, xR ⦂ Fp) {
 ///     for i from 0 up to 321 {
 ///         xL, xR := xR + (xL + Ci)^3, xL
@@ -140,7 +135,8 @@ impl<'a, F: Field> ConstraintSynthesizer<F> for MiMCDemo<'a, F> {
     }
 }
 
-fn test_mimc_groth_17<E: PairingEngine>() {
+#[allow(unused)]
+pub(crate) fn test_mimc_groth_16<E: PairingEngine>() {
     // This may not be cryptographically safe, use
     // `OsRng` (for example) in production software.
     let rng = &mut test_rng();
@@ -150,7 +146,7 @@ fn test_mimc_groth_17<E: PairingEngine>() {
         .map(|_| <E::Fr as UniformRand>::rand(rng))
         .collect::<Vec<E::Fr>>();
 
-    println!("Creating parameters...");
+    // println!("Creating parameters...");
 
     // Create parameters for our circuit
     let params = {
@@ -166,12 +162,12 @@ fn test_mimc_groth_17<E: PairingEngine>() {
     // Prepare the verification key (for proof verification)
     let pvk = prepare_verifying_key(&params.vk);
 
-    println!("Creating proofs...");
+    // println!("Creating proofs...");
 
     // Let's benchmark stuff!
     const SAMPLES: u32 = 1;
-    let mut total_proving = Duration::new(0, 0);
-    let mut total_verifying = Duration::new(0, 0);
+    // let mut total_proving = Duration::new(0, 0);
+    // let mut total_verifying = Duration::new(0, 0);
 
     // Just a place to put the proof data, so we can
     // benchmark deserialization.
@@ -185,7 +181,7 @@ fn test_mimc_groth_17<E: PairingEngine>() {
 
         // proof_vec.truncate(0);
 
-        let start = Instant::now();
+        // let start = Instant::now();
         {
             // Create an instance of our circuit (with the
             // witness)
@@ -197,21 +193,21 @@ fn test_mimc_groth_17<E: PairingEngine>() {
 
             // Create a groth16 proof with our parameters.
             let proof = create_random_proof(c, &params, rng).unwrap();
-            total_proving += start.elapsed();
+            // total_proving += start.elapsed();
 
             let mut proof_vector = Vec::new();
             proof.serialize(&mut proof_vector);
-            println!("proof: {:?}", proof_vector.to_hex::<String>());
+            // println!("proof: {:?}", proof_vector.to_hex::<String>());
             let mut pvk_vector = Vec::new();
             pvk.vk.serialize(&mut pvk_vector);
-            println!("vk: {:?}", pvk_vector.to_hex::<String>());
+            // println!("vk: {:?}", pvk_vector.to_hex::<String>());
             let mut image_vector = Vec::new();
             image.write(&mut image_vector);
-            println!("image: {:?}", image_vector.to_hex::<String>());
+            // println!("image: {:?}", image_vector.to_hex::<String>());
 
-            let start = Instant::now();
+            // let start = Instant::now();
             assert!(verify_proof(&pvk, &proof, &[image]).unwrap());
-            total_verifying += start.elapsed();
+            // total_verifying += start.elapsed();
 
             // proof.write(&mut proof_vec).unwrap();
         }
@@ -219,14 +215,14 @@ fn test_mimc_groth_17<E: PairingEngine>() {
         // let proof = Proof::read(&proof_vec[..]).unwrap();
         // Check the proof
     }
-    let proving_avg = total_proving / SAMPLES;
-    let proving_avg =
-        proving_avg.subsec_nanos() as f64 / 1_000_000_000f64 + (proving_avg.as_secs() as f64);
+    // let proving_avg = total_proving / SAMPLES;
+    // let proving_avg =
+    //     proving_avg.subsec_nanos() as f64 / 1_000_000_000f64 + (proving_avg.as_secs() as f64);
+    //
+    // let verifying_avg = total_verifying / SAMPLES;
+    // let verifying_avg =
+    // verifying_avg.subsec_nanos() as f64 / 1_000_000_000f64 + (verifying_avg.as_secs() as f64);
 
-    let verifying_avg = total_verifying / SAMPLES;
-    let verifying_avg =
-        verifying_avg.subsec_nanos() as f64 / 1_000_000_000f64 + (verifying_avg.as_secs() as f64);
-
-    println!("Average proving time: {:?} seconds", proving_avg);
-    println!("Average verifying time: {:?} seconds", verifying_avg);
+    // println!("Average proving time: {:?} seconds", proving_avg);
+    // println!("Average verifying time: {:?} seconds", verifying_avg);
 }

@@ -30,8 +30,8 @@ pub fn add(curve_id: i32, input: &[u8]) -> Result<Vec<u8>, SerializationError> {
 
 /// Vector Addition
 #[cfg(feature = "ink")]
-pub fn add(input: &[u8]) -> Result<bool, SerializationError> {
-    ink_env::pairing::add(CURVE_ID, input)
+pub fn add(curve_id: i32, input: &[u8]) -> Result<bool, SerializationError> {
+    ink_env::pairing::add(curve_id, input)
 }
 
 /// Scalar MulAssign
@@ -48,8 +48,8 @@ pub fn mul(curve_id: i32, input: &[u8]) -> Result<Vec<u8>, SerializationError> {
 
 /// Scalar MulAssign
 #[cfg(feature = "ink")]
-pub fn mul(input: &[u8]) -> Result<bool, SerializationError> {
-    ink_env::pairing::add(CURVE_ID, input)
+pub fn mul(curve_id: i32, input: &[u8]) -> Result<bool, SerializationError> {
+    ink_env::pairing::add(curve_id, input)
 }
 
 /// Pairing
@@ -66,8 +66,8 @@ pub fn pairing(curve_id: i32, input: &[u8]) -> Result<Vec<u8>, SerializationErro
 
 /// Pairing
 #[cfg(feature = "ink")]
-pub fn pairing(input: &[u8]) -> Result<bool, SerializationError> {
-    ink_env::pairing::add(CURVE_ID, input)
+pub fn pairing(curve_id: i32, input: &[u8]) -> Result<bool, SerializationError> {
+    ink_env::pairing::add(curve_id, input)
 }
 
 /// Groth16 Verifaction
