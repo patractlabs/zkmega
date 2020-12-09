@@ -4,128 +4,59 @@
 #![allow(unused_must_use)]
 #![allow(non_snake_case)]
 #![no_std]
+mod derive;
+
 mod bls12_377;
 mod bls12_381;
 mod bn254;
 mod bw6_761;
 mod cp6_782;
+pub mod ops;
 pub mod tests;
 
-pub use ark_ec::{AffineCurve, PairingEngine, ProjectiveCurve};
-pub use ark_ff::{test_rng, FromBytes, One, PrimeField, ToBytes, UniformRand, Zero};
 pub use ark_serialize::SerializationError;
-pub use ark_std::{
-    io::{Error, ErrorKind},
-    ops::{MulAssign, Neg},
-    str::FromStr,
-    vec::Vec,
-};
+pub use ark_std::io::{Error, ErrorKind};
+use ark_std::{ops::MulAssign, vec::Vec};
+pub use ops::CurveBasicOperations;
+
+/// Vector Addition
+pub fn add(curve_id: i32, input: &[u8]) -> Result<Vec<u8>, SerializationError> {
+    match curve_id {
+        0x2a => <ark_bls12_377::Bls12_377 as CurveBasicOperations>::add(input),
+        0x2b => <ark_bls12_381::Bls12_381 as CurveBasicOperations>::add(input),
+        0x2c => <ark_bn254::Bn254 as CurveBasicOperations>::add(input),
+        0x2d => <ark_cp6_782::CP6_782 as CurveBasicOperations>::add(input),
+        _ => Err(Error::new(ErrorKind::Other, "Invalid curve id"))?,
+    }
+}
+
+/// Scalar MulAssign
+pub fn mul(curve_id: i32, input: &[u8]) -> Result<Vec<u8>, SerializationError> {
+    match curve_id {
+        0x2a => <ark_bls12_377::Bls12_377 as CurveBasicOperations>::mul(input),
+        0x2b => <ark_bls12_381::Bls12_381 as CurveBasicOperations>::mul(input),
+        0x2c => <ark_bn254::Bn254 as CurveBasicOperations>::mul(input),
+        0x2d => <ark_cp6_782::CP6_782 as CurveBasicOperations>::mul(input),
+        _ => Err(Error::new(ErrorKind::Other, "Invalid curve id"))?,
+    }
+}
+
+/// Pairing
+pub fn pairing(curve_id: i32, input: &[u8]) -> Result<Vec<u8>, SerializationError> {
+    match curve_id {
+        0x2a => <ark_bls12_377::Bls12_377 as CurveBasicOperations>::mul(input),
+        0x2b => <ark_bls12_381::Bls12_381 as CurveBasicOperations>::mul(input),
+        0x2c => <ark_bn254::Bn254 as CurveBasicOperations>::mul(input),
+        0x2d => <ark_cp6_782::CP6_782 as CurveBasicOperations>::mul(input),
+        _ => Err(Error::new(ErrorKind::Other, "Invalid curve id"))?,
+    }
+}
 
 /// Re-export curves
-pub mod curves {
+pub mod curve {
     pub use ark_bls12_377::Bls12_377;
     pub use ark_bls12_381::Bls12_381;
     pub use ark_bn254::Bn254;
     pub use ark_bw6_761::BW6_761;
     pub use ark_cp6_782::CP6_782;
-}
-
-pub trait CurveBasicOperations: PairingEngine {
-    // curve basic parameters
-    const SCALAR_FIELD: &'static str;
-    const PRIME_FIELD: &'static str;
-    // G1 bytes length
-    const G1_LEN: usize;
-    // G2 bytes length
-    const G2_LEN: usize;
-    // Scalar bytes length
-    const SCALAR_LEN: usize;
-    // Function ID
-    const CURVE_ID: usize;
-
-    #[cfg(feature = "ink")]
-    fn add(input: &[u8]) -> Result<Vec<u8>, SerializationError> {
-        ink_env::zk_snarks::add(ID, input)
-    }
-
-    #[cfg(not(feature = "ink"))]
-    fn add(input: &[u8]) -> Result<Vec<u8>, SerializationError> {
-        // g1 infinity is bool, so two g1s should be + 2 byte.
-        if input.len() != Self::G1_LEN * 2 {
-            return Err(Error::new(
-                ErrorKind::Other,
-                "add operation input invalid length",
-            ))?;
-        }
-        let point1 =
-            <<Self as PairingEngine>::G1Affine as FromBytes>::read(&input[0..Self::G1_LEN])?;
-        let point2 =
-            <<Self as PairingEngine>::G1Affine as FromBytes>::read(&input[Self::G1_LEN..])?;
-
-        let sum_res = point1 + point2;
-        let mut output = Vec::new();
-
-        sum_res.write(&mut output)?;
-        Ok(output)
-    }
-
-    #[cfg(feature = "ink")]
-    fn mul(input: &[u8]) -> Result<Vec<u8>, SerializationError> {
-        ink_env::zk_snarks::mul(CURVE_ID, input)
-    }
-
-    #[cfg(not(feature = "ink"))]
-    fn mul(input: &[u8]) -> Result<Vec<u8>, SerializationError> {
-        // g1 infinity is bool, so + 1 byte.
-        if input.len() != Self::G1_LEN + Self::SCALAR_LEN {
-            return Err(Error::new(
-                ErrorKind::Other,
-                "scalar_mul operation input invalid length",
-            ))?;
-        }
-        let point =
-            <<Self as PairingEngine>::G1Affine as FromBytes>::read(&input[0..Self::G1_LEN])?;
-        let scalar = <<Self as PairingEngine>::Fr as FromBytes>::read(&input[Self::G1_LEN..])?;
-
-        let mul_res = point.into_projective().mul(scalar.into_repr());
-        let mut output = Vec::new();
-        mul_res.into_affine().write(&mut output)?;
-        Ok(output)
-    }
-
-    #[cfg(feature = "ink")]
-    fn pairings(input: &[u8]) -> Result<bool, SerializationError> {
-        ink_env::zk_snarks::pairing(CURVE_ID, input)
-    }
-
-    #[cfg(not(feature = "ink"))]
-    fn pairings(input: &[u8]) -> Result<bool, SerializationError> {
-        // g1 infinity is bool, so + 1 byte.
-        let g1_len = Self::G1_LEN;
-        // ditto, g1 g2 + 2.
-        let g1_g2_len = Self::G1_LEN + Self::G2_LEN;
-        if input.len() % g1_g2_len != 0 && !input.is_empty() {
-            return Err(Error::new(
-                ErrorKind::Other,
-                "pairing operation input invalid length",
-            ))?;
-        }
-
-        // Get pairs
-        let mut pairings = Vec::with_capacity(4);
-        for i in 0..input.len() / g1_g2_len {
-            let g1 = <<Self as PairingEngine>::G1Affine as FromBytes>::read(
-                &input[i * g1_g2_len..i * g1_g2_len + g1_len],
-            )?;
-            let g2 = <<Self as PairingEngine>::G2Affine as FromBytes>::read(
-                &input[i * g1_g2_len + g1_len..(i + 1) * g1_g2_len],
-            )?;
-
-            pairings.push((g1.into(), g2.into()))
-        }
-
-        // Check if pairing
-        Ok(<Self as PairingEngine>::product_of_pairings(&pairings)
-            == <Self as PairingEngine>::Fqk::one())
-    }
 }
