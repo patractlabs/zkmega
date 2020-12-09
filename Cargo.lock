@@ -887,15 +887,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "60302e4db3a61da70c0cb7991976248362f30319e88850c487b9b95bbf059e00"
 
 [[package]]
-name = "megaclite"
-version = "0.1.0"
-dependencies = [
- "megaclite-arkworks",
- "megaclite-matter-labs",
- "megaclite-zcash",
-]
-
-[[package]]
 name = "megaclite-arkworks"
 version = "0.1.0"
 dependencies = [
@@ -916,6 +907,15 @@ dependencies = [
  "paste",
  "rand 0.7.3",
  "rustc-hex",
+]
+
+[[package]]
+name = "megaclite-curve"
+version = "0.1.0"
+dependencies = [
+ "megaclite-arkworks",
+ "megaclite-matter-labs",
+ "megaclite-zcash",
 ]
 
 [[package]]
@@ -1512,8 +1512,8 @@ dependencies = [
  "ark-serialize",
  "ark-std",
  "bellman_ce",
- "megaclite",
  "megaclite-arkworks",
+ "megaclite-curve",
  "megaclite-matter-labs",
  "megaclite-zcash",
  "num-bigint 0.3.1",

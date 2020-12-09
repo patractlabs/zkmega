@@ -1,44 +1,11 @@
-[package]
-name = "megaclite"
-version = "0.1.0"
-authors = ["Megaclite <https://github.com/patractlabs/megaclite>"]
-edition = "2018"
-
 [workspace]
 members = [
-    "crates/arkworks",
-    "crates/zcash",
-    "crates/matter-labs",
+    "crates/curve",
+    "crates/curve/arkworks",
+    "crates/curve/matter-labs",
+    "crates/curve/zcash",
     "tests",
 ]
-
-[lib]
-name = "megaclite"
-path = "megaclite.rs"
-
-[dependencies.arkworks-curve]
-package = "megaclite-arkworks"
-path = "crates/arkworks"
-optional = true
-
-[dependencies.matter-labs-curve]
-package = "megaclite-matter-labs"
-path = "crates/matter-labs"
-optional = true
-
-[dependencies.zcash-curve]
-package = "megaclite-zcash"
-path = "crates/zcash"
-optional = true
-
-[features]
-default = ["arkworks"]
-arkworks = ["arkworks-curve"]
-matter-labs = ["matter-labs-curve"]
-zcash = ["zcash-curve"]
-tests = [ "arkworks-curve/tests" ]
-ink = [ "arkworks-curve/ink" ]
-
 
 [profile.test]
 opt-level = 3
