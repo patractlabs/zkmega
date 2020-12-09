@@ -1,0 +1,31 @@
+[package]
+name = "megaclite-curve"
+version = "0.1.0"
+authors = ["Megaclite <https://github.com/patractlabs/megaclite>"]
+edition = "2018"
+
+[lib]
+path = "lib.rs"
+
+[dependencies.arkworks-curve]
+package = "megaclite-arkworks"
+path = "arkworks"
+optional = true
+
+[dependencies.matter-labs-curve]
+package = "megaclite-matter-labs"
+path = "matter-labs"
+optional = true
+
+[dependencies.zcash-curve]
+package = "megaclite-zcash"
+path = "zcash"
+optional = true
+
+[features]
+default = ["arkworks"]
+arkworks = ["arkworks-curve"]
+matter-labs = ["matter-labs-curve"]
+zcash = ["zcash-curve"]
+tests = [ "arkworks-curve/tests" ]
+ink = [ "arkworks-curve/ink" ]
