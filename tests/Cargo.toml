@@ -20,6 +20,8 @@ ark-ff = { git = "https://github.com/arkworks-rs/algebra", default-features = fa
 ark-ec = { git = "https://github.com/arkworks-rs/algebra", default-features = false }
 ark-std = { git = "https://github.com/arkworks-rs/utils", default-features = false }
 ark-serialize = { git = "https://github.com/arkworks-rs/algebra", default-features = false }
+ark-relations = { git = "https://github.com/arkworks-rs/snark", default-features = false }
+ark-groth16 = { git = "https://github.com/arkworks-rs/groth16", default-features = false }
 sapling_crypto_ce = { package = "sapling-crypto_ce", git = "https://github.com/matter-labs/sapling-crypto", branch = "master" }
 
 # crates.io deps
@@ -27,5 +29,5 @@ rustc-hex = { version = "2", default-features = false }
 bellman_ce = { version = "0.3.0", default-features = false }
 num-bigint = "0.3"
 num-traits = "0.2"
-rand = "0.4"
+rand = { version = "0.7", default-features = false }
 rust-crypto = "0.2.36"
