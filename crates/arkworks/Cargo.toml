@@ -17,8 +17,10 @@ ark-ec = { git = "https://github.com/arkworks-rs/algebra", default-features = fa
 ark-std = { git = "https://github.com/arkworks-rs/utils", default-features = false }
 ark-serialize = { git = "https://github.com/arkworks-rs/algebra", default-features = false }
 
-rustc-hex = { version = "2", default-features = false }
+num-bigint = "0.3"
+num-traits = "0.2"
 rand = { version = "0.7", default-features = false }
+rustc-hex = { version = "2", default-features = false }
 
 ink_env = { version = "3.0.0-rc2", optional = true }
 
