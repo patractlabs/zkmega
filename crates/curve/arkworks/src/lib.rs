@@ -54,12 +54,12 @@ pub fn mul(curve_id: i32, input: &[u8]) -> Result<bool, SerializationError> {
 
 /// Pairing
 #[cfg(not(feature = "ink"))]
-pub fn pairing(curve_id: i32, input: &[u8]) -> Result<Vec<u8>, SerializationError> {
+pub fn pairing(curve_id: i32, input: &[u8]) -> Result<bool, SerializationError> {
     match curve_id {
-        0x2a => <ark_bls12_377::Bls12_377 as CurveBasicOperations>::mul(input),
-        0x2b => <ark_bls12_381::Bls12_381 as CurveBasicOperations>::mul(input),
-        0x2c => <ark_bn254::Bn254 as CurveBasicOperations>::mul(input),
-        0x2d => <ark_bw6_761::BW6_761 as CurveBasicOperations>::mul(input),
+        0x2a => <ark_bls12_377::Bls12_377 as CurveBasicOperations>::pairings(input),
+        0x2b => <ark_bls12_381::Bls12_381 as CurveBasicOperations>::pairings(input),
+        0x2c => <ark_bn254::Bn254 as CurveBasicOperations>::pairings(input),
+        0x2d => <ark_bw6_761::BW6_761 as CurveBasicOperations>::pairings(input),
         _ => Err(Error::new(ErrorKind::Other, "Invalid curve id").into()),
     }
 }
