@@ -1,9 +1,8 @@
 #![no_std]
+#[macro_use]
+extern crate alloc;
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}
+mod merkle_tree;
+mod mimc;
+
+pub use mimc::*;

@@ -533,6 +533,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "eddsa"
+version = "0.1.0"
+dependencies = [
+ "once_cell",
+ "tiny-keccak",
+ "zkp-u256",
+]
+
+[[package]]
 name = "either"
 version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -860,6 +869,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "itertools"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "284f18f85651fe11e8a991b2adb42cb078325c996ed026d994719efcfca1d54b"
+dependencies = [
+ "either",
+]
+
+[[package]]
 name = "keccak"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -960,6 +978,22 @@ name = "memory_units"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8452105ba047068f40ff7093dd1d9da90898e63dd61736462e9cdda6a90ad3c3"
+
+[[package]]
+name = "merkle-tree"
+version = "0.1.0"
+dependencies = [
+ "num-traits",
+ "once_cell",
+ "tiny-keccak",
+ "zkp-u256",
+]
+
+[[package]]
+name = "no-std-compat"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b93853da6d84c2e3c7d730d6473e8817692dd89be387eb01b94d7f108ecb5b8c"
 
 [[package]]
 name = "nodrop"
@@ -1665,4 +1699,20 @@ dependencies = [
  "quote",
  "syn",
  "synstructure",
+]
+
+[[package]]
+name = "zkp-u256"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "66beb05f6d1d209cce4837b1aced9055a34948d619fd58f55c2049b10b597d09"
+dependencies = [
+ "crunchy",
+ "hex",
+ "itertools",
+ "no-std-compat",
+ "num-traits",
+ "parity-scale-codec",
+ "rand 0.7.3",
+ "serde",
 ]
