@@ -794,8 +794,7 @@ dependencies = [
 [[package]]
 name = "ink_allocator"
 version = "3.0.0-rc2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ebe1487bec97f6d8606ba9ceafe9aa3d18f8986c9a36e24505805886d67381e5"
+source = "git+https://github.com/patractlabs/ink?branch=features/nightly#e37c2ba65b66e54c0305fd3d587d0ad8fbb9f3b3"
 dependencies = [
  "wee_alloc",
 ]
@@ -803,8 +802,7 @@ dependencies = [
 [[package]]
 name = "ink_env"
 version = "3.0.0-rc2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2786223cf44f12bb12136d3669c7b28d9d59e7413cdb09c2cbb3ef8af6d2c080"
+source = "git+https://github.com/patractlabs/ink?branch=features/nightly#e37c2ba65b66e54c0305fd3d587d0ad8fbb9f3b3"
 dependencies = [
  "arrayref",
  "blake2 0.9.1",
@@ -827,8 +825,7 @@ dependencies = [
 [[package]]
 name = "ink_metadata"
 version = "3.0.0-rc2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7e3aaecbf4b03a40b9741724a0940ac39c24e7b193c293216128b874f177dfca"
+source = "git+https://github.com/patractlabs/ink?branch=features/nightly#e37c2ba65b66e54c0305fd3d587d0ad8fbb9f3b3"
 dependencies = [
  "derive_more",
  "impl-serde",
@@ -841,8 +838,7 @@ dependencies = [
 [[package]]
 name = "ink_prelude"
 version = "3.0.0-rc2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "afaa9922945f806c922cfec3df74272f911444f662619f2bc48c477a392a0858"
+source = "git+https://github.com/patractlabs/ink?branch=features/nightly#e37c2ba65b66e54c0305fd3d587d0ad8fbb9f3b3"
 dependencies = [
  "cfg-if 1.0.0",
 ]
@@ -850,8 +846,7 @@ dependencies = [
 [[package]]
 name = "ink_primitives"
 version = "3.0.0-rc2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a62fc6da9d6a482800cbb2ee7b9cde0758bab9be3adefc1e7ae0cd4e47815b5d"
+source = "git+https://github.com/patractlabs/ink?branch=features/nightly#e37c2ba65b66e54c0305fd3d587d0ad8fbb9f3b3"
 dependencies = [
  "ink_prelude",
  "parity-scale-codec",
