@@ -17,7 +17,7 @@ pub fn verify<C: CurveBasicOperations>(
     let scalar_len = C::SCALAR_LEN;
 
     if (public_inputs.len() + 1) != vk_gamma_abc.len() {
-        return Err(Error::new(ErrorKind::Other, "Verifying key was malformed"))?;
+        return Err(Error::new(ErrorKind::Other, "Verifying key was malformed").into());
     }
 
     // First two fields are used as the sum

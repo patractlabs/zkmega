@@ -24,10 +24,7 @@ pub trait CurveBasicOperations: PairingEngine {
     fn add(input: &[u8]) -> Result<Vec<u8>, SerializationError> {
         // g1 infinity is bool, so two g1s should be + 2 byte.
         if input.len() != Self::G1_LEN * 2 {
-            return Err(Error::new(
-                ErrorKind::Other,
-                "add operation input invalid length",
-            ))?;
+            return Err(Error::new(ErrorKind::Other, "add operation input invalid length").into());
         }
         let point1 =
             <<Self as PairingEngine>::G1Affine as FromBytes>::read(&input[0..Self::G1_LEN])?;
@@ -47,7 +44,8 @@ pub trait CurveBasicOperations: PairingEngine {
             return Err(Error::new(
                 ErrorKind::Other,
                 "scalar_mul operation input invalid length",
-            ))?;
+            )
+            .into());
         }
         let point =
             <<Self as PairingEngine>::G1Affine as FromBytes>::read(&input[0..Self::G1_LEN])?;
@@ -65,10 +63,9 @@ pub trait CurveBasicOperations: PairingEngine {
         // ditto, g1 g2 + 2.
         let g1_g2_len = Self::G1_LEN + Self::G2_LEN;
         if input.len() % g1_g2_len != 0 && !input.is_empty() {
-            return Err(Error::new(
-                ErrorKind::Other,
-                "pairing operation input invalid length",
-            ))?;
+            return Err(
+                Error::new(ErrorKind::Other, "pairing operation input invalid length").into(),
+            );
         }
 
         // Get pairs
