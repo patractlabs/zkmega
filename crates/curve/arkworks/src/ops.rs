@@ -20,6 +20,8 @@ pub trait CurveBasicOperations: PairingEngine {
     const G2_LEN: usize;
     // Scalar bytes length
     const SCALAR_LEN: usize;
+    // Curve ID
+    const CURVE_ID: u32;
 
     fn add(input: &[u8]) -> Result<Vec<u8>, SerializationError> {
         // g1 infinity is bool, so two g1s should be + 2 byte.
