@@ -20,7 +20,7 @@ static SCALAR_FIELD: Lazy<U256> = Lazy::new(|| {
 
 /// MiMC-p/p with exponent of 7
 /// Recommended at least 46 rounds, for a polynomial degree of 2^126
-// basic compressed function(based on Even-Mansour mode)
+// basic compressed function(based on Even-Mansour mode
 fn mimc_pe7(in_x: &U256, in_k: &U256, in_seed: &U256, round_count: u64) -> U256 {
     // Initialise round constants, k will be hashed
     if round_count < 1 {
@@ -32,18 +32,18 @@ fn mimc_pe7(in_x: &U256, in_k: &U256, in_seed: &U256, round_count: u64) -> U256 
     let mut in_x = in_x.clone();
 
     // Further n-2 subsequent rounds include a round constant
-    for _ in round_count..0 {
+    for _ in 0..round_count {
         let mut keccak = Keccak::v256();
         let mut received = [0u8; 32];
         keccak.update(&c.to_bytes_be()[..]);
         keccak.finalize(&mut received);
-        c = U256::from_bytes_be(&received);
+        c = U256::from_bytes_be(&received) % &*SCALAR_FIELD;
 
         // x = (x + c_i + k)^7
-        t = (&in_x + &c + in_k) % &*SCALAR_FIELD; // t = x + c_i + k
+        t = &in_x + &c % &*SCALAR_FIELD + in_k % &*SCALAR_FIELD; // t = x + c_i + k
         a = t.mulmod(&t, &*SCALAR_FIELD); // t^2
-        a = a.mulmod(&a, &*SCALAR_FIELD).mulmod(&a, &*SCALAR_FIELD); // t^7
-        in_x = a.mulmod(&t, &*SCALAR_FIELD);
+        a = a.mulmod(&a, &*SCALAR_FIELD).mulmod(&a, &*SCALAR_FIELD);
+        in_x = a.mulmod(&t, &*SCALAR_FIELD); // t^7
     }
 
     // Return adds key again as blinding factor
@@ -54,7 +54,7 @@ fn mimc_pe7(in_x: &U256, in_k: &U256, in_seed: &U256, round_count: u64) -> U256 
 fn mimc_pe7_mp(mut in_x: Vec<&U256>, in_k: &U256, in_seed: U256, round_count: u64) -> U256 {
     let mut r = in_k.clone();
     for i in 0..in_x.len() {
-        r = (&r + in_x[i] + mimc_pe7(&mut in_x[i], &r, &in_seed, round_count)) % &*SCALAR_FIELD;
+        r = &r + in_x[i] + mimc_pe7(&mut in_x[i], &r, &in_seed, round_count) % &*SCALAR_FIELD;
     }
     r
 }
@@ -64,7 +64,7 @@ pub fn mimc_hash(msg: Vec<&U256>, in_key: &U256) -> U256 {
     let mut seed = [0u8; 32];
     keccak.update(SEED.as_ref());
     keccak.finalize(&mut seed);
-    let in_seed = U256::from_bytes_be(&seed);
+    let in_seed = U256::from_bytes_be(&seed) % &*SCALAR_FIELD;
     mimc_pe7_mp(msg, in_key, in_seed, 91)
 }
 
@@ -85,4 +85,15 @@ fn padding_msg(msg: &[u8]) -> Vec<U256> {
         padding_msg.push(padding);
     };
     padding_msg
+}
+
+#[test]
+fn test_mimc() {
+    let b1 = U256::from_decimal_str("1").unwrap();
+    let b2 = U256::from_decimal_str("2").unwrap();
+
+    assert_eq!(
+        "0x2ca75fe593175b8a8dd7761538cc1b3d72c1eac5e87cc2b712738dc3aade8d61",
+        mimc_hash(vec![&b1], &b2).to_hex_string()
+    );
 }

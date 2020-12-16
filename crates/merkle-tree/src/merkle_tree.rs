@@ -176,3 +176,6 @@ impl MerkleTree {
         mimc_hash(input, iv)
     }
 }
+
+#[test]
+fn test_merkle_tree() {}
