@@ -33,7 +33,7 @@ pub fn verify<C: CurveBasicOperations>(
         mul_input[0..g1_len].copy_from_slice(b);
         mul_input[g1_len..g1_len + scalar_len].copy_from_slice(i);
 
-        let mul_ic = crate::call(C::CURVE_ID + 0x2a + 0x10, &mul_input)?;
+        let mul_ic = crate::call(C::CURVE_ID + 0x3a, &mul_input)?;
 
         let mut acc_mul_ic = Vec::with_capacity(g1_len * 2);
         acc_mul_ic[0..g1_len].copy_from_slice(acc.as_ref());
@@ -86,7 +86,7 @@ pub fn verify<C: CurveBasicOperations>(
     // Return the result of computing the pairing check
     // e(p1[0], p2[0]) *  .... * e(p1[n], p2[n]) == 1.
     // For example pairing([P1(), P1().negate()], [P2(), P2()]) should return true.
-    Ok(crate::call(C::CURVE_ID + 0x2a, &input)?[0] == 0)
+    Ok(crate::call(C::CURVE_ID + 0x4a, &input)?[0] == 0)
 }
 
 fn negate_y_based_curve(y: BigUint, prime_field: &'static str) -> Result<BigUint> {
