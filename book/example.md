@@ -40,3 +40,7 @@ assert_eq!(mt.update(),mt.get_root());
 let (merkle_proof,address_bits) = mt.get_proof(1);
 assert!(mt.verify_merkle_proof(leaf,merkle_proof,address_bits));
 ```
+
+## EDDSA
+
+> TODO
