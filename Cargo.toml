@@ -4,6 +4,8 @@ members = [
     "crates/curve/arkworks",
     "crates/curve/matter-labs",
     "crates/curve/zcash",
+    "crates/merkle-tree",
+    "crates/eddsa",
     "tests",
 ]
 
