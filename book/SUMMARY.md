@@ -4,14 +4,9 @@
 
 ---
 
-* [Arch]()
-  * [Pairing](./pairing.md)
-  * [Pallet Contracts](./pallet-contracts.md)
-* [Solution]()
-  * [Curves](./curves.md)
-* [Substrate]()
-  * [Benchmark](./benchmark.md)
-- [Metis](./metis.md)
+* [Contract](./contract.md)
+* [Example](./example.md)
+* [Benchmark](./benchmark.md)
 
 ---
 
