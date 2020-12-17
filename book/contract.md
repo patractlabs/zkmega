@@ -1,4 +1,8 @@
-# Pallet Contracts
+# Contract
+
+> Currently we are testing with **CHAIN_EXTENSION**, this chapter is **OUTDATED** Now, 
+> will be updated after the merging of [#7548](https://github.com/paritytech/substrate/pull/7548)
+> and [#592](https://github.com/paritytech/ink/pull/592)
 
 Here we did some modifications on [paritytech/substrate][paritytech/substrate], added the
 curves mentioned in last chapters into `runtime_interfaces`, for more detail, check the 
