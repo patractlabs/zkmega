@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><div><strong aria-hidden="true">1.</strong> Arch</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="pairing.html"><strong aria-hidden="true">1.1.</strong> Pairing</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html"><strong aria-hidden="true">1.2.</strong> Pallet Contracts</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">2.</strong> Solution</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="curves.html"><strong aria-hidden="true">2.1.</strong> Curves</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> Substrate</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="benchmark.html" class="active"><strong aria-hidden="true">3.1.</strong> Benchmark</a></li></ol></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">4.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="contract.html"><strong aria-hidden="true">1.</strong> Contract</a></li><li class="chapter-item expanded "><a href="example.html"><strong aria-hidden="true">2.</strong> Example</a></li><li class="chapter-item expanded "><a href="benchmark.html" class="active"><strong aria-hidden="true">3.</strong> Benchmark</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -188,31 +188,24 @@ cargo build -p jupiter-dev --all-features --release
 <table><thead><tr><th>memory</th><th>processor</th></tr></thead><tbody>
 <tr><td>64GiB System memory</td><td>AMD Ryzen 9 5900X 12-Core Processor</td></tr>
 </tbody></table>
-<p>Here we test the curevs on ubuntu LTS 20.04</p>
-<table><thead><tr><th>Curve</th><th>Native</th><th>Time</th><th>Wasm</th><th>Time</th></tr></thead><tbody>
-<tr><td>bls12_377</td><td>native_bls12_377_add</td><td>9.588</td><td>wasm_bls12_377_add</td><td>29.02</td></tr>
-<tr><td></td><td>native_bls12_377_mul</td><td>183.1</td><td>wasm_bls12_377_mul</td><td>1893</td></tr>
-<tr><td></td><td>native_bls12_377_pairing_two</td><td>1732</td><td>wasm_bls12_377_pairing_two</td><td>15310</td></tr>
-<tr><td></td><td>native_bls12_377_pairing_six</td><td>4005</td><td>wasm_bls12_377_pairing_six</td><td>36460</td></tr>
-<tr><td></td><td>native_bls12_377_verify</td><td>7484</td><td>wasm_bls12_377_verify</td><td>64680</td></tr>
-<tr><td>------------</td><td>----------------------------------</td><td>-------</td><td>--------------------------------</td><td>--------</td></tr>
-<tr><td>bls12_381</td><td>native_bls12_381_add</td><td>13.9</td><td>wasm_bls12_381_add</td><td>28.31</td></tr>
-<tr><td></td><td>native_bls12_381_mul</td><td>177.1</td><td>wasm_bls12_381_mul</td><td>1879</td></tr>
-<tr><td></td><td>native_bls12_381_pairing_two</td><td>1438</td><td>wasm_bls12_381_pairing_two</td><td>14770</td></tr>
-<tr><td></td><td>native_bls12_381_pairing_six</td><td>3323</td><td>wasm_bls12_381_pairing_six</td><td>34450</td></tr>
-<tr><td></td><td>native_bls12_381_verify</td><td>6411</td><td>wasm_bls12_381_verify</td><td>63260</td></tr>
-<tr><td>------------</td><td>----------------------------------</td><td>-------</td><td>--------------------------------</td><td>--------</td></tr>
-<tr><td>bn254</td><td>native_bn254_add</td><td>5.631</td><td>wasm_bn254_add</td><td>16.05</td></tr>
-<tr><td></td><td>native_bn254_mul</td><td>107.7</td><td>wasm_bn254_mul</td><td>534.3</td></tr>
-<tr><td></td><td>native_bn254_pairing_two</td><td>1150</td><td>wasm_bn254_pairing_two</td><td>5061</td></tr>
-<tr><td></td><td>native_bn254_pairing_six</td><td>2498</td><td>wasm_bn254_pairing_six</td><td>12180</td></tr>
-<tr><td></td><td>native_bn254_verify</td><td>4178</td><td>wasm_bn254_verify</td><td>19850</td></tr>
-<tr><td>------------</td><td>----------------------------------</td><td>-------</td><td>--------------------------------</td><td>--------</td></tr>
-<tr><td>bw6_761</td><td>native_bw6_761_add</td><td>30.35</td><td>wasm_bw6_761_add</td><td>26.79</td></tr>
-<tr><td></td><td>native_bw6_761_mul</td><td>963.8</td><td>wasm_bw6_761_mul</td><td>14630</td></tr>
-<tr><td></td><td>native_bw6_761_pairing_two</td><td>5715</td><td>wasm_bw6_761_pairing_two</td><td>60960</td></tr>
-<tr><td></td><td>native_bw6_761_pairing_six</td><td>14130</td><td>wasm_bw6_761_pairing_six</td><td>158600</td></tr>
-<tr><td></td><td>native_bw6_761_verify</td><td>20330</td><td>wasm_bw6_761_verify</td><td>299800</td></tr>
+<p>Here we test the curevs on ubuntu LTS 20.04, Time is measured in us</p>
+<table><thead><tr><th>Curve</th><th>Native</th><th>Time(us)</th><th>WASM</th><th>Time(us)</th><th>Speed(Native/WASM)</th></tr></thead><tbody>
+<tr><td>bls12_377(~9.5x)</td><td>native_bls12_377_add</td><td>9.588</td><td>wasm_bls12_377_add</td><td>29.02</td><td>~3x</td></tr>
+<tr><td></td><td>native_bls12_377_mul</td><td>183.1</td><td>wasm_bls12_377_mul</td><td>1893</td><td>~10x</td></tr>
+<tr><td></td><td>native_bls12_377_pairing_two</td><td>1732</td><td>wasm_bls12_377_pairing_two</td><td>15310</td><td>~7x</td></tr>
+<tr><td></td><td>native_bls12_377_verify</td><td>7484</td><td>wasm_bls12_377_verify</td><td>64680</td><td>~9x</td></tr>
+<tr><td>bls12_381(~10x)</td><td>native_bls12_381_add</td><td>13.9</td><td>wasm_bls12_381_add</td><td>28.31</td><td>~2x</td></tr>
+<tr><td></td><td>native_bls12_381_mul</td><td>177.1</td><td>wasm_bls12_381_mul</td><td>1879</td><td>~10x</td></tr>
+<tr><td></td><td>native_bls12_381_pairing_two</td><td>1438</td><td>wasm_bls12_381_pairing_two</td><td>14770</td><td>~10x</td></tr>
+<tr><td></td><td>native_bls12_381_verify</td><td>6411</td><td>wasm_bls12_381_verify</td><td>63260</td><td>~10x</td></tr>
+<tr><td>bn254(~5x)</td><td>native_bn254_add</td><td>5.631</td><td>wasm_bn254_add</td><td>16.05</td><td>~3x</td></tr>
+<tr><td></td><td>native_bn254_mul</td><td>107.7</td><td>wasm_bn254_mul</td><td>534.3</td><td>~5x</td></tr>
+<tr><td></td><td>native_bn254_pairing_two</td><td>1150</td><td>wasm_bn254_pairing_two</td><td>5061</td><td>~5x</td></tr>
+<tr><td></td><td>native_bn254_verify</td><td>4178</td><td>wasm_bn254_verify</td><td>19850</td><td>~5x</td></tr>
+<tr><td>bw6_761(~13x)</td><td>native_bw6_761_add</td><td>30.35</td><td>wasm_bw6_761_add</td><td>26.79</td><td>\</td></tr>
+<tr><td></td><td>native_bw6_761_mul</td><td>963.8</td><td>wasm_bw6_761_mul</td><td>14630</td><td>~15x</td></tr>
+<tr><td></td><td>native_bw6_761_pairing_two</td><td>5715</td><td>wasm_bw6_761_pairing_two</td><td>60960</td><td>~10x</td></tr>
+<tr><td></td><td>native_bw6_761_verify</td><td>20330</td><td>wasm_bw6_761_verify</td><td>299800</td><td>~15x</td></tr>
 </tbody></table>
 <pre><code class="language-bash"># 1. Under the jupiter repo
 # 2. Has compiled jupiter-dev
@@ -224,13 +217,13 @@ sh ./benchmark.sh
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="curves.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="example.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
 
                         
-                            <a rel="next" href="metis.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next" href="milestones/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         
@@ -242,13 +235,13 @@ sh ./benchmark.sh
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="curves.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="example.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
 
                 
-                    <a rel="next" href="metis.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next" href="milestones/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
                 

@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Curves - The Megaclite Book</title>
+        <title>Example - The Megaclite Book</title>
         
         
 
@@ -95,7 +95,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><div><strong aria-hidden="true">1.</strong> Arch</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="pairing.html"><strong aria-hidden="true">1.1.</strong> Pairing</a></li><li class="chapter-item expanded "><a href="pallet-contracts.html"><strong aria-hidden="true">1.2.</strong> Pallet Contracts</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">2.</strong> Solution</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="curves.html" class="active"><strong aria-hidden="true">2.1.</strong> Curves</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> Substrate</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="benchmark.html"><strong aria-hidden="true">3.1.</strong> Benchmark</a></li></ol></li><li class="chapter-item expanded "><a href="metis.html"><strong aria-hidden="true">4.</strong> Metis</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">The Megaclite Book</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="contract.html"><strong aria-hidden="true">1.</strong> Contract</a></li><li class="chapter-item expanded "><a href="example.html" class="active"><strong aria-hidden="true">2.</strong> Example</a></li><li class="chapter-item expanded "><a href="benchmark.html"><strong aria-hidden="true">3.</strong> Benchmark</a></li><li class="spacer"></li><li class="chapter-item expanded affix "><a href="milestones/index.html">Milestones</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -167,22 +167,59 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1><a class="header" href="#curves" id="curves">Curves</a></h1>
-<table><thead><tr><th></th><th>bls12_377</th><th>bls12_381</th><th>bn254</th><th>bw6_761</th><th>cp6_782</th></tr></thead><tbody>
-<tr><td>arkworks</td><td>x</td><td>x</td><td>x</td><td>x</td><td>x</td></tr>
-<tr><td>matter-labs</td><td></td><td>x</td><td>x</td><td></td><td></td></tr>
-<tr><td>zcash</td><td></td><td></td><td>x</td><td></td><td></td></tr>
+                        <h1><a class="header" href="#example" id="example">Example</a></h1>
+<h2><a class="header" href="#call-curves-in-ink" id="call-curves-in-ink">Call curves in ink!</a></h2>
+<table><thead><tr><th>curve</th><th>add</th><th>mul</th><th>pairing</th></tr></thead><tbody>
+<tr><td>bls12_377</td><td>0x01000000</td><td>0x01000001</td><td>0x01000002</td></tr>
+<tr><td>bls12_381</td><td>0x01000010</td><td>0x01000011</td><td>0x01000012</td></tr>
+<tr><td>bn254</td><td>0x01000020</td><td>0x01000021</td><td>0x01000022</td></tr>
+<tr><td>bw6_761</td><td>0x01000030</td><td>0x01000031</td><td>0x01000032</td></tr>
 </tbody></table>
-<p>We implement megaclite curves based on <a href="https://github.com/patractlabs/megaclite/tree/master/crates/zcash">zcash</a>, <a href="https://github.com/patractlabs/megaclite/tree/master/crates/matter-labs">matter-labs</a> 
-and <a href="https://github.com/patractlabs/megaclite/tree/master/crates/arkworks">arkworks</a>, all of the curves megaclite implements contain <code>add</code>, <code>mul</code> 
-and <code>pairing</code>, including <code>verify</code>.</p>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let result = ink_env::call_chain_extension(func_id, &amp;Vec::from(input))?
+<span class="boring">}
+</span></code></pre></pre>
+<h2><a class="header" href="#mimc" id="mimc">MIMC</a></h2>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use zkp_u256::{U256, Zero};
+use merkle_tree::mimc::{mimc,mimc_with_key}
+let message = U256::from_decimal_str(&quot;49&quot;).unwrap();
+let in_key = U256::zero();
+assert_eq!(
+    mimc(b&quot;1&quot;),
+    mimc_with_key(vec![&amp;message], &amp;in_key)
+);
+<span class="boring">}
+</span></code></pre></pre>
+<h2><a class="header" href="#merkle-tree" id="merkle-tree">Merkle Tree</a></h2>
+<pre><pre class="playground"><code class="language-rust">
+<span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use merkle_tree::MerkleTree;
+let mut mt = MerkleTree::default();
+let message = b&quot;49&quot;;
+let (leaf,index) = mt.insert(message).unwrap();
+assert_eq!(mt.update(),mt.get_root());
+
+let (merkle_proof,address_bits) = mt.get_proof(1);
+assert!(mt.verify_merkle_proof(leaf,merkle_proof,address_bits));
+<span class="boring">}
+</span></code></pre></pre>
+<h2><a class="header" href="#eddsa" id="eddsa">EDDSA</a></h2>
+<blockquote>
+<p>TODO</p>
+</blockquote>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                         
-                            <a rel="prev" href="pallet-contracts.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="contract.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         
@@ -200,7 +237,7 @@ and <code>pairing</code>, including <code>verify</code>.</p>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                 
-                    <a rel="prev" href="pallet-contracts.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="contract.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
                 
