@@ -1,7 +1,7 @@
 use alloc::vec::Vec;
 use once_cell::sync::Lazy;
 use tiny_keccak::{Hasher, Keccak};
-use zkp_u256::U256;
+use zkp_u256::{Zero, U256};
 
 // Implements MiMC-p/p(it is possible to use MiMC-2n/n for large block size)
 // over the AltBn128 scalar field used by zksnarks
@@ -59,7 +59,7 @@ fn mimc_pe7_mp(mut in_x: Vec<&U256>, in_k: &U256, in_seed: U256, round_count: u6
     r
 }
 
-pub fn mimc_hash(msg: Vec<&U256>, in_key: &U256) -> U256 {
+pub fn mimc_with_key(msg: Vec<&U256>, in_key: &U256) -> U256 {
     let mut keccak = Keccak::v256();
     let mut seed = [0u8; 32];
     keccak.update(SEED.as_ref());
@@ -69,7 +69,7 @@ pub fn mimc_hash(msg: Vec<&U256>, in_key: &U256) -> U256 {
 }
 
 // padding message to 32 bytes size.
-fn padding_msg(msg: &[u8]) -> Vec<U256> {
+pub fn padding_message(msg: &[u8]) -> Vec<U256> {
     let quotient = msg.len() / 32;
     let mut padding_msg = Vec::new();
     let mut u256_array = [0u8; 32];
@@ -79,21 +79,28 @@ fn padding_msg(msg: &[u8]) -> Vec<U256> {
     });
 
     if msg.len() % 32 != 0 {
-        let padding = [0u8; 32];
-        [0u8; 32].copy_from_slice(&msg[quotient * 32..msg.len()]);
-        let padding = U256::from_bytes_be(&padding);
-        padding_msg.push(padding);
+        let mut padding_array = [0u8; 32];
+        padding_array[32 - msg.len()..].copy_from_slice(&msg[quotient * 32..msg.len()]);
+        let last_u256 = U256::from_bytes_be(&padding_array);
+        padding_msg.push(last_u256);
     };
     padding_msg
 }
 
+pub fn mimc(msg: &[u8]) -> U256 {
+    let in_k = U256::zero();
+    let padding_msg = padding_message(msg);
+    mimc_with_key(padding_msg.iter().collect(), &in_k)
+}
+
 #[test]
 fn test_mimc() {
-    let b1 = U256::from_decimal_str("1").unwrap();
-    let b2 = U256::from_decimal_str("2").unwrap();
+    let message = U256::from_decimal_str("49").unwrap();
+    let in_key = U256::zero();
 
-    assert_eq!(
-        "0x2ca75fe593175b8a8dd7761538cc1b3d72c1eac5e87cc2b712738dc3aade8d61",
-        mimc_hash(vec![&b1], &b2).to_hex_string()
-    );
+    assert_eq!(mimc(b"1"), mimc_with_key(vec![&message], &in_key));
+    // assert_eq!(
+    //     "0x2ca75fe593175b8a8dd7761538cc1b3d72c1eac5e87cc2b712738dc3aade8d61",
+    //     mimc_with_key(vec![&b1], &b2).to_hex_string()
+    // );
 }

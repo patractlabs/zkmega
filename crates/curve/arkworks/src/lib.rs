@@ -4,6 +4,9 @@
 #![allow(unused_must_use)]
 #![allow(non_snake_case)]
 #![no_std]
+#[macro_use]
+extern crate alloc;
+
 mod derive;
 
 pub mod curve;

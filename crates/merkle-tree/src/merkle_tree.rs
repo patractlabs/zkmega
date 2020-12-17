@@ -1,5 +1,6 @@
 use super::*;
 use alloc::vec::Vec;
+use core::mem::size_of;
 use once_cell::sync::Lazy;
 use tiny_keccak::{Hasher, Keccak};
 use zkp_u256::{Zero, U256};
@@ -60,26 +61,27 @@ impl Default for MerkleTree {
             root: U256::default(),
             leaves: vec![vec![U256::default(); MAX_LEAF_COUNT]; TREE_DEPTH],
         };
-        mt.update_tree(&FILL_LEVEL_IVS);
+        mt.update();
         mt
     }
 }
 
 impl MerkleTree {
-    fn insert(&mut self, leaf: U256) -> Result<(U256, usize), &'static str> {
+    fn insert(&mut self, message: &[u8]) -> Result<(U256, usize), &'static str> {
+        let leaf = mimc(message);
         if leaf.is_zero() {
             Err("leaf must be non-zero")?
         }
 
         self.leaves[0][self.cur] = leaf;
 
-        let new_root = self.update_tree(&FILL_LEVEL_IVS);
+        let new_root = self.update();
         self.cur += 1;
         Ok((new_root, self.cur))
     }
 
     // Update the leaves of the entire tree, return new tree root.
-    fn update_tree(&mut self, ivs: &Vec<U256>) -> U256 {
+    fn update(&mut self) -> U256 {
         let mut current_index = self.cur;
         let mut leaf1 = U256::default();
         let mut leaf2 = U256::default();
@@ -101,10 +103,12 @@ impl MerkleTree {
                 );
                 leaf2 = self.leaves[depth][current_index].clone();
             }
-            self.leaves[depth + 1][next_index] = MerkleTree::hash_impl(&leaf1, &leaf2, &ivs[depth]);
+            self.leaves[depth][next_index] =
+                MerkleTree::hash_impl(&leaf1, &leaf2, &FILL_LEVEL_IVS[depth]);
             current_index = next_index;
         }
-        self.leaves[TREE_DEPTH][0].clone()
+        self.root = self.leaves[TREE_DEPTH - 1][0].clone();
+        self.root.clone()
     }
 
     // Return leaf according to depth and index,
@@ -135,12 +139,15 @@ impl MerkleTree {
     }
 
     //
-    fn verify_merkle_proof(&self, leaf: U256, proof: [U256; 29], address_bits: [bool; 29]) -> bool {
+    fn verify_merkle_proof(&self, leaf: U256, proof: Vec<U256>, address_bits: Vec<bool>) -> bool {
+        if proof.len() != 29 && address_bits.len() != 29 {
+            return false;
+        }
         self.verify_path(leaf, proof, address_bits) == self.get_root()
     }
 
     // Returns calculated merkle root
-    fn verify_path(&self, leaf: U256, in_path: [U256; 29], address_bits: [bool; 29]) -> U256 {
+    fn verify_path(&self, leaf: U256, in_path: Vec<U256>, address_bits: Vec<bool>) -> U256 {
         let mut item = leaf;
         for depth in 0..TREE_DEPTH {
             if address_bits[depth] {
@@ -157,8 +164,9 @@ impl MerkleTree {
         if leaf.is_zero() {
             // Keccak(depth, offset)
             let mut input = [0u8; 32];
-            input[0..4].copy_from_slice(&depth.to_be_bytes()[..]);
-            input[4..8].copy_from_slice(&offset.to_be_bytes()[..]);
+            input[0..size_of::<usize>()].copy_from_slice(&depth.to_be_bytes()[..]);
+            input[size_of::<usize>()..2 * size_of::<usize>()]
+                .copy_from_slice(&offset.to_be_bytes()[..]);
 
             let mut keccak = Keccak::v256();
             let mut received = [0u8; 32];
@@ -173,9 +181,18 @@ impl MerkleTree {
     // Use two leaves to generate mimc hash
     fn hash_impl(left: &U256, right: &U256, iv: &U256) -> U256 {
         let input = vec![left, right];
-        mimc_hash(input, iv)
+        mimc_with_key(input, iv)
     }
 }
 
 #[test]
-fn test_merkle_tree() {}
+fn test_merkle_tree() {
+    use merkle_tree::MerkleTree;
+    let mut mt = MerkleTree::default();
+    let message = b"49";
+    let (leaf, index) = mt.insert(message).unwrap();
+    assert_eq!(mt.update(), mt.get_root());
+
+    // let (merkle_proof, address_bits) = mt.get_proof(1);
+    // // assert!(mt.verify_merkle_proof(leaf, merkle_proof, address_bits));
+}

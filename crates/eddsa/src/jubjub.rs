@@ -2,12 +2,12 @@ use super::*;
 use once_cell::sync::Lazy;
 use zkp_u256::{One, Zero, U256};
 
-static JUBJUB_A: u64 = 168700;
-static JUBJUB_D: u64 = 168696;
+pub(crate) static JUBJUB_A: u64 = 168700;
+pub(crate) static JUBJUB_D: u64 = 168696;
 
 // static COFACTOR:u64 = 8;
 
-static Q: Lazy<U256> = Lazy::new(|| {
+pub(crate) static Q: Lazy<U256> = Lazy::new(|| {
     U256::from_decimal_str(
         "21888242871839275222246405745257275088548364400416034343698204186575808495617",
     )

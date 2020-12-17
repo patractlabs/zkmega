@@ -1704,8 +1704,7 @@ dependencies = [
 [[package]]
 name = "zkp-u256"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "66beb05f6d1d209cce4837b1aced9055a34948d619fd58f55c2049b10b597d09"
+source = "git+https://github.com/patractlabs/OpenZKP?branch=master#23bd75cd1c01ff4a586a015597f2bda5ebe64be6"
 dependencies = [
  "crunchy",
  "hex",

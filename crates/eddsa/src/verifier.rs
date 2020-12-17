@@ -33,7 +33,7 @@ pub fn hash_to_u256(data: &[u8]) -> U256 {
     return hash_u256 & mask;
 }
 
-pub fn verify(public_key: [U256; 2], r: [U256; 2], hashed_msg: U256, s: U256) -> bool {
+pub fn verify(hashed_msg: U256, public_key: [U256; 2], r: [U256; 2], s: U256) -> bool {
     let mut input = Vec::with_capacity(32 * 5);
     input.extend_from_slice(unsafe { &mem::transmute_copy::<[U256; 2], [u8; 32]>(&r) });
     input.extend_from_slice(unsafe { &mem::transmute_copy::<[U256; 2], [u8; 32]>(&public_key) });
@@ -41,9 +41,22 @@ pub fn verify(public_key: [U256; 2], r: [U256; 2], hashed_msg: U256, s: U256) ->
 
     if let Some(lhs) = scalar_mult(GENERATE[0].clone(), GENERATE[1].clone(), s) {
         let t = hash_to_u256(&input);
-        if let Some(rhs) = scalar_mult(public_key[0].clone(), public_key[1].clone(), t) {
-            return lhs == rhs;
+        if let Some((pk_x, pk_y)) = scalar_mult(public_key[0].clone(), public_key[1].clone(), t) {
+            let [r_x, r_y] = r;
+            let etec_point = etec_add(
+                &point_to_etec(r_x, r_y, Q.clone()),
+                &point_to_etec(pk_x, pk_y, Q.clone()),
+                &*Q,
+                &JUBJUB_A.into(),
+                &JUBJUB_D.into(),
+            );
+            if let Some(rhs) = etec_to_point(etec_point, Q.clone()) {
+                return lhs == rhs;
+            }
         }
     }
     false
 }
+
+#[test]
+fn test_eddsa_verify() {}

@@ -7,7 +7,7 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-zkp-u256 = "0.2.0"
+zkp-u256 = { git = "https://github.com/patractlabs/OpenZKP", branch = "master"}
 tiny-keccak = { version = "2.0", features = ["fips202"] }
 once_cell = "1.5.2"
 
