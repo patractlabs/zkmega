@@ -2,11 +2,6 @@
 
 [Megaclite][book] is a zero-knowledge proof tool set building for the Polkadot ecology. 
 
-+ [Pairing](https://patractlabs.github.io/megaclite/pairing)
-+ [Pallet Contracts](https://patractlabs.github.io/megaclite/pallet-contracts)
-+ [Metis](https://patractlabs.github.io/megaclite/metis)
-
-
 ## ZK Rollup Introduction
 
 Compared with the privacy function, the performance improvement brought by Rollup is the
