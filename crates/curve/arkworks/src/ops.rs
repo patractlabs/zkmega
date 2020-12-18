@@ -14,7 +14,7 @@ use num_bigint::BigUint;
 pub trait CurveBasicOperations: PairingEngine {
     // curve basic parameters
     const SCALAR_FIELD: &'static str;
-    const MODULUS: &'static str;
+    const MODULUS: &'static [u8];
     // G1 bytes length
     const G1_LEN: usize;
     // G2 bytes length

@@ -4,6 +4,8 @@ use ark_bn254::Bn254;
 use ark_bw6_761::BW6_761;
 use ark_cp6_782::CP6_782;
 use arkworks::groth16::verify_proof;
+use num_bigint::BigUint;
+use num_traits::Num;
 use rustc_hex::FromHex;
 
 #[test]
@@ -40,6 +42,8 @@ fn test_based_bls12_377_mimc_groth16() {
         &[&public_input[..]]
     )
     .expect("verify proof fail "));
+    // let modules = BigUint::from_str_radix("21888242871839275222246405745257275088696311157297823662689037894645226208583",10).unwrap().to_bytes_le();
+    // println!("{:?}",modules);
 }
 
 #[test]

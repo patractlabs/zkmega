@@ -89,16 +89,13 @@ pub fn verify<C: CurveBasicOperations>(
     Ok(crate::call(C::CURVE_ID + 0x4a, &input)?[0] == 0)
 }
 
-fn negate_y_based_curve(y: BigUint, MODULUS: &'static str) -> Result<BigUint> {
-    let q = BigUint::from_str_radix(MODULUS, 10).map_err(|_| "Wrong curve parameter:MODULUS")?;
-
-    assert!((q.clone() - y.clone() % q.clone()) < q.clone());
-    // assert_eq!(q.clone().to_str_radix(10), (q.clone() - y.clone() % q.clone()).to_str_radix(10));
-    Ok(q.clone() - y.clone() % q)
+fn negate_y_based_curve(y: BigUint, MODULUS: &[u8]) -> BigUint {
+    let q = BigUint::from_bytes_le(MODULUS);
+    q.clone() - y.clone() % q
 }
 
 fn negate_y<C: CurveBasicOperations>(y: &[u8]) -> Result<Vec<u8>> {
-    let neg_y = negate_y_based_curve(BigUint::from_bytes_le(y), C::MODULUS)?.to_bytes_le();
+    let neg_y = negate_y_based_curve(BigUint::from_bytes_le(y), C::MODULUS).to_bytes_le();
 
     // Because of randomness, Negate_y vector might not satisfy g1_y_len bytes.
     let mut neg_y_fill_with_zero = vec![0u8; y.len()];
@@ -107,12 +104,12 @@ fn negate_y<C: CurveBasicOperations>(y: &[u8]) -> Result<Vec<u8>> {
     Ok(neg_y_fill_with_zero)
 }
 
-fn public_input_require<C: CurveBasicOperations>(input: &[u8]) -> Result<()> {
-    if BigUint::from_bytes_be(input)
-        >= BigUint::from_str_radix(C::SCALAR_FIELD, 10)
-            .map_err(|_| "Parse wrong: public input to BigUint.")?
-    {
-        return Err("public input is invalid.".into());
-    }
-    Ok(())
-}
+// fn public_input_require<C: CurveBasicOperations>(input: &[u8]) -> Result<()> {
+//     if BigUint::from_bytes_be(input)
+//         >= BigUint::from_str_radix(C::SCALAR_FIELD, 10)
+//             .map_err(|_| "Parse wrong: public input to BigUint.")?
+//     {
+//         return Err("public input is invalid.".into());
+//     }
+//     Ok(())
+// }
