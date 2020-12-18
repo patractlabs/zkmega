@@ -6,10 +6,10 @@ use num_traits::Num;
 
 /// Groth16 verification
 pub fn verify<C: CurveBasicOperations>(
-    vk_gamma_abc: &[&[u8]],
-    vk: &[u8],
-    proof: &[u8],
-    public_inputs: &[&[u8]],
+    vk_gamma_abc: Vec<Vec<u8>>,
+    vk: Vec<u8>,
+    proof: Vec<u8>,
+    public_inputs: Vec<Vec<u8>>,
 ) -> Result<bool> {
     let g1_len = C::G1_LEN;
     let g2_len = C::G2_LEN;
