@@ -13,7 +13,7 @@ pub type Result<T> = BasicResult<T, Error>;
 #[derive(Debug)]
 pub enum Error {
     Serialize(SerializationError),
-    Custom(&'static str),
+    Custom(String),
     #[cfg(feature = "ink")]
     InkError(InkError),
 }
@@ -26,6 +26,12 @@ impl From<SerializationError> for Error {
 
 impl From<&'static str> for Error {
     fn from(e: &'static str) -> Self {
+        Error::Custom(String::from(e))
+    }
+}
+
+impl From<String> for Error {
+    fn from(e: String) -> Self {
         Error::Custom(e)
     }
 }
