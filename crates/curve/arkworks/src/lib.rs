@@ -3,10 +3,7 @@
 #![allow(unused_variables)]
 #![allow(unused_must_use)]
 #![allow(non_snake_case)]
-#![no_std]
-#[macro_use]
-extern crate alloc;
-
+#![cfg_attr(not(features = "std"), no_std)]
 mod derive;
 
 pub mod curve;
