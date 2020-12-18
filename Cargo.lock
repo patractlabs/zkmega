@@ -916,7 +916,6 @@ dependencies = [
  "ark-std",
  "ink_env",
  "num-bigint 0.3.1",
- "num-traits",
  "paste",
  "rand 0.7.3",
  "rustc-hex",

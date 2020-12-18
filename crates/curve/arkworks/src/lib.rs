@@ -62,7 +62,7 @@ pub fn verify(
     public_inputs: Vec<Vec<u8>>,
 ) -> Result<bool> {
     match curve_id {
-        00x0 => groth16::verify_proof::<curve::Bls12_377>(vk_gamma_abc, vk, proof, public_inputs),
+        0x00 => groth16::verify_proof::<curve::Bls12_377>(vk_gamma_abc, vk, proof, public_inputs),
         0x10 => groth16::verify_proof::<curve::Bls12_381>(vk_gamma_abc, vk, proof, public_inputs),
         0x20 => groth16::verify_proof::<curve::Bn254>(vk_gamma_abc, vk, proof, public_inputs),
         0x30 => groth16::verify_proof::<curve::BW6_761>(vk_gamma_abc, vk, proof, public_inputs),

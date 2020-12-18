@@ -2,7 +2,6 @@
 use crate::{result::Result, CurveBasicOperations, Error, ErrorKind, SerializationError};
 use ark_std::vec::Vec;
 use num_bigint::BigUint;
-use num_traits::Num;
 
 /// Groth16 verification
 pub fn verify<C: CurveBasicOperations>(
