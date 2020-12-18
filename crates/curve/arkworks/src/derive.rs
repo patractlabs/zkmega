@@ -53,7 +53,7 @@ mod bls12_377 {
         const G1_LEN: usize = 97;
         const G2_LEN: usize = 193;
         const SCALAR_LEN: usize = 32;
-        const CURVE_ID: u32 = 0x0;
+        const CURVE_ID: u32 = 0x00;
     }
 
     paste_test!(Bls12_377, Fq12);
@@ -75,7 +75,7 @@ mod bls12_381 {
         const G1_LEN: usize = 97;
         const G2_LEN: usize = 193;
         const SCALAR_LEN: usize = 32;
-        const CURVE_ID: u32 = 0x1;
+        const CURVE_ID: u32 = 0x10;
     }
 
     paste_test!(Bls12_381, Fq12);
@@ -98,7 +98,7 @@ mod bn254 {
         const G1_LEN: usize = 65;
         const G2_LEN: usize = 129;
         const SCALAR_LEN: usize = 32;
-        const CURVE_ID: u32 = 0x2;
+        const CURVE_ID: u32 = 0x20;
     }
 
     paste_test!(Bn254, Fq12);
@@ -119,7 +119,7 @@ mod bw6_761 {
         const G1_LEN: usize = 193;
         const G2_LEN: usize = 193;
         const SCALAR_LEN: usize = 48;
-        const CURVE_ID: u32 = 0x3;
+        const CURVE_ID: u32 = 0x30;
     }
 
     paste_test!(BW6_761, Fq6);
@@ -140,7 +140,7 @@ mod cp6_782 {
         const G1_LEN: usize = 209;
         const G2_LEN: usize = 625;
         const SCALAR_LEN: usize = 48;
-        const CURVE_ID: u32 = 0x4;
+        const CURVE_ID: u32 = 0x40;
     }
 
     paste_test!(CP6_782, Fq6);

@@ -62,10 +62,10 @@ pub fn verify(
     public_inputs: Vec<Vec<u8>>,
 ) -> Result<bool> {
     match curve_id {
-        0x0 => groth16::verify::<curve::Bls12_377>(vk_gamma_abc, vk, proof, public_inputs),
-        0x1 => groth16::verify::<curve::Bls12_381>(vk_gamma_abc, vk, proof, public_inputs),
-        0x2 => groth16::verify::<curve::Bn254>(vk_gamma_abc, vk, proof, public_inputs),
-        0x3 => groth16::verify::<curve::BW6_761>(vk_gamma_abc, vk, proof, public_inputs),
+        0x00 => groth16::verify::<curve::Bls12_377>(vk_gamma_abc, vk, proof, public_inputs),
+        0x10 => groth16::verify::<curve::Bls12_381>(vk_gamma_abc, vk, proof, public_inputs),
+        0x20 => groth16::verify::<curve::Bn254>(vk_gamma_abc, vk, proof, public_inputs),
+        0x30 => groth16::verify::<curve::BW6_761>(vk_gamma_abc, vk, proof, public_inputs),
         _ => Err("Invalid curve id".into()),
     }
 }
