@@ -8,12 +8,13 @@ pub use ark_std::{
     str::FromStr,
     vec::Vec,
 };
+use num_bigint::BigUint;
 
 /// Arkworks Curve Ops
 pub trait CurveBasicOperations: PairingEngine {
     // curve basic parameters
     const SCALAR_FIELD: &'static str;
-    const PRIME_FIELD: &'static str;
+    const MODULUS: &'static str;
     // G1 bytes length
     const G1_LEN: usize;
     // G2 bytes length

@@ -1,41 +1,70 @@
-//! Groth16 MIMC DEMO
+#![deny(
+    unused_import_braces,
+    unused_qualifications,
+    trivial_casts,
+    trivial_numeric_casts
+)]
+#![deny(unused_qualifications, variant_size_differences, stable_features)]
+#![deny(
+non_shorthand_field_patterns,
+unused_attributes,
+// unused_imports,
+unused_extern_crates
+)]
+#![deny(
+    renamed_and_removed_lints,
+    stable_features,
+    unused_allocation,
+    unused_comparisons
+)]
+#![deny(
+    unused_must_use,
+    unused_mut,
+    unused_unsafe,
+    private_in_public,
+    unsafe_code
+)]
+
 // For randomness (during paramgen and proof generation)
 use rand::Rng;
 
 // For benchmarking
-use ark_std::{time::Duration, vec::Vec};
+// use std::time::{Duration, Instant};
 
-use ark_ff::{test_rng, Field, FromBytes, ToBytes, UniformRand};
+// Bring in some tools for using pairing-friendly curves
+// We're going to use the BLS12-377 pairing-friendly elliptic curve.
+use ark_ff::{biginteger::BigInteger256, test_rng, Field, ToBytes};
+// use ark_bls12_377::{Bls12_377, Fr};
+// use ark_bls12_381::{Bls12_381, Fr};
+use ark_bn254::{Bn254, Fr};
+// use ark_bw6_761::{BW6_761,Fr};
+// use ark_cp6_782::{CP6_782,Fr};
 
 // We'll use these interfaces to construct our circuit.
+use ark_ec::PairingEngine;
 use ark_relations::{
     lc, ns,
     r1cs::{ConstraintSynthesizer, ConstraintSystemRef, SynthesisError, Variable},
 };
-// We're going to use the Groth-Maller17 proving system.
-use ark_ec::PairingEngine;
-use ark_groth16::{
-    create_random_proof, generate_random_parameters, prepare_verifying_key, verify_proof,
-    PreparedVerifyingKey, Proof, VerifyingKey,
-};
-use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
-use rustc_hex::{FromHex, ToHex};
+use arkworks::{groth16::verify_proof, CurveBasicOperations};
+use num_bigint::BigUint;
+use num_traits::Num;
 
 const MIMC_ROUNDS: usize = 322;
 
 /// This is an implementation of MiMC, specifically a
-/// variant named `LongsightF322p3` for BLS12-381.
+/// variant named `LongsightF322p3` for BLS12-377.
 /// See http://eprint.iacr.org/2016/492 for more
 /// information about this construction.
 ///
-/// ```text
+/// ``
 /// function LongsightF322p3(xL ⦂ Fp, xR ⦂ Fp) {
 ///     for i from 0 up to 321 {
 ///         xL, xR := xR + (xL + Ci)^3, xL
 ///     }
 ///     return xL
 /// }
-/// `
+/// ``
 fn mimc<F: Field>(mut xl: F, mut xr: F, constants: &[F]) -> F {
     assert_eq!(constants.len(), MIMC_ROUNDS);
 
@@ -135,84 +164,110 @@ impl<'a, F: Field> ConstraintSynthesizer<F> for MiMCDemo<'a, F> {
     }
 }
 
-#[allow(unused)]
-pub(crate) fn test_mimc_groth_16<E: PairingEngine>() {
+#[test]
+fn test_mimc_groth16() {
+    // We're going to use the Groth-Maller17 proving system.
+    use ark_groth16::{
+        create_random_proof, generate_random_parameters, prepare_verifying_key,
+        verify_proof as raw_verify_proof,
+    };
+    use rustc_hex::{FromHex, ToHex};
+
     // This may not be cryptographically safe, use
     // `OsRng` (for example) in production software.
     let rng = &mut test_rng();
 
     // Generate the MiMC round constants
-    let constants = (0..MIMC_ROUNDS)
-        .map(|_| <E::Fr as UniformRand>::rand(rng))
-        .collect::<Vec<E::Fr>>();
+    let constants = (0..MIMC_ROUNDS).map(|_| rng.gen()).collect::<Vec<_>>();
 
-    // println!("Creating parameters...");
+    println!("Creating parameters...");
 
     // Create parameters for our circuit
     let params = {
-        let c = MiMCDemo::<E::Fr> {
+        let c = MiMCDemo::<Fr> {
             xl: None,
             xr: None,
             constants: &constants,
         };
 
-        generate_random_parameters::<E, _, _>(c, rng).unwrap()
+        generate_random_parameters::<Bn254, _, _>(c, rng).unwrap()
     };
 
     // Prepare the verification key (for proof verification)
     let pvk = prepare_verifying_key(&params.vk);
 
-    // println!("Creating proofs...");
+    println!("Creating proofs...");
 
     // Let's benchmark stuff!
-    const SAMPLES: u32 = 1;
-    // let mut total_proving = Duration::new(0, 0);
-    // let mut total_verifying = Duration::new(0, 0);
+    // const SAMPLES: u32 = 50;
 
     // Just a place to put the proof data, so we can
     // benchmark deserialization.
     // let mut proof_vec = vec![];
 
-    for _ in 0..SAMPLES {
-        // Generate a random preimage and compute the image
-        let xl = <E::Fr as UniformRand>::rand(rng);
-        let xr = <E::Fr as UniformRand>::rand(rng);
-        let image = mimc(xl, xr, &constants);
+    // Generate a random preimage and compute the image
+    let xl: Fr = rng.gen();
+    let xr: Fr = rng.gen();
+    let image = mimc(xl, xr, &constants);
 
-        // proof_vec.truncate(0);
+    let input_vec = vec![image.clone()];
+    // proof_vec.truncate(0);
 
-        // let start = Instant::now();
-        {
-            // Create an instance of our circuit (with the
-            // witness)
-            let c = MiMCDemo {
-                xl: Some(xl),
-                xr: Some(xr),
-                constants: &constants,
-            };
+    {
+        // Create an instance of our circuit (with the
+        // witness)
+        let c = MiMCDemo {
+            xl: Some(xl),
+            xr: Some(xr),
+            constants: &constants,
+        };
 
-            // Create a groth16 proof with our parameters.
-            let proof = create_random_proof(c, &params, rng).unwrap();
-            // total_proving += start.elapsed();
+        // Create a groth16 proof with our parameters.
+        let proof = create_random_proof(c, &params, rng).unwrap();
 
-            let mut proof_vector = Vec::new();
-            proof.serialize(&mut proof_vector);
-            // println!("proof: {:?}", proof_vector.to_hex::<String>());
-            let mut pvk_vector = Vec::new();
-            pvk.vk.serialize(&mut pvk_vector);
-            // println!("vk: {:?}", pvk_vector.to_hex::<String>());
-            let mut image_vector = Vec::new();
-            image.write(&mut image_vector);
-            // println!("image: {:?}", image_vector.to_hex::<String>());
+        // proof encode
+        let mut proof_encode = Vec::new();
+        proof.write(&mut proof_encode).unwrap();
+        println!("proof:{}", proof_encode.to_hex::<String>());
 
-            // let start = Instant::now();
-            assert!(verify_proof(&pvk, &proof, &[image]).unwrap());
-            // total_verifying += start.elapsed();
+        // vk encode
+        let mut vk_encode = Vec::new();
+        params.vk.gamma_g2.write(&mut vk_encode).unwrap();
+        params.vk.delta_g2.write(&mut vk_encode).unwrap();
+        params.vk.alpha_g1.write(&mut vk_encode).unwrap();
+        params.vk.beta_g2.write(&mut vk_encode).unwrap();
+        println!("vk:{}", vk_encode.to_hex::<String>());
 
-            // proof.write(&mut proof_vec).unwrap();
-        }
+        // vk_ic encode
+        let vk_ic = params
+            .vk
+            .gamma_abc_g1
+            .iter()
+            .map(|ic| {
+                let mut ic_vector = Vec::new();
+                ic.write(&mut ic_vector).unwrap();
+                ic_vector
+            })
+            .collect::<Vec<Vec<u8>>>();
+        let mut vk_ic_slice = Vec::new();
+        vk_ic.iter().for_each(|ic| vk_ic_slice.push(&ic[..]));
+        println!("vk_ic:{}", vk_ic_slice[0].to_hex::<String>());
+        println!("vk_ic2:{}", vk_ic_slice[1].to_hex::<String>());
 
-        // let proof = Proof::read(&proof_vec[..]).unwrap();
-        // Check the proof
+        let mut input = vec![Vec::new(); 1];
+        input_vec.iter().enumerate().for_each(|(i, scalar)| {
+            scalar.write(&mut input[i]).unwrap();
+        });
+
+        let public_input = input.iter().map(|x| &x[..]).collect::<Vec<_>>();
+        println!("public_input:{}", public_input[0].to_hex::<String>());
+
+        assert!(verify_proof::<Bn254>(
+            &vk_ic_slice,
+            &vk_encode[..],
+            &proof_encode[..],
+            &public_input
+        )
+        .expect("verify proof fail "));
     }
 }
