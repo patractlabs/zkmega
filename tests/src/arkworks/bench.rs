@@ -18,10 +18,10 @@ fn test_based_bls12_381_mimc_groth16() {
         FromHex::from_hex("1d6c7850edbac8a5281ab93d2ed245d47b64f20c21950926d595624b488c291c")
             .unwrap();
     assert!(verify_proof::<Bls12_381>(
-        &[&*vk_ic, &*vk_ic2],
-        &*vk_encode,
-        &*proof_encode,
-        &[&*public_input]
+        vec![vk_ic, vk_ic2],
+        vk_encode,
+        proof_encode,
+        vec![public_input]
     )
     .expect("verify proof fail "));
 }
@@ -36,10 +36,10 @@ fn test_based_bls12_377_mimc_groth16() {
         FromHex::from_hex("a4961fec1c734055a80af91b3fd7405a2cdb741e1867aa7f783ca0959a077110")
             .unwrap();
     assert!(verify_proof::<Bls12_377>(
-        &[&*vk_ic, &*vk_ic2],
-        &*vk_encode,
-        &*proof_encode,
-        &[&public_input[..]]
+        vec![vk_ic, vk_ic2],
+        vk_encode,
+        proof_encode,
+        vec![public_input]
     )
     .expect("verify proof fail "));
     // let modules = BigUint::from_str_radix("21888242871839275222246405745257275088696311157297823662689037894645226208583",10).unwrap().to_bytes_le();
@@ -56,10 +56,10 @@ fn test_based_bn254_mimc_groth16() {
         FromHex::from_hex("829d3d572251103bac02b39e397c657c0b1f372bfc4d1b74f6c23de4993b4824")
             .unwrap();
     assert!(verify_proof::<Bn254>(
-        &[&*vk_ic, &*vk_ic2],
-        &*vk_encode,
-        &*proof_encode,
-        &[&public_input[..]]
+        vec![vk_ic, vk_ic2],
+        vk_encode,
+        proof_encode,
+        vec![public_input]
     )
     .expect("verify proof fail "));
 }
@@ -72,10 +72,10 @@ fn test_based_bw6_761_mimc_groth16() {
     let proof_encode:Vec<u8> = FromHex::from_hex("cf5ea12a32dc313ec0791efdfca4ffa5dca127faeb57027754f0fcdd0e868623082e4543cae1bb11078c359dabbd4abbb38640c75081dca4aa2ef35bdb5ee4c856465c7b75956b88ab36d940a8df7e13adaa709ee349ed9454c7d6705211020087f361ca8cb2e83018809872a71853f0eb99a989362a3a753edbe4f58feec45c19be03b06567b357ec6779f3756b1494b74d98503d5c67ef3548ca9464d7525a3f92cdf335702a76eaaff83330f9da2c4a84b02a99ce06e0b04a1a0f1fd2f80000335b53718581ba3e14b48e381078551ff535a3d7a1671dc42898e742857f158a27d249a4d3bbe060016acdf3e9bde0095b23e073e40d56027474673321542ab30641f50f61452762d66984e33745d9456c5eba2cdafc07a52525ef1d3e221e00c92be8c3030de0338c27d281e887a63ab927478464faa7e7b0bbc68de44734c20cfd24763b8384fc6a15b2f82bf0349b86392aaa2e6fc2c95c1d0891f83a92d3b2c1deb230316eb43d9ddcbd069e600aff23ef13dd1f7b9cfade33db4872300000d1367d1907cd90da19e25e3241fb83393731c0d6183300675275017cc6287f2154abf2320cdc2cefc9df0383f98688e2e22914bef4fc32136222fb9dde45840de012e91cce1d02fbb6250a342b72c8c4155e0ff2ffa7ee71211f2641e816f200f8e725a65be98dafc395c538b2c1a009af190aedb99ecae9410257b5b295fb757dc7af138db54d06c582021442342f8924e092ae2fbf375fe94d6480910f7154b14aec033bd5cf27a2cdd225282b7a2fcaab6ac338a89d994c45976d9b7fa10000").unwrap();
     let public_input:Vec<u8> = FromHex::from_hex("28933fc1b649ded455bd7739026be2bf6f7e1c0acde6dee164724218bbf1391e318017e5a6ab8248bda0bdd1f40b8301").unwrap();
     assert!(verify_proof::<BW6_761>(
-        &[&*vk_ic, &*vk_ic2],
-        &*vk_encode,
-        &*proof_encode,
-        &[&public_input[..]]
+        vec![vk_ic, vk_ic2],
+        vk_encode,
+        proof_encode,
+        vec![public_input]
     )
     .expect("verify proof fail "));
 }
