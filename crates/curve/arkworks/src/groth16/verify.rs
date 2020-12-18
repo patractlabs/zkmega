@@ -2,7 +2,6 @@
 use crate::{result::Result, CurveBasicOperations, Error, ErrorKind, SerializationError};
 use ark_std::vec::Vec;
 use num_bigint::BigUint;
-use num_traits::Num;
 
 /// Groth16 verification
 pub fn verify<C: CurveBasicOperations>(
@@ -27,17 +26,17 @@ pub fn verify<C: CurveBasicOperations>(
     //  [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
     // acc = sigma(i:0~l)* [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
     for (i, b) in public_inputs.iter().zip(vk_gamma_abc.iter().skip(1)) {
-        public_input_require_on_curve::<C>(i)?;
+        // public_input_require::<C>(i)?;
 
         let mut mul_input = Vec::with_capacity(g1_len + scalar_len);
-        mul_input[0..g1_len].copy_from_slice(b);
-        mul_input[g1_len..g1_len + scalar_len].copy_from_slice(i);
+        mul_input.extend_from_slice(b);
+        mul_input.extend_from_slice(i);
 
         let mul_ic = crate::call(0x01000001 + C::CURVE_ID, &mul_input)?;
 
         let mut acc_mul_ic = Vec::with_capacity(g1_len * 2);
-        acc_mul_ic[0..g1_len].copy_from_slice(acc.as_ref());
-        acc_mul_ic[g1_len..g1_len * 2].copy_from_slice(mul_ic.as_ref());
+        acc_mul_ic.extend_from_slice(acc.as_ref());
+        acc_mul_ic.extend_from_slice(mul_ic.as_ref());
 
         acc = crate::call(0x01000000 + C::CURVE_ID, &*acc_mul_ic)?;
     }
@@ -89,32 +88,27 @@ pub fn verify<C: CurveBasicOperations>(
     Ok(crate::call(0x01000002 + C::CURVE_ID, &input)?[0] == 0)
 }
 
-fn negate_y_based_curve(y: BigUint, prime_field: &'static str) -> Result<BigUint> {
-    let q = BigUint::from_str_radix(prime_field, 10)
-        .map_err(|_| "Wrong curve parameter:PRIME_FIELD")?;
-    let q_clone = q.clone();
-    Ok(q - y % q_clone)
+fn negate_y_based_curve(y: BigUint, MODULUS: &[u8]) -> BigUint {
+    let q = BigUint::from_bytes_le(MODULUS);
+    q.clone() - y.clone() % q
 }
 
 fn negate_y<C: CurveBasicOperations>(y: &[u8]) -> Result<Vec<u8>> {
-    let neg_y = negate_y_based_curve(BigUint::from_bytes_be(y), C::PRIME_FIELD)?.to_bytes_be();
+    let neg_y = negate_y_based_curve(BigUint::from_bytes_le(y), C::MODULUS).to_bytes_le();
 
-    // Because of randomness, Negate_y vector might not satisfy 32 or 48 bytes.
+    // Because of randomness, Negate_y vector might not satisfy g1_y_len bytes.
     let mut neg_y_fill_with_zero = Vec::with_capacity(y.len());
-    if neg_y.len() != y.len() {
-        neg_y_fill_with_zero[y.len() - neg_y.len()..y.len()].copy_from_slice(&*neg_y);
-    } else {
-        neg_y_fill_with_zero[0..y.len()].copy_from_slice(&*neg_y);
-    }
+    neg_y_fill_with_zero[0..neg_y.len()].copy_from_slice(&*neg_y);
+
     Ok(neg_y_fill_with_zero)
 }
 
-fn public_input_require_on_curve<C: CurveBasicOperations>(input: &[u8]) -> Result<()> {
-    if BigUint::from_bytes_be(input)
-        >= BigUint::from_str_radix(C::SCALAR_FIELD, 10)
-            .map_err(|_| "Parse wrong: public input to BigUint.")?
-    {
-        return Err("public input is invalid.".into());
-    }
-    Ok(())
-}
+// fn public_input_require<C: CurveBasicOperations>(input: &[u8]) -> Result<()> {
+//     if BigUint::from_bytes_be(input)
+//         >= BigUint::from_str_radix(C::SCALAR_FIELD, 10)
+//             .map_err(|_| "Parse wrong: public input to BigUint.")?
+//     {
+//         return Err("public input is invalid.".into());
+//     }
+//     Ok(())
+// }

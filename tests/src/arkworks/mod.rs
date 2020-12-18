@@ -1,5 +1,6 @@
 mod bench;
 mod ops;
+mod verify;
 
 use ark_ec::{AffineCurve, PairingEngine, ProjectiveCurve};
 use ark_ff::{test_rng, FromBytes, One, PrimeField, ToBytes, UniformRand, Zero};
