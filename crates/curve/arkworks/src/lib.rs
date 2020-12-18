@@ -6,6 +6,9 @@
 #![cfg_attr(not(features = "std"), no_std)]
 mod derive;
 
+#[macro_use]
+extern crate ark_std;
+
 pub mod curve;
 pub mod groth16;
 pub mod ops;

@@ -97,7 +97,7 @@ fn negate_y<C: CurveBasicOperations>(y: &[u8]) -> Result<Vec<u8>> {
     let neg_y = negate_y_based_curve(BigUint::from_bytes_le(y), C::MODULUS).to_bytes_le();
 
     // Because of randomness, Negate_y vector might not satisfy g1_y_len bytes.
-    let mut neg_y_fill_with_zero = Vec::with_capacity(y.len());
+    let mut neg_y_fill_with_zero = vec![0; y.len()];
     neg_y_fill_with_zero[0..neg_y.len()].copy_from_slice(&*neg_y);
 
     Ok(neg_y_fill_with_zero)

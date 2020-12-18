@@ -8,7 +8,6 @@ edition = "2018"
 matter_labs = { package = "megaclite-matter-labs", path = "../crates/curve/matter-labs" }
 zcash = { package = "megaclite-zcash", path = "../crates/curve/zcash" }
 arkworks = { package = "megaclite-arkworks", path = "../crates/curve/arkworks" }
-megaclite = { package = "megaclite-curve", path = "../crates/curve", features = ["arkworks"]}
 
 # Git deps
 ark-bls12-377 = { git = "https://github.com/arkworks-rs/curves", default-features = false, features = ["curve"] }

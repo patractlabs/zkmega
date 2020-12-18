@@ -922,15 +922,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "megaclite-curve"
-version = "0.1.0"
-dependencies = [
- "megaclite-arkworks",
- "megaclite-matter-labs",
- "megaclite-zcash",
-]
-
-[[package]]
 name = "megaclite-matter-labs"
 version = "0.1.0"
 dependencies = [
@@ -1541,7 +1532,6 @@ dependencies = [
  "ark-std",
  "bellman_ce",
  "megaclite-arkworks",
- "megaclite-curve",
  "megaclite-matter-labs",
  "megaclite-zcash",
  "num-bigint 0.3.1",
