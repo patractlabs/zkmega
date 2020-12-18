@@ -6,10 +6,10 @@ use num_traits::Num;
 
 /// Groth16 verification
 pub fn verify<C: CurveBasicOperations>(
-    vk_gamma_abc: &[&[u8]],
-    vk: &[u8],
-    proof: &[u8],
-    public_inputs: &[&[u8]],
+    vk_gamma_abc: Vec<Vec<u8>>,
+    vk: Vec<u8>,
+    proof: Vec<u8>,
+    public_inputs: Vec<Vec<u8>>,
 ) -> Result<bool> {
     let g1_len = C::G1_LEN;
     let g2_len = C::G2_LEN;
@@ -100,7 +100,7 @@ fn negate_y<C: CurveBasicOperations>(y: &[u8]) -> Result<Vec<u8>> {
     let neg_y = negate_y_based_curve(BigUint::from_bytes_be(y), C::PRIME_FIELD)?.to_bytes_be();
 
     // Because of randomness, Negate_y vector might not satisfy 32 or 48 bytes.
-    let mut neg_y_fill_with_zero = vec![0u8; y.len()];
+    let mut neg_y_fill_with_zero = Vec::with_capacity(y.len());
     if neg_y.len() != y.len() {
         neg_y_fill_with_zero[y.len() - neg_y.len()..y.len()].copy_from_slice(&*neg_y);
     } else {
