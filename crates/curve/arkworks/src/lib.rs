@@ -3,10 +3,7 @@
 #![allow(unused_variables)]
 #![allow(unused_must_use)]
 #![allow(non_snake_case)]
-#![no_std]
-#[macro_use]
-extern crate alloc;
-
+#![cfg_attr(not(features = "std"), no_std)]
 mod derive;
 
 pub mod curve;
@@ -38,20 +35,37 @@ pub fn call(func_id: u32, input: &[u8]) -> Result<Vec<u8>> {
 pub fn call(func_id: u32, input: &[u8]) -> Result<Vec<u8>> {
     Ok(match func_id {
         // add - 0x2a + 0,1,2,3
-        0x2a => <ark_bls12_377::Bls12_377 as CurveBasicOperations>::add(input),
-        0x2b => <ark_bls12_381::Bls12_381 as CurveBasicOperations>::add(input),
-        0x2c => <ark_bn254::Bn254 as CurveBasicOperations>::add(input),
-        0x2d => <ark_bw6_761::BW6_761 as CurveBasicOperations>::add(input),
+        0x01000000 => <ark_bls12_377::Bls12_377 as CurveBasicOperations>::add(input),
+        0x01000010 => <ark_bls12_381::Bls12_381 as CurveBasicOperations>::add(input),
+        0x01000020 => <ark_bn254::Bn254 as CurveBasicOperations>::add(input),
+        0x01000030 => <ark_bw6_761::BW6_761 as CurveBasicOperations>::add(input),
         // mul - 0x3a + 0,1,2,3
-        0x3a => <ark_bls12_377::Bls12_377 as CurveBasicOperations>::mul(input),
-        0x3b => <ark_bls12_381::Bls12_381 as CurveBasicOperations>::mul(input),
-        0x3c => <ark_bn254::Bn254 as CurveBasicOperations>::mul(input),
-        0x3d => <ark_bw6_761::BW6_761 as CurveBasicOperations>::mul(input),
+        0x01000001 => <ark_bls12_377::Bls12_377 as CurveBasicOperations>::mul(input),
+        0x01000011 => <ark_bls12_381::Bls12_381 as CurveBasicOperations>::mul(input),
+        0x01000021 => <ark_bn254::Bn254 as CurveBasicOperations>::mul(input),
+        0x01000031 => <ark_bw6_761::BW6_761 as CurveBasicOperations>::mul(input),
         // pairing - 0x4a + 0,1,2,3
-        0x4a => <ark_bls12_377::Bls12_377 as CurveBasicOperations>::pairings(input).map(b2b),
-        0x4b => <ark_bls12_381::Bls12_381 as CurveBasicOperations>::pairings(input).map(b2b),
-        0x4c => <ark_bn254::Bn254 as CurveBasicOperations>::pairings(input).map(b2b),
-        0x4d => <ark_bw6_761::BW6_761 as CurveBasicOperations>::pairings(input).map(b2b),
+        0x01000002 => <ark_bls12_377::Bls12_377 as CurveBasicOperations>::pairings(input).map(b2b),
+        0x01000012 => <ark_bls12_381::Bls12_381 as CurveBasicOperations>::pairings(input).map(b2b),
+        0x01000022 => <ark_bn254::Bn254 as CurveBasicOperations>::pairings(input).map(b2b),
+        0x01000032 => <ark_bw6_761::BW6_761 as CurveBasicOperations>::pairings(input).map(b2b),
         _ => Err(Error::new(ErrorKind::Other, "Invalid function id").into()),
     }?)
+}
+
+/// Groth16 Verify
+pub fn verify(
+    curve_id: u32,
+    vk_gamma_abc: Vec<Vec<u8>>,
+    vk: Vec<u8>,
+    proof: Vec<u8>,
+    public_inputs: Vec<Vec<u8>>,
+) -> Result<bool> {
+    match curve_id {
+        0x0 => groth16::verify::<curve::Bls12_377>(vk_gamma_abc, vk, proof, public_inputs),
+        0x1 => groth16::verify::<curve::Bls12_381>(vk_gamma_abc, vk, proof, public_inputs),
+        0x2 => groth16::verify::<curve::Bn254>(vk_gamma_abc, vk, proof, public_inputs),
+        0x3 => groth16::verify::<curve::BW6_761>(vk_gamma_abc, vk, proof, public_inputs),
+        _ => Err("Invalid curve id".into()),
+    }
 }

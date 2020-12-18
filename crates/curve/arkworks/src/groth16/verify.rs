@@ -6,10 +6,10 @@ use num_traits::Num;
 
 /// Groth16 verification
 pub fn verify<C: CurveBasicOperations>(
-    vk_gamma_abc: &[&[u8]],
-    vk: &[u8],
-    proof: &[u8],
-    public_inputs: &[&[u8]],
+    vk_gamma_abc: Vec<Vec<u8>>,
+    vk: Vec<u8>,
+    proof: Vec<u8>,
+    public_inputs: Vec<Vec<u8>>,
 ) -> Result<bool> {
     let g1_len = C::G1_LEN;
     let g2_len = C::G2_LEN;
@@ -33,13 +33,13 @@ pub fn verify<C: CurveBasicOperations>(
         mul_input.extend_from_slice(b);
         mul_input.extend_from_slice(i);
 
-        let mul_ic = crate::call(C::CURVE_ID + 0x3a, &*mul_input)?;
+        let mul_ic = crate::call(0x01000001 + C::CURVE_ID, &mul_input)?;
 
         let mut acc_mul_ic = Vec::with_capacity(g1_len * 2);
         acc_mul_ic.extend_from_slice(acc.as_ref());
         acc_mul_ic.extend_from_slice(mul_ic.as_ref());
 
-        acc = crate::call(C::CURVE_ID + 0x2a, &*acc_mul_ic)?;
+        acc = crate::call(0x01000000 + C::CURVE_ID, &*acc_mul_ic)?;
     }
 
     // The original verification equation is:
@@ -86,7 +86,7 @@ pub fn verify<C: CurveBasicOperations>(
     // Return the result of computing the pairing check
     // e(p1[0], p2[0]) *  .... * e(p1[n], p2[n]) == 1.
     // For example pairing([P1(), P1().negate()], [P2(), P2()]) should return true.
-    Ok(crate::call(C::CURVE_ID + 0x4a, &input)?[0] == 0)
+    Ok(crate::call(0x01000002 + C::CURVE_ID, &input)?[0] == 0)
 }
 
 fn negate_y_based_curve(y: BigUint, MODULUS: &[u8]) -> BigUint {
@@ -98,7 +98,7 @@ fn negate_y<C: CurveBasicOperations>(y: &[u8]) -> Result<Vec<u8>> {
     let neg_y = negate_y_based_curve(BigUint::from_bytes_le(y), C::MODULUS).to_bytes_le();
 
     // Because of randomness, Negate_y vector might not satisfy g1_y_len bytes.
-    let mut neg_y_fill_with_zero = vec![0u8; y.len()];
+    let mut neg_y_fill_with_zero = Vec::with_capacity(y.len());
     neg_y_fill_with_zero[0..neg_y.len()].copy_from_slice(&*neg_y);
 
     Ok(neg_y_fill_with_zero)
