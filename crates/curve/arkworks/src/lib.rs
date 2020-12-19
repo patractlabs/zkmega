@@ -7,7 +7,7 @@
 mod derive;
 
 #[macro_use]
-extern crate ark_std;
+extern crate alloc;
 
 pub mod curve;
 pub mod groth16;
@@ -15,9 +15,10 @@ pub mod ops;
 pub mod result;
 pub mod tests;
 
+use alloc::vec::Vec;
 pub use ark_serialize::SerializationError;
 pub use ark_std::io::{Error, ErrorKind};
-use ark_std::{ops::MulAssign, vec::Vec};
+use ark_std::ops::MulAssign;
 pub use ops::CurveBasicOperations;
 use result::Result;
 
@@ -61,18 +62,12 @@ pub fn call(func_id: u32, input: &[u8]) -> Result<Vec<u8>> {
 }
 
 /// Groth16 Verify
-pub fn verify(
-    curve_id: u32,
-    vk_gamma_abc: Vec<Vec<u8>>,
-    vk: Vec<u8>,
-    proof: Vec<u8>,
-    public_inputs: Vec<Vec<u8>>,
-) -> Result<bool> {
+pub fn verify(curve_id: u32, parcel: Vec<u8>) -> Result<bool> {
     match curve_id {
-        0x00 => groth16::verify_proof::<curve::Bls12_377>(vk_gamma_abc, vk, proof, public_inputs),
-        0x10 => groth16::verify_proof::<curve::Bls12_381>(vk_gamma_abc, vk, proof, public_inputs),
-        0x20 => groth16::verify_proof::<curve::Bn254>(vk_gamma_abc, vk, proof, public_inputs),
-        0x30 => groth16::verify_proof::<curve::BW6_761>(vk_gamma_abc, vk, proof, public_inputs),
+        0x00 => groth16::verify::<curve::Bls12_377>(parcel),
+        0x10 => groth16::verify::<curve::Bls12_381>(parcel),
+        0x20 => groth16::verify::<curve::Bn254>(parcel),
+        0x30 => groth16::verify::<curve::BW6_761>(parcel),
         _id => Err(ark_std::format!("Invalid curve id {}", _id).into()),
     }
 }

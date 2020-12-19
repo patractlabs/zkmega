@@ -1537,6 +1537,7 @@ dependencies = [
  "megaclite-zcash",
  "num-bigint 0.3.1",
  "num-traits",
+ "parity-scale-codec",
  "rand 0.7.3",
  "rust-crypto",
  "rustc-hex",
