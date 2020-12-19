@@ -6,6 +6,9 @@
 #![cfg_attr(not(features = "std"), no_std)]
 mod derive;
 
+#[macro_use]
+extern crate ark_std;
+
 pub mod curve;
 pub mod groth16;
 pub mod ops;
@@ -27,7 +30,7 @@ fn b2b(b: bool) -> Vec<u8> {
 /// Call curve function
 #[cfg(feature = "ink")]
 pub fn call(func_id: u32, input: &[u8]) -> Result<Vec<u8>> {
-    Ok(ink_env::call_chain_extension(func_id, &Vec::from(input))?)
+    Ok(ink_env::call_chain_extension(func_id, &input)?)
 }
 
 /// Call curve function

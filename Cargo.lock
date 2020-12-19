@@ -916,18 +916,10 @@ dependencies = [
  "ark-std",
  "ink_env",
  "num-bigint 0.3.1",
+ "parity-scale-codec",
  "paste",
  "rand 0.7.3",
  "rustc-hex",
-]
-
-[[package]]
-name = "megaclite-curve"
-version = "0.1.0"
-dependencies = [
- "megaclite-arkworks",
- "megaclite-matter-labs",
- "megaclite-zcash",
 ]
 
 [[package]]
@@ -1541,7 +1533,6 @@ dependencies = [
  "ark-std",
  "bellman_ce",
  "megaclite-arkworks",
- "megaclite-curve",
  "megaclite-matter-labs",
  "megaclite-zcash",
  "num-bigint 0.3.1",

@@ -42,3 +42,10 @@ impl From<InkError> for Error {
         Error::InkError(e)
     }
 }
+
+impl Error {
+    /// DEBUG string format
+    pub fn debug(&self) -> String {
+        format!("{:?}", self)
+    }
+}

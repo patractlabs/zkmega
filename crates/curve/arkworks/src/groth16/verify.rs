@@ -26,18 +26,34 @@ pub fn verify<C: CurveBasicOperations>(
     //  [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
     // acc = sigma(i:0~l)* [(βui(x)+αvi(x)+wi(x))/γ] ∈ G1
     for (i, b) in public_inputs.iter().zip(vk_gamma_abc.iter().skip(1)) {
-        // public_input_require::<C>(i)?;
-
-        let mut mul_input = Vec::with_capacity(g1_len + scalar_len);
-        mul_input.extend_from_slice(b);
+        let mut mul_input = vec![0; g1_len];
+        mul_input.copy_from_slice(b);
         mul_input.extend_from_slice(i);
 
+        // Check if invalid length
+        if mul_input.len() != g1_len + scalar_len {
+            return Err(format!(
+                "Invalid input length {} for mul operation, should be {}",
+                mul_input.len(),
+                g1_len * 2
+            )
+            .into());
+        }
         let mul_ic = crate::call(0x01000001 + C::CURVE_ID, &mul_input)?;
 
-        let mut acc_mul_ic = Vec::with_capacity(g1_len * 2);
-        acc_mul_ic.extend_from_slice(acc.as_ref());
+        let mut acc_mul_ic = vec![0; g1_len];
+        acc_mul_ic.copy_from_slice(acc.as_ref());
         acc_mul_ic.extend_from_slice(mul_ic.as_ref());
 
+        // Check if invalid length
+        if acc_mul_ic.len() != g1_len * 2 {
+            return Err(format!(
+                "Invalid input length {} for add operation, should be {}",
+                acc_mul_ic.len(),
+                g1_len * 2
+            )
+            .into());
+        }
         acc = crate::call(0x01000000 + C::CURVE_ID, &*acc_mul_ic)?;
     }
 
@@ -97,7 +113,7 @@ fn negate_y<C: CurveBasicOperations>(y: &[u8]) -> Result<Vec<u8>> {
     let neg_y = negate_y_based_curve(BigUint::from_bytes_le(y), C::MODULUS).to_bytes_le();
 
     // Because of randomness, Negate_y vector might not satisfy g1_y_len bytes.
-    let mut neg_y_fill_with_zero = Vec::with_capacity(y.len());
+    let mut neg_y_fill_with_zero = vec![0; y.len()];
     neg_y_fill_with_zero[0..neg_y.len()].copy_from_slice(&*neg_y);
 
     Ok(neg_y_fill_with_zero)
