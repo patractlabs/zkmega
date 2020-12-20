@@ -24,6 +24,7 @@ ark-groth16 = { git = "https://github.com/arkworks-rs/groth16", default-features
 sapling_crypto_ce = { package = "sapling-crypto_ce", git = "https://github.com/matter-labs/sapling-crypto", branch = "master" }
 
 # crates.io deps
+hex = "^0"
 rustc-hex = { version = "2", default-features = false }
 bellman_ce = { version = "0.3.0", default-features = false }
 num-bigint = "0.3"

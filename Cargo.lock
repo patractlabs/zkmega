@@ -1533,6 +1533,7 @@ dependencies = [
  "ark-serialize",
  "ark-std",
  "bellman_ce",
+ "hex",
  "megaclite-arkworks",
  "megaclite-matter-labs",
  "megaclite-zcash",
