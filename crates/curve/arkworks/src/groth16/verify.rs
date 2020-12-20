@@ -1,10 +1,32 @@
 //! Groth16 verifaction
 use crate::{result::Result, CurveBasicOperations, Error, ErrorKind, SerializationError};
-use ark_std::vec::Vec;
+use alloc::vec::Vec;
 use num_bigint::BigUint;
+use parity_scale_codec::{Decode, Encode};
+
+/// Groth16 Verifying Parcel
+#[derive(Debug, Encode, Decode)]
+pub struct Groth16Parcel {
+    pub vk_gamma_abc: Vec<Vec<u8>>,
+    pub vk: Vec<u8>,
+    pub proof: Vec<u8>,
+    pub public_inputs: Vec<Vec<u8>>,
+}
+
+/// Verify Wrapper
+pub fn verify<C: CurveBasicOperations>(parcel: Vec<u8>) -> Result<bool> {
+    let Groth16Parcel {
+        vk_gamma_abc,
+        vk,
+        proof,
+        public_inputs,
+    } = Groth16Parcel::decode(&mut parcel.as_ref())
+        .map_err(|_| format!("Decode verify parcel failed, src: {:?}", parcel))?;
+    verify_proof::<C>(vk_gamma_abc, vk, proof, public_inputs)
+}
 
 /// Groth16 verification
-pub fn verify<C: CurveBasicOperations>(
+pub fn verify_proof<C: CurveBasicOperations>(
     vk_gamma_abc: Vec<Vec<u8>>,
     vk: Vec<u8>,
     proof: Vec<u8>,
@@ -31,14 +53,14 @@ pub fn verify<C: CurveBasicOperations>(
         mul_input.extend_from_slice(i);
 
         // Check if invalid length
-        if mul_input.len() != g1_len + scalar_len {
-            return Err(format!(
-                "Invalid input length {} for mul operation, should be {}",
-                mul_input.len(),
-                g1_len * 2
-            )
-            .into());
-        }
+        // if mul_input.len() != g1_len + scalar_len {
+        //     return Err(format!(
+        //         "Invalid input length {} for mul operation, should be {}",
+        //         mul_input.len(),
+        //         g1_len * 2
+        //     )
+        //     .into());
+        // }
         let mul_ic = crate::call(0x01000001 + C::CURVE_ID, &mul_input)?;
 
         let mut acc_mul_ic = vec![0; g1_len];
@@ -46,14 +68,14 @@ pub fn verify<C: CurveBasicOperations>(
         acc_mul_ic.extend_from_slice(mul_ic.as_ref());
 
         // Check if invalid length
-        if acc_mul_ic.len() != g1_len * 2 {
-            return Err(format!(
-                "Invalid input length {} for add operation, should be {}",
-                acc_mul_ic.len(),
-                g1_len * 2
-            )
-            .into());
-        }
+        // if acc_mul_ic.len() != g1_len * 2 {
+        //     return Err(format!(
+        //         "Invalid input length {} for add operation, should be {}",
+        //         acc_mul_ic.len(),
+        //         g1_len * 2
+        //     )
+        //     .into());
+        // }
         acc = crate::call(0x01000000 + C::CURVE_ID, &*acc_mul_ic)?;
     }
 
@@ -118,13 +140,3 @@ fn negate_y<C: CurveBasicOperations>(y: &[u8]) -> Result<Vec<u8>> {
 
     Ok(neg_y_fill_with_zero)
 }
-
-// fn public_input_require<C: CurveBasicOperations>(input: &[u8]) -> Result<()> {
-//     if BigUint::from_bytes_be(input)
-//         >= BigUint::from_str_radix(C::SCALAR_FIELD, 10)
-//             .map_err(|_| "Parse wrong: public input to BigUint.")?
-//     {
-//         return Err("public input is invalid.".into());
-//     }
-//     Ok(())
-// }
