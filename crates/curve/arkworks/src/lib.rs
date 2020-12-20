@@ -20,6 +20,7 @@ pub use ark_serialize::SerializationError;
 pub use ark_std::io::{Error, ErrorKind};
 use ark_std::ops::MulAssign;
 pub use ops::CurveBasicOperations;
+use parity_scale_codec::{Decode, Encode};
 use result::Result;
 
 /// bool to bytes
@@ -31,13 +32,22 @@ fn b2b(b: bool) -> Vec<u8> {
 /// Call curve function
 #[cfg(feature = "ink")]
 pub fn call(func_id: u32, input: &[u8]) -> Result<Vec<u8>> {
-    Ok(ink_env::call_chain_extension(func_id, &input)?)
+    Ok(
+        ink_env::call_chain_extension::<&[u8], Vec<u8>>(func_id, &input).map_err(|e| {
+            format!(
+                "call chain extensition failed, err: {:?}, input: {:?}",
+                e, input
+            )
+        })?,
+    )
 }
 
 /// Call curve function
 #[cfg(not(feature = "ink"))]
 pub fn call(func_id: u32, input: &[u8]) -> Result<Vec<u8>> {
     Ok(match func_id {
+        // debug
+        0x2a => Ok(input.to_vec()),
         // add - 0x2a + 0,1,2,3
         0x01000000 => <ark_bls12_377::Bls12_377 as CurveBasicOperations>::add(input),
         0x01000010 => <ark_bls12_381::Bls12_381 as CurveBasicOperations>::add(input),
@@ -62,7 +72,24 @@ pub fn call(func_id: u32, input: &[u8]) -> Result<Vec<u8>> {
 }
 
 /// Groth16 Verify
-pub fn verify(curve_id: u32, parcel: Vec<u8>) -> Result<bool> {
+pub fn verify(
+    curve_id: u32,
+    vk_gamma_abc: Vec<Vec<u8>>,
+    vk: Vec<u8>,
+    proof: Vec<u8>,
+    public_inputs: Vec<Vec<u8>>,
+) -> Result<bool> {
+    match curve_id {
+        0x00 => groth16::verify_proof::<curve::Bls12_377>(vk_gamma_abc, vk, proof, public_inputs),
+        0x10 => groth16::verify_proof::<curve::Bls12_381>(vk_gamma_abc, vk, proof, public_inputs),
+        0x20 => groth16::verify_proof::<curve::Bn254>(vk_gamma_abc, vk, proof, public_inputs),
+        0x30 => groth16::verify_proof::<curve::BW6_761>(vk_gamma_abc, vk, proof, public_inputs),
+        _id => Err(ark_std::format!("Invalid curve id {}", _id).into()),
+    }
+}
+
+/// Groth16 Verify Parcel
+pub fn verify_parcel(curve_id: u32, parcel: Vec<u8>) -> Result<bool> {
     match curve_id {
         0x00 => groth16::verify::<curve::Bls12_377>(parcel),
         0x10 => groth16::verify::<curve::Bls12_381>(parcel),

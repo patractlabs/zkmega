@@ -914,6 +914,7 @@ dependencies = [
  "ark-relations",
  "ark-serialize",
  "ark-std",
+ "cfg-if 1.0.0",
  "ink_env",
  "num-bigint 0.3.1",
  "parity-scale-codec",
