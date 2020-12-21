@@ -99,8 +99,4 @@ fn test_mimc() {
     let in_key = U256::zero();
 
     assert_eq!(mimc(b"1"), mimc_with_key(vec![&message], &in_key));
-    // assert_eq!(
-    //     "0x2ca75fe593175b8a8dd7761538cc1b3d72c1eac5e87cc2b712738dc3aade8d61",
-    //     mimc_with_key(vec![&b1], &b2).to_hex_string()
-    // );
 }
