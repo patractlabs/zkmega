@@ -202,11 +202,22 @@ assert_eq!(
 </span>use merkle_tree::MerkleTree;
 let mut mt = MerkleTree::default();
 let message = b&quot;49&quot;;
-let (leaf,index) = mt.insert(message).unwrap();
-assert_eq!(mt.update(),mt.get_root());
+let (leaf, index) = mt.insert(message).unwrap();
+assert_eq!(mt.update(), mt.get_root());
+let merkle_proof = mt.get_proof(index);
+assert!(mt.verify_merkle_proof(leaf, merkle_proof, index));
 
-let (merkle_proof,address_bits) = mt.get_proof(1);
-assert!(mt.verify_merkle_proof(leaf,merkle_proof,address_bits));
+let message = b&quot;50&quot;;
+let (leaf, index) = mt.insert(message).unwrap();
+assert_eq!(mt.update(), mt.get_root());
+let merkle_proof = mt.get_proof(index);
+assert!(mt.verify_merkle_proof(leaf, merkle_proof, index));
+
+let message = b&quot;51&quot;;
+let (leaf, index) = mt.insert(message).unwrap();
+assert_eq!(mt.update(), mt.get_root());
+let merkle_proof = mt.get_proof(index);
+assert!(mt.verify_merkle_proof(leaf, merkle_proof, index));
 <span class="boring">}
 </span></code></pre></pre>
 <h2><a class="header" href="#eddsa" id="eddsa">EDDSA</a></h2>
