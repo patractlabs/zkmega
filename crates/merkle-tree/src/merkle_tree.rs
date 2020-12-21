@@ -5,11 +5,11 @@ use once_cell::sync::Lazy;
 use tiny_keccak::{Hasher, Keccak};
 use zkp_u256::{Zero, U256};
 
-// ceil(log2(1<<29))
-static TREE_DEPTH: usize = 29;
+// ceil(log2(1<<20))
+static TREE_DEPTH: usize = 10;
 
-// 1<<29 leaves
-static MAX_LEAF_COUNT: usize = 536870912;
+// 1<<20 leaves
+static MAX_LEAF_COUNT: usize = 1024;
 
 static FILL_LEVEL_IVS: Lazy<Vec<U256>> = Lazy::new(|| {
     let ivs = [
