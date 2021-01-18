@@ -41,9 +41,9 @@ mod bls12_377 {
     use ark_ec::PairingEngine;
     use ark_ff::{
         fields::{Field, PrimeField},
-        test_rng, One,
+        One,
     };
-    use ark_std::{ops::MulAssign, vec::Vec};
+    use ark_std::{ops::MulAssign, test_rng, vec::Vec};
     use rand::Rng;
     use rustc_hex::FromHex;
 
