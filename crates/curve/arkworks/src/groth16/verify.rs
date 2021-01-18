@@ -94,19 +94,19 @@ pub fn verify_proof<C: CurveBasicOperations>(
         ),
         (
             &acc[0..g1_len / 2],
-            &*negate_y::<C>(&acc[g1_len / 2..g1_len - 1])?,
+            &*negate_y::<C>(&acc[g1_len / 2..g1_len - 1]),
             &[0u8][..],
             &vk[0..g2_len],
         ),
         (
             &proof[g1_g2_len..g1_g2_len + g1_len / 2],
-            &*negate_y::<C>(&proof[g1_g2_len + g1_len / 2..g1_g2_len + g1_len - 1])?,
+            &*negate_y::<C>(&proof[g1_g2_len + g1_len / 2..g1_g2_len + g1_len - 1]),
             &[0u8][..],
             &vk[g2_len..g2_len * 2],
         ),
         (
             &vk[g2_len * 2..g2_len * 2 + g1_len / 2],
-            &*negate_y::<C>(&vk[g2_len * 2 + g1_len / 2..g2_len * 2 + g1_len - 1])?,
+            &*negate_y::<C>(&vk[g2_len * 2 + g1_len / 2..g2_len * 2 + g1_len - 1]),
             &[0u8][..],
             &vk[g2_len * 2 + g1_len..g2_len * 3 + g1_len],
         ),
@@ -128,15 +128,15 @@ pub fn verify_proof<C: CurveBasicOperations>(
 
 fn negate_y_based_curve(y: BigUint, MODULUS: &[u8]) -> BigUint {
     let q = BigUint::from_bytes_le(MODULUS);
-    q.clone() - y.clone() % q
+    q.clone() - y % q
 }
 
-fn negate_y<C: CurveBasicOperations>(y: &[u8]) -> Result<Vec<u8>> {
+fn negate_y<C: CurveBasicOperations>(y: &[u8]) -> Vec<u8> {
     let neg_y = negate_y_based_curve(BigUint::from_bytes_le(y), C::MODULUS).to_bytes_le();
 
     // Because of randomness, Negate_y vector might not satisfy g1_y_len bytes.
     let mut neg_y_fill_with_zero = vec![0; y.len()];
     neg_y_fill_with_zero[0..neg_y.len()].copy_from_slice(&*neg_y);
 
-    Ok(neg_y_fill_with_zero)
+    neg_y_fill_with_zero
 }

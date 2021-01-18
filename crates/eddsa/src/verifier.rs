@@ -29,7 +29,7 @@ pub fn hash_to_u256(data: &[u8]) -> U256 {
     .unwrap();
 
     // hash mod mask.
-    return hash_u256 & mask;
+    hash_u256 & mask
 }
 
 pub fn verify(hashed_msg: U256, public_key: [U256; 2], r: [U256; 2], s: U256) -> bool {

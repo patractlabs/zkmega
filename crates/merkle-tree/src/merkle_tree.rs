@@ -80,12 +80,12 @@ impl MerkleTree {
                 .chunks_exact(2)
                 .enumerate()
                 .for_each(|(index, chunk)| {
-                    self.leaves[depth][index * 2 + 0] =
-                        Self::get_unique_leaf(depth, index * 2 + 0, chunk[0].clone());
+                    self.leaves[depth][index * 2] =
+                        Self::get_unique_leaf(depth, index * 2, chunk[0].clone());
                     self.leaves[depth][index * 2 + 1] =
                         Self::get_unique_leaf(depth, index * 2 + 1, chunk[1].clone());
                     self.leaves[depth + 1][index] = Self::hash_impl(
-                        &self.leaves[depth][index * 2 + 0],
+                        &self.leaves[depth][index * 2],
                         &self.leaves[depth][index * 2 + 1],
                         &FILL_LEVEL_IVS[depth],
                     );
@@ -96,7 +96,7 @@ impl MerkleTree {
     fn insert(&mut self, message: &[u8]) -> Result<(U256, usize), &'static str> {
         let leaf = mimc(message);
         if leaf.is_zero() {
-            Err("leaf must be non-zero")?
+            return Err("leaf must be non-zero");
         }
 
         let offset = self.cur;

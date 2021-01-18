@@ -51,10 +51,10 @@ fn mimc_pe7(in_x: &U256, in_k: &U256, in_seed: &U256, round_count: u64) -> U256 
 }
 
 // Sponge mode instantiated by MiMC permutation with a fixed key
-fn mimc_pe7_mp(mut in_x: Vec<&U256>, in_k: &U256, in_seed: U256, round_count: u64) -> U256 {
+fn mimc_pe7_mp(in_x: Vec<&U256>, in_k: &U256, in_seed: U256, round_count: u64) -> U256 {
     let mut r = in_k.clone();
-    for i in 0..in_x.len() {
-        r = &r + in_x[i] + mimc_pe7(&mut in_x[i], &r, &in_seed, round_count) % &*SCALAR_FIELD;
+    for i in in_x {
+        r = &r + i + mimc_pe7(i, &r, &in_seed, round_count) % &*SCALAR_FIELD;
     }
     r
 }
