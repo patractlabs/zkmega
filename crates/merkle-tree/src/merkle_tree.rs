@@ -9,7 +9,7 @@ use zkp_u256::{Zero, U256};
 static TREE_DEPTH: usize = 10;
 
 // 1<<20 leaves
-static MAX_LEAF_COUNT: usize = 1024;
+const MAX_LEAF_COUNT: usize = 1024;
 
 static FILL_LEVEL_IVS: Lazy<Vec<U256>> = Lazy::new(|| {
     let ivs = [
@@ -111,8 +111,8 @@ impl MerkleTree {
     // Update the leaves of the entire tree, return new tree root.
     fn update(&mut self) -> U256 {
         let mut current_index = self.cur;
-        let mut leaf1 = U256::default();
-        let mut leaf2 = U256::default();
+        let mut leaf1: U256;
+        let mut leaf2: U256;
 
         for depth in 0..TREE_DEPTH {
             let next_index = current_index / 2;
@@ -217,21 +217,10 @@ impl MerkleTree {
 #[test]
 fn test_merkle_tree() {
     let mut mt = MerkleTree::default();
-    let message = b"49";
+    let message = b"hello world";
     let (leaf, index) = mt.insert(message).unwrap();
     assert_eq!(mt.update(), mt.get_root());
-    let merkle_proof = mt.get_proof(index);
-    assert!(mt.verify_merkle_proof(leaf, merkle_proof, index));
 
-    let message = b"50";
-    let (leaf, index) = mt.insert(message).unwrap();
-    assert_eq!(mt.update(), mt.get_root());
-    let merkle_proof = mt.get_proof(index);
-    assert!(mt.verify_merkle_proof(leaf, merkle_proof, index));
-
-    let message = b"51";
-    let (leaf, index) = mt.insert(message).unwrap();
-    assert_eq!(mt.update(), mt.get_root());
     let merkle_proof = mt.get_proof(index);
     assert!(mt.verify_merkle_proof(leaf, merkle_proof, index));
 }

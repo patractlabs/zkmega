@@ -27,8 +27,8 @@ fn mimc_pe7(in_x: &U256, in_k: &U256, in_seed: &U256, round_count: u64) -> U256 
         return U256::from(0);
     }
     let mut c = in_seed.clone();
-    let mut t = U256::default();
-    let mut a = U256::default();
+    let mut t: U256;
+    let mut a: U256;
     let mut in_x = in_x.clone();
 
     // Further n-2 subsequent rounds include a round constant
