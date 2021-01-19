@@ -17,11 +17,11 @@ pub mod tests;
 
 use alloc::vec::Vec;
 pub use ark_serialize::SerializationError;
-pub use ark_std::io::{Error, ErrorKind};
+pub use ark_std::io::ErrorKind;
 use ark_std::ops::MulAssign;
 pub use ops::CurveBasicOperations;
 use parity_scale_codec::{Decode, Encode};
-use result::Result;
+use result::{Error, Result};
 
 /// bool to bytes
 #[cfg(not(feature = "ink"))]
@@ -32,14 +32,12 @@ fn b2b(b: bool) -> Vec<u8> {
 /// Call curve function
 #[cfg(feature = "ink")]
 pub fn call(func_id: u32, input: &[u8]) -> Result<Vec<u8>> {
-    Ok(
-        ink_env::call_chain_extension::<&[u8], Vec<u8>>(func_id, &input).map_err(|e| {
-            format!(
-                "call chain extensition failed, err: {:?}, input: {:?}",
-                e, input
-            )
-        })?,
-    )
+    use ink_env::chain_extension::{ChainExtensionMethod, FromStatusCode};
+    Ok(ChainExtensionMethod::build(func_id)
+        .input::<&[u8]>()
+        .output_result::<Vec<u8>, Error>()
+        .ignore_error_code()
+        .call(&input)?)
 }
 
 /// Call curve function
@@ -63,11 +61,7 @@ pub fn call(func_id: u32, input: &[u8]) -> Result<Vec<u8>> {
         0x01000012 => <ark_bls12_381::Bls12_381 as CurveBasicOperations>::pairings(input).map(b2b),
         0x01000022 => <ark_bn254::Bn254 as CurveBasicOperations>::pairings(input).map(b2b),
         0x01000032 => <ark_bw6_761::BW6_761 as CurveBasicOperations>::pairings(input).map(b2b),
-        _id => Err(Error::new(
-            ErrorKind::Other,
-            ark_std::format!("Invalid function id {}", _id),
-        )
-        .into()),
+        id => Err(Error::ScaleCodecError)?,
     }?)
 }
 
@@ -84,7 +78,7 @@ pub fn verify(
         0x10 => groth16::verify_proof::<curve::Bls12_381>(vk_gamma_abc, vk, proof, public_inputs),
         0x20 => groth16::verify_proof::<curve::Bn254>(vk_gamma_abc, vk, proof, public_inputs),
         0x30 => groth16::verify_proof::<curve::BW6_761>(vk_gamma_abc, vk, proof, public_inputs),
-        _id => Err(ark_std::format!("Invalid curve id {}", _id).into()),
+        id => Err(Error::InvalidFunctionId),
     }
 }
 
@@ -95,6 +89,6 @@ pub fn verify_parcel(curve_id: u32, parcel: Vec<u8>) -> Result<bool> {
         0x10 => groth16::verify::<curve::Bls12_381>(parcel),
         0x20 => groth16::verify::<curve::Bn254>(parcel),
         0x30 => groth16::verify::<curve::BW6_761>(parcel),
-        _id => Err(ark_std::format!("Invalid curve id {}", _id).into()),
+        id => Err(Error::InvalidFunctionId),
     }
 }

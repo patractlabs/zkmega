@@ -2,7 +2,5 @@
 #[macro_use]
 extern crate alloc;
 
-mod merkle_tree;
-mod mimc;
-
-pub use mimc::*;
+pub mod merkle_tree;
+pub mod mimc;

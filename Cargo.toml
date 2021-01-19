@@ -1,8 +1,6 @@
 [workspace]
 members = [
-    "crates/curve/arkworks",
-    "crates/curve/matter-labs",
-    "crates/curve/zcash",
+    "crates/curve",
     "crates/merkle-tree",
     "crates/eddsa",
     "tests",
