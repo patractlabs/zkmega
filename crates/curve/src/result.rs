@@ -2,25 +2,23 @@
 use ark_serialize::SerializationError;
 use ark_std::string::String;
 use core::result::Result as BasicResult;
+use parity_scale_codec::{Decode, Encode, Error as CodecError};
 
-#[cfg(feature = "ink")]
-use ink_env::Error as InkError;
+// #[cfg(feature = "ink")]
+// use ink_env::Error as InkError;
 
 /// Curve Result
 pub type Result<T> = BasicResult<T, Error>;
 
 /// Curve Error
-#[derive(Debug)]
+#[derive(Debug, Encode, Decode)]
 pub enum Error {
-    Serialize(SerializationError),
     Custom(String),
-    #[cfg(feature = "ink")]
-    InkError(InkError),
 }
 
 impl From<SerializationError> for Error {
     fn from(e: SerializationError) -> Self {
-        Error::Serialize(e)
+        Error::Custom("Serialize data failed".into())
     }
 }
 
@@ -36,12 +34,18 @@ impl From<String> for Error {
     }
 }
 
-#[cfg(feature = "ink")]
-impl From<InkError> for Error {
-    fn from(e: InkError) -> Self {
-        Error::InkError(e)
+impl From<CodecError> for Error {
+    fn from(e: CodecError) -> Self {
+        Error::Custom("Scale codec error".into())
     }
 }
+
+// #[cfg(feature = "ink")]
+// impl From<InkError> for Error {
+//     fn from(e: InkError) -> Self {
+//         Error::InkError(e)
+//     }
+// }
 
 impl Error {
     /// DEBUG string format
