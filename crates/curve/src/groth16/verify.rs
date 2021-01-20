@@ -21,8 +21,7 @@ pub fn verify<C: CurveBasicOperations>(parcel: Vec<u8>) -> Result<bool> {
         vk,
         proof,
         public_inputs,
-    } = Groth16Parcel::decode(&mut parcel.as_ref())
-        .map_err(|_| format!("Decode verify parcel failed, src: {:?}", parcel))?;
+    } = Groth16Parcel::decode(&mut parcel.as_ref()).map_err(|_| Error::VerifyParcelFailed)?;
     verify_proof::<C>(vk_gamma_abc, vk, proof, public_inputs)
 }
 
@@ -66,7 +65,7 @@ pub fn verify_proof<C: CurveBasicOperations>(
     let scalar_len = C::SCALAR_LEN;
 
     if (public_inputs.len() + 1) != vk_gamma_abc.len() {
-        return Err("Verifying key was malformed".into());
+        return Err(Error::VerifyParcelFailed);
     }
 
     // First two fields are used as the sum
