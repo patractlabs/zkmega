@@ -2,5 +2,8 @@
 #[macro_use]
 extern crate alloc;
 
-pub mod merkle_tree;
-pub mod mimc;
+#[allow(dead_code)]
+mod merkle_tree;
+mod mimc;
+
+pub use mimc::*;

@@ -14,6 +14,7 @@ pub enum Error {
     SerializeDataFailed,
     ScaleCodecError,
     VerifyParcelFailed,
+    Custom(String),
 }
 
 impl From<SerializationError> for Error {
@@ -25,6 +26,12 @@ impl From<SerializationError> for Error {
 impl From<CodecError> for Error {
     fn from(e: CodecError) -> Self {
         Error::ScaleCodecError
+    }
+}
+
+impl From<String> for Error {
+    fn from(e: String) -> Self {
+        Error::Custom(e)
     }
 }
 

@@ -33,7 +33,7 @@ use rand::Rng;
 
 // Bring in some tools for using pairing-friendly curves
 // We're going to use the BLS12-377 pairing-friendly elliptic curve.
-use ark_ff::{biginteger::BigInteger256, test_rng, Field, ToBytes};
+use ark_ff::{biginteger::BigInteger256, Field, ToBytes};
 // use ark_bls12_377::{Bls12_377, Fr};
 // use ark_bls12_381::{Bls12_381, Fr};
 use ark_bn254::{Bn254, Fr};
@@ -167,6 +167,7 @@ impl<'a, F: Field> ConstraintSynthesizer<F> for MiMCDemo<'a, F> {
 #[test]
 fn test_mimc_groth16() {
     // We're going to use the Groth-Maller17 proving system.
+    use ark_ff::test_rng;
     use ark_groth16::{
         create_random_proof, generate_random_parameters, prepare_verifying_key,
         verify_proof as raw_verify_proof,
@@ -250,7 +251,7 @@ fn test_mimc_groth16() {
             })
             .collect::<Vec<Vec<u8>>>();
         let mut vk_ic_slice = Vec::new();
-        vk_ic.iter().for_each(|ic| vk_ic_slice.push(&ic[..]));
+        vk_ic.iter().for_each(|ic| vk_ic_slice.push(ic.to_vec()));
         println!("vk_ic:{}", vk_ic_slice[0].to_hex::<String>());
         println!("vk_ic2:{}", vk_ic_slice[1].to_hex::<String>());
 
@@ -259,15 +260,12 @@ fn test_mimc_groth16() {
             scalar.write(&mut input[i]).unwrap();
         });
 
-        let public_input = input.iter().map(|x| &x[..]).collect::<Vec<_>>();
+        let public_input = input.iter().map(|x| x.to_vec()).collect::<Vec<_>>();
         println!("public_input:{}", public_input[0].to_hex::<String>());
 
-        // assert!(verify_proof::<Bn254>(
-        //     vk_ic_slice.to_vec(),
-        //     vk_encode,
-        //     proof_encode,
-        //     public_input[..],
-        // )
-        // .expect("verify proof fail "));
+        assert!(
+            verify_proof::<Bn254>(vk_ic_slice, vk_encode, proof_encode, public_input,)
+                .expect("verify proof fail ")
+        );
     }
 }

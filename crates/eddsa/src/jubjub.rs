@@ -32,5 +32,5 @@ pub fn scalar_mult(x: U256, y: U256, mut value: U256) -> Option<(U256, U256)> {
         p = etec_double(&p, &Q, &JUBJUB_A.into());
         value /= U256::from(2);
     }
-    etec_to_point(a, U256::from(0))
+    etec_to_point(a, Q.clone())
 }
