@@ -167,11 +167,11 @@ impl<'a, F: Field> ConstraintSynthesizer<F> for MiMCDemo<'a, F> {
 #[test]
 fn test_mimc_groth16() {
     // We're going to use the Groth-Maller17 proving system.
+    use ark_ff::test_rng;
     use ark_groth16::{
         create_random_proof, generate_random_parameters, prepare_verifying_key,
         verify_proof as raw_verify_proof,
     };
-    use ark_std::test_rng;
     use rustc_hex::{FromHex, ToHex};
 
     // This may not be cryptographically safe, use

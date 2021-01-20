@@ -1,9 +1,9 @@
 use crate::{tests::mimc::test_mimc_groth_16, CurveBasicOperations};
 use ark_bls12_377::{Bls12_377, Fr};
-use ark_ff::{Field, FromBytes, ToBytes};
+use ark_ff::{test_rng, Field, FromBytes, ToBytes, UniformRand};
 use ark_groth16::{verify_proof, PreparedVerifyingKey, Proof, VerifyingKey};
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
-use ark_std::{ops::MulAssign, test_rng, vec::Vec, UniformRand};
+use ark_std::{ops::MulAssign, vec::Vec};
 use rustc_hex::FromHex;
 
 /// BLS12_377 ADD

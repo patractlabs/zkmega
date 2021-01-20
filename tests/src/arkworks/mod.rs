@@ -3,13 +3,12 @@ mod ops;
 mod verify;
 
 use ark_ec::{AffineCurve, PairingEngine, ProjectiveCurve};
-use ark_ff::{FromBytes, One, PrimeField, ToBytes, UniformRand, Zero};
+use ark_ff::{test_rng, FromBytes, One, PrimeField, ToBytes, UniformRand, Zero};
 use ark_serialize::SerializationError;
 use ark_std::{
     io::{Error, ErrorKind},
     ops::{MulAssign, Neg},
     str::FromStr,
-    test_rng,
     vec::Vec,
 };
 use arkworks::CurveBasicOperations;

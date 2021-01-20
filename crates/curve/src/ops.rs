@@ -1,14 +1,12 @@
 //! Curve Operations
 pub use ark_ec::{AffineCurve, PairingEngine, ProjectiveCurve};
-pub use ark_ff::{FromBytes, One, PrimeField, ToBytes, Zero};
+pub use ark_ff::{test_rng, FromBytes, One, PrimeField, ToBytes, UniformRand, Zero};
 pub use ark_serialize::SerializationError;
 pub use ark_std::{
     io::{Error, ErrorKind},
     ops::{MulAssign, Neg},
     str::FromStr,
-    test_rng,
     vec::Vec,
-    UniformRand,
 };
 use num_bigint::BigUint;
 
