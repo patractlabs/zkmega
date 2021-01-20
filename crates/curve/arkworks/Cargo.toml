@@ -22,6 +22,7 @@ ark-groth16 = { git = "https://github.com/arkworks-rs/groth16", default-features
 num-bigint = { version = "0.3", default-features = false }
 rand = { version = "0.7", default-features = false }
 rustc-hex = { version = "2", default-features = false }
+hex = "0.4.2"
 
 paste = { version = "1.0.3", optional = true }
 cfg-if = { version = "1.0.0", default-features = false }

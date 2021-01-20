@@ -1,6 +1,7 @@
 #![no_std]
 extern crate alloc;
 
+#[allow(dead_code)]
 mod etec;
 mod jubjub;
 mod verifier;
