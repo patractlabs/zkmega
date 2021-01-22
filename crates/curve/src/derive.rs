@@ -41,9 +41,9 @@ mod bls12_377 {
     use ark_ec::PairingEngine;
     use ark_ff::{
         fields::{Field, PrimeField},
-        test_rng, One,
+        One,
     };
-    use ark_std::{ops::MulAssign, vec::Vec};
+    use ark_std::{ops::MulAssign, vec::Vec, test_rng};
     use rand::Rng;
     use rustc_hex::FromHex;
 
@@ -69,8 +69,8 @@ mod bls12_381 {
     use crate::CurveBasicOperations;
     use ark_bls12_381::{Bls12_381, Fq12, Fr, G1Projective, G2Projective};
     use ark_ec::PairingEngine;
-    use ark_ff::{test_rng, Field, One, PrimeField};
-    use ark_std::{ops::MulAssign, vec::Vec};
+    use ark_ff::{Field, One, PrimeField};
+    use ark_std::{ops::MulAssign, vec::Vec, test_rng};
     use rand::Rng;
     use rustc_hex::FromHex;
 
@@ -96,8 +96,8 @@ mod bn254 {
     use crate::CurveBasicOperations;
     use ark_bn254::{Bn254, Fq12, Fr, G1Projective, G2Projective};
     use ark_ec::PairingEngine;
-    use ark_ff::{test_rng, Field, One, PrimeField};
-    use ark_std::{ops::MulAssign, vec::Vec};
+    use ark_ff::{Field, One, PrimeField};
+    use ark_std::{ops::MulAssign, vec::Vec, test_rng};
     use rand::Rng;
     use rustc_hex::FromHex;
 
@@ -122,8 +122,8 @@ mod bw6_761 {
     use crate::CurveBasicOperations;
     use ark_bw6_761::{Fq6, Fr, G1Projective, G2Projective, BW6_761};
     use ark_ec::PairingEngine;
-    use ark_ff::{test_rng, Field, One, PrimeField};
-    use ark_std::{ops::MulAssign, vec::Vec};
+    use ark_ff::{Field, One, PrimeField};
+    use ark_std::{ops::MulAssign, vec::Vec, test_rng};
     use rand::Rng;
     use rustc_hex::FromHex;
 
@@ -151,8 +151,8 @@ mod cp6_782 {
     use crate::CurveBasicOperations;
     use ark_cp6_782::{Fq6, Fr, G1Projective, G2Projective, CP6_782};
     use ark_ec::PairingEngine;
-    use ark_ff::{test_rng, Field, One, PrimeField};
-    use ark_std::{ops::MulAssign, vec::Vec};
+    use ark_ff::{Field, One, PrimeField};
+    use ark_std::{ops::MulAssign, vec::Vec, test_rng};
     use rand::Rng;
     use rustc_hex::FromHex;
 
