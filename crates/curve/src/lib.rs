@@ -22,7 +22,7 @@ pub use ark_std::io::ErrorKind;
 use ark_std::ops::MulAssign;
 pub use ops::CurveBasicOperations;
 use parity_scale_codec::{Decode, Encode};
-use result::{Error, Result};
+pub use result::{Error, Result};
 
 /// bool to bytes
 #[cfg(not(feature = "ink"))]

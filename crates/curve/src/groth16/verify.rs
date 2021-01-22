@@ -23,15 +23,17 @@ pub fn verify<C: CurveBasicOperations>(parcel: Vec<u8>) -> Result<bool> {
         public_inputs,
     } = Groth16Parcel::decode(&mut parcel.as_ref()).map_err(|_| Error::VerifyParcelFailed)?;
     verify_proof::<C>(vk_gamma_abc, vk, proof, public_inputs)
+    // verify_proof::<C>(vk, vk_gamma_abc, proof_and_inputs)
 }
 
 /// preprocess vk and proof to verify proof
 pub fn preprocessed_verify_proof<C: CurveBasicOperations>(
     vk: [&str; 14],
     vk_gamma_abc: [&str; 6],
-    proof_and_input: &'static str,
+    proof_and_input: &[u8],
 ) -> Result<bool> {
-    let bytes = hex::decode(proof_and_input).map_err(|e| format!("hex decode error:{}", e))?;
+    // let bytes = hex::decode(proof_and_input).map_err(|e| format!("hex decode error:{}", e))?;
+    let bytes = proof_and_input;
     let (proof, input) = bytes.split_at(2 * C::G1_LEN + C::G2_LEN);
 
     let mut vk_vec = Vec::new();
@@ -81,12 +83,13 @@ pub fn verify_proof<C: CurveBasicOperations>(
 
         // Check if invalid length
         if mul_input.len() != g1_len + scalar_len {
-            return Err(format!(
-                "Invalid input length {} for mul operation, should be {}",
-                mul_input.len(),
-                g1_len + scalar_len
-            )
-            .into());
+            return Err(Error::SerializeDataFailed);
+            // return Err(format!(
+            //     "Invalid input length {} for mul operation, should be {}",
+            //     mul_input.len(),
+            //     g1_len + scalar_len
+            // )
+            // .into());
         }
         let mul_ic = crate::call(0x01000001 + C::CURVE_ID, &mul_input)?;
 
@@ -96,12 +99,7 @@ pub fn verify_proof<C: CurveBasicOperations>(
 
         // Check if invalid length
         if acc_mul_ic.len() != g1_len * 2 {
-            return Err(format!(
-                "Invalid input length {} for add operation, should be {}",
-                acc_mul_ic.len(),
-                g1_len * 2
-            )
-            .into());
+            return Err(Error::SerializeDataFailed);
         }
         acc = crate::call(0x01000000 + C::CURVE_ID, &*acc_mul_ic)?;
     }

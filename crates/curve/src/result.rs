@@ -1,6 +1,6 @@
 //! Curve Result
 use ark_serialize::SerializationError;
-use ark_std::string::String;
+use ark_std::{string::String, vec::Vec};
 use core::result::Result as BasicResult;
 use parity_scale_codec::{Decode, Encode, Error as CodecError};
 
@@ -14,7 +14,7 @@ pub enum Error {
     SerializeDataFailed,
     ScaleCodecError,
     VerifyParcelFailed,
-    Custom(String),
+    Custom(Vec<u8>),
 }
 
 impl From<SerializationError> for Error {
@@ -31,7 +31,7 @@ impl From<CodecError> for Error {
 
 impl From<String> for Error {
     fn from(e: String) -> Self {
-        Error::Custom(e)
+        Error::Custom(e.as_bytes().to_vec())
     }
 }
 
