@@ -2,8 +2,7 @@
 use crate::{result::Result, CurveBasicOperations, Error, ErrorKind, SerializationError};
 use alloc::{string::ToString, vec::Vec};
 use num_bigint::BigUint;
-use parity_scale_codec::alloc::string::String;
-use parity_scale_codec::{Decode, Encode};
+use parity_scale_codec::{alloc::string::String, Decode, Encode};
 
 /// Groth16 Verifying Parcel
 #[derive(Debug, Encode, Decode)]
@@ -23,7 +22,6 @@ pub fn verify<C: CurveBasicOperations>(parcel: Vec<u8>) -> Result<bool> {
         public_inputs,
     } = Groth16Parcel::decode(&mut parcel.as_ref()).map_err(|_| Error::VerifyParcelFailed)?;
     verify_proof::<C>(vk_gamma_abc, vk, proof, public_inputs)
-    // verify_proof::<C>(vk, vk_gamma_abc, proof_and_inputs)
 }
 
 /// preprocess vk and proof to verify proof
@@ -32,8 +30,9 @@ pub fn preprocessed_verify_proof<C: CurveBasicOperations>(
     vk_gamma_abc: [&str; 6],
     proof_and_input: &[u8],
 ) -> Result<bool> {
-    // let bytes = hex::decode(proof_and_input).map_err(|e| format!("hex decode error:{}", e))?;
-    let bytes = proof_and_input;
+    // TODO: here is a workaround
+    let proof_and_input = String::from_utf8_lossy(proof_and_input);
+    let bytes = hex::decode(&*proof_and_input).map_err(|e| format!("hex decode error:{}", e))?;
     let (proof, input) = bytes.split_at(2 * C::G1_LEN + C::G2_LEN);
 
     let mut vk_vec = Vec::new();
@@ -203,7 +202,7 @@ fn test_verify() {
     let proof_and_input = "c900f310725b3ec9dcc26021a8bc01558f44b7aa9bb6bc98399212652248d9988a3fceeccf07b1787cc7dea439c9b20683bc04a9e5a961a4094fc738f98f4878d5298587f9693bf18505b2cf0737fb49017775469d0215d1e0bd8fb36e36c81600f4f56a8745305c97ed023eaf97c5646ba67300a9430ae8ab437446d5f0fbaa48bcec410bbea6941131b518d1212faa02a032871dcedfd968bd0fc93c45c4e026f91193cb4910f92b98ef3f4fac9cf3d168a8fa338c90a4071a9c374edf80c008fbeb5a067bf5e50f213efc8da9822b5064666d369dd39dfd9199b4c2cb2273b5c4d3685216db4325429821bcde61330bfb5b8801e92cd231d53f2f3c09f39e54b99c3bd3780e9ba31b486f736243dd355406b4c5bc43dc65fd39688a41d8a30f0011333c5d8d51e3429ba5c60be670b62f078a048196b98bd5a890c71f1ff1c746d6d764f455d120ec484f87524c2c4b065e66bfa9ff4ab99f06df246ea397e5757bf5045fde4899d33821e2eb71ebcaac8274d306fc2620e2a88ce1d26f0e92030090000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000";
 
     assert_eq!(
-        preprocessed_verify_proof::<Bls12_381>(VK, VK_GAMMA_ABC, proof_and_input).unwrap(),
+        preprocessed_verify_proof::<Bls12_381>(VK, VK_GAMMA_ABC, proof_and_input.as_bytes()).unwrap(),
         true
     );
 }
