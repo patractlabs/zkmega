@@ -236,12 +236,14 @@ checksum = "349f9b6a179ed607305526ca489b34ad0a41aed5f7980fa90eb03160b69598fb"
 
 [[package]]
 name = "bitvec"
-version = "0.17.4"
+version = "0.20.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "41262f11d771fd4a61aa3ce019fca363b4b6c282fca9da2a31186d3965a47a5c"
+checksum = "f5011ffc90248764d7005b0e10c7294f5aa1bd87d9dd7248f4ad475b347c294d"
 dependencies = [
- "either",
+ "funty",
  "radium",
+ "tap",
+ "wyz",
 ]
 
 [[package]]
@@ -317,9 +319,9 @@ checksum = "8d696c370c750c948ada61c69a0ee2cbbb9c50b1019ddb86d9317157a99c2cae"
 
 [[package]]
 name = "byte-slice-cast"
-version = "0.3.5"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b0a5e3906bcbf133e33c1d4d95afc664ad37fbdb9f6568d8043e7ea8c27d93d3"
+checksum = "65c1bf4a04a88c54f589125563643d773f3254b5c38571395e2b591c693bbc81"
 
 [[package]]
 name = "byte-tools"
@@ -549,6 +551,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a06f77d526c1a601b7c4cdd98f54b5eaabffc14d5f2f0296febdc7f357c6d3ba"
 
 [[package]]
+name = "funty"
+version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fed34cd105917e91daa4da6b3728c47b068749d6a62c59811f06ed2ac71d9da7"
+
+[[package]]
 name = "futures"
 version = "0.3.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -703,7 +711,7 @@ dependencies = [
 [[package]]
 name = "ink_allocator"
 version = "3.0.0-rc2"
-source = "git+https://github.com/paritytech/ink#1daf6a8e02a833067ee3eec905464a13a81b1cab"
+source = "git+https://github.com/paritytech/ink#a50bf6d3dbcb938c2635f5cf9b075bdde2e20555"
 dependencies = [
  "wee_alloc",
 ]
@@ -711,7 +719,7 @@ dependencies = [
 [[package]]
 name = "ink_env"
 version = "3.0.0-rc2"
-source = "git+https://github.com/paritytech/ink#1daf6a8e02a833067ee3eec905464a13a81b1cab"
+source = "git+https://github.com/paritytech/ink#a50bf6d3dbcb938c2635f5cf9b075bdde2e20555"
 dependencies = [
  "arrayref",
  "blake2 0.9.1",
@@ -734,7 +742,7 @@ dependencies = [
 [[package]]
 name = "ink_metadata"
 version = "3.0.0-rc2"
-source = "git+https://github.com/paritytech/ink#1daf6a8e02a833067ee3eec905464a13a81b1cab"
+source = "git+https://github.com/paritytech/ink#a50bf6d3dbcb938c2635f5cf9b075bdde2e20555"
 dependencies = [
  "derive_more",
  "impl-serde",
@@ -747,7 +755,7 @@ dependencies = [
 [[package]]
 name = "ink_prelude"
 version = "3.0.0-rc2"
-source = "git+https://github.com/paritytech/ink#1daf6a8e02a833067ee3eec905464a13a81b1cab"
+source = "git+https://github.com/paritytech/ink#a50bf6d3dbcb938c2635f5cf9b075bdde2e20555"
 dependencies = [
  "cfg-if 1.0.0",
 ]
@@ -755,7 +763,7 @@ dependencies = [
 [[package]]
 name = "ink_primitives"
 version = "3.0.0-rc2"
-source = "git+https://github.com/paritytech/ink#1daf6a8e02a833067ee3eec905464a13a81b1cab"
+source = "git+https://github.com/paritytech/ink#a50bf6d3dbcb938c2635f5cf9b075bdde2e20555"
 dependencies = [
  "ink_prelude",
  "parity-scale-codec",
@@ -944,9 +952,9 @@ dependencies = [
 
 [[package]]
 name = "parity-scale-codec"
-version = "1.3.5"
+version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7c740e5fbcb6847058b40ac7e5574766c6388f585e184d769910fe0d3a2ca861"
+checksum = "75c823fdae1bb5ff5708ee61a62697e6296175dc671710876871c853f48592b3"
 dependencies = [
  "arrayvec 0.5.2",
  "bitvec",
@@ -957,9 +965,9 @@ dependencies = [
 
 [[package]]
 name = "parity-scale-codec-derive"
-version = "1.2.2"
+version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "198db82bb1c18fc00176004462dd809b2a6d851669550aa17af6dacd21ae0c14"
+checksum = "9029e65297c7fd6d7013f0579e193ec2b34ae78eabca854c9417504ad8a2d214"
 dependencies = [
  "proc-macro-crate",
  "proc-macro2",
@@ -1049,9 +1057,9 @@ dependencies = [
 
 [[package]]
 name = "radium"
-version = "0.3.0"
+version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "def50a86306165861203e7f84ecffbbdfdea79f0e51039b33de1e952358c47ac"
+checksum = "643f8f41a8ebc4c5dc4515c82bb8abd397b527fc20fd681b7c011c2aee5d44fb"
 
 [[package]]
 name = "rand"
@@ -1233,10 +1241,11 @@ dependencies = [
 
 [[package]]
 name = "scale-info"
-version = "0.4.1"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "09591597256643082c89e633dc300e4892627f7e1f69006400b463a7108a93e2"
+checksum = "2a18094668bdf02110cbeb9829163d81f509b3bc5a0168b0e4242121a2be2aa5"
 dependencies = [
+ "cfg-if 1.0.0",
  "derive_more",
  "parity-scale-codec",
  "scale-info-derive",
@@ -1245,9 +1254,9 @@ dependencies = [
 
 [[package]]
 name = "scale-info-derive"
-version = "0.2.1"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8e46e58629b3dbc3334c65adfe6b4a2fd63501cdeebe7079195848c5ab8bd2c1"
+checksum = "eb90ce8f31cc26350086b9476da9d3e7b068d4f014e6a64d33435f7c027b76df"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1381,6 +1390,12 @@ dependencies = [
  "syn",
  "unicode-xid",
 ]
+
+[[package]]
+name = "tap"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "36474e732d1affd3a6ed582781b3683df3d0563714c59c39591e8ff707cf078e"
 
 [[package]]
 name = "tests"
@@ -1526,6 +1541,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 
 [[package]]
+name = "wyz"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "85e60b0d1b5f99db2556934e21937020776a5d31520bf169e851ac44e6420214"
+
+[[package]]
 name = "zeroize"
 version = "1.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1549,7 +1570,7 @@ dependencies = [
 [[package]]
 name = "zkp-u256"
 version = "0.2.0"
-source = "git+https://github.com/patractlabs/OpenZKP?branch=master#23bd75cd1c01ff4a586a015597f2bda5ebe64be6"
+source = "git+https://github.com/patractlabs/OpenZKP?branch=master#a71c96e23a2a831bb2c97268bb1113480c42876b"
 dependencies = [
  "crunchy",
  "hex",
