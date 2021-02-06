@@ -55,5 +55,5 @@ std = [
     "parity-scale-codec/std",
 ]
 tests = ["ark-relations", "ark-groth16"]
-ink_std = [ "ink_env/std" ]
+ink_std = [ "ink_env/std", "std" ]
 ink = [ "ink_env" ]
