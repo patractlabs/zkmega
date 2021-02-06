@@ -32,7 +32,28 @@ ark-relations = { git = "https://github.com/arkworks-rs/snark", default-features
 ark-groth16 = { git = "https://github.com/arkworks-rs/groth16", default-features = false }
 
 [features]
-default = []
+default = [ "std" ]
+std = [
+    "ark-bls12-377/std",
+    "ark-bls12-381/std",
+    "ark-bn254/std",
+    "ark-bw6-761/std",
+    "ark-cp6-782/std",
+    "ark-ff/std",
+    "ark-ec/std",
+    "ark-std/std",
+    "ark-serialize/std",
+    "ark-relations/std",
+    "ark-groth16/std",
+
+    "num-bigint/std",
+    "rand/std",
+    "rustc-hex/std",
+    "hex/std",
+
+    "ink_env/std",
+    "parity-scale-codec/std",
+]
 tests = ["ark-relations", "ark-groth16"]
 ink_std = [ "ink_env/std" ]
 ink = [ "ink_env" ]
