@@ -22,7 +22,7 @@ ark-groth16 = { git = "https://github.com/arkworks-rs/groth16", default-features
 num-bigint = { version = "0.3", default-features = false }
 rand = { version = "0.7", default-features = false }
 rustc-hex = { version = "2", default-features = false }
-hex = { version = "0.4.2", default-features = false }
+hex = { version = "0.4.3", default-features = false, features = ["alloc"] }
 
 ink_env = { git = "https://github.com/paritytech/ink", optional = true, default-features = false }
 parity-scale-codec = { version = "2.0.0", default-features = false, features = [ "derive" ] }
