@@ -169,7 +169,7 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1><a class="header" href="#megaclite" id="megaclite">Megaclite</a></h1>
+                        <h1 id="megaclite"><a class="header" href="#megaclite">Megaclite</a></h1>
 <p><a href="https://patractlabs.github.io/megaclite">Megaclite</a> is a zero-knowledge proof tool set building for the Polkadot ecology. </p>
 <ul>
 <li><a href="https://patractlabs.github.io/megaclite/pairing">Pairing</a></li>
@@ -180,7 +180,7 @@
 <li>Polkadot Treasury report for v0.1: https://polkadot.polkassembly.io/post/221. </li>
 <li>Element group for discussion: https://app.element.io/#/room/#PatractLabsDev:matrix.org</li>
 </ul>
-<h2><a class="header" href="#zk-rollup-introduction" id="zk-rollup-introduction">ZK Rollup Introduction</a></h2>
+<h2 id="zk-rollup-introduction"><a class="header" href="#zk-rollup-introduction">ZK Rollup Introduction</a></h2>
 <p>Compared with the privacy function, the performance improvement brought by Rollup is the
 early application direction of zero-knowledge proof. At present, the Layer 2 expansion
 plan of the blockchain is to transfer a considerable part of the on-chain workload to 
@@ -203,9 +203,9 @@ ZK Rollup technology to achieve some innovations, such as <a href="https://loopr
 and <a href="https://uniswap.org/">uniswap</a> etc. However, in the past 3 years, ZK technology has further developed, 
 such as the more practical <a href="https://electriccoin.co/blog/new-snark-curve/">BLS curve</a>, and <a href="https://eprint.iacr.org/2019/953/20190827:165656">PLONK algorithm</a> etc. 
 Ethereum has not yet supported it.</p>
-<h2><a class="header" href="#license" id="license">LICENSE</a></h2>
+<h2 id="license"><a class="header" href="#license">LICENSE</a></h2>
 <p>Apache-2.0</p>
-<h1><a class="header" href="#contract" id="contract">Contract</a></h1>
+<h1 id="contract"><a class="header" href="#contract">Contract</a></h1>
 <blockquote>
 <p>Currently we are testing with <strong>CHAIN_EXTENSION</strong>, this chapter is <strong>OUTDATED</strong> Now, 
 will be updated after the merging of <a href="https://github.com/paritytech/substrate/pull/7548">#7548</a>
@@ -225,7 +225,7 @@ future, and will pr to the offical repos if they are accepted by the Polkadot Ec
 git = &quot;https://github.com/patractlabs/ink&quot;
 branch = &quot;megaclite&quot;
 </code></pre>
-<h2><a class="header" href="#example" id="example">Example</a></h2>
+<h2 id="example"><a class="header" href="#example">Example</a></h2>
 <pre><code class="language-rust ignore">#![cfg_attr(not(feature = &quot;std&quot;), no_std)]
 
 use jupiter_ink_lang as ink;
@@ -265,8 +265,8 @@ mod altbn128 {
     }
 }
 </code></pre>
-<h1><a class="header" href="#example-1" id="example-1">Example</a></h1>
-<h2><a class="header" href="#call-curves-in-ink" id="call-curves-in-ink">Call curves in ink!</a></h2>
+<h1 id="example-1"><a class="header" href="#example-1">Example</a></h1>
+<h2 id="call-curves-in-ink"><a class="header" href="#call-curves-in-ink">Call curves in ink!</a></h2>
 <table><thead><tr><th>curve</th><th>add</th><th>mul</th><th>pairing</th></tr></thead><tbody>
 <tr><td>bls12_377</td><td>0x01000000</td><td>0x01000001</td><td>0x01000002</td></tr>
 <tr><td>bls12_381</td><td>0x01000010</td><td>0x01000011</td><td>0x01000012</td></tr>
@@ -279,7 +279,7 @@ mod altbn128 {
 </span>let result = ink_env::call_chain_extension(func_id, &amp;Vec::from(input))?
 <span class="boring">}
 </span></code></pre></pre>
-<h2><a class="header" href="#mimc" id="mimc">MIMC</a></h2>
+<h2 id="mimc"><a class="header" href="#mimc">MIMC</a></h2>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -293,7 +293,7 @@ assert_eq!(
 );
 <span class="boring">}
 </span></code></pre></pre>
-<h2><a class="header" href="#merkle-tree" id="merkle-tree">Merkle Tree</a></h2>
+<h2 id="merkle-tree"><a class="header" href="#merkle-tree">Merkle Tree</a></h2>
 <pre><pre class="playground"><code class="language-rust">
 <span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -318,14 +318,14 @@ let merkle_proof = mt.get_proof(index);
 assert!(mt.verify_merkle_proof(leaf, merkle_proof, index));
 <span class="boring">}
 </span></code></pre></pre>
-<h2><a class="header" href="#eddsa" id="eddsa">EDDSA</a></h2>
+<h2 id="eddsa"><a class="header" href="#eddsa">EDDSA</a></h2>
 <blockquote>
 <p>TODO</p>
 </blockquote>
-<h1><a class="header" href="#benchmark" id="benchmark">Benchmark</a></h1>
+<h1 id="benchmark"><a class="header" href="#benchmark">Benchmark</a></h1>
 <p>We have constructed <a href="https://github.com/patractlabs/megaclite/tree/master/crates/arkworks/src/tests">the tests of megaclite curves</a> in <a href="https://github.com/patractlabs/substrate/blob/features/curve-benchmark/bin/node-template/pallets/template/src/lib.rs">pallet-template</a> which imports the 
 curves from megaclite directly(<em>Wasm</em>) and with <a href="https://github.com/patractlabs/substrate/blob/features/curve-benchmark/bin/node-template/io/src/lib.rs">runtime-interface</a>(<em>Native</em>).</p>
-<h2><a class="header" href="#building" id="building">Building</a></h2>
+<h2 id="building"><a class="header" href="#building">Building</a></h2>
 <pre><code class="language-bash"># Clone the branch `curve-benchmark` of our fork
 git clone https://github.com/patractlabs/jupiter.git \
     --branch features/runtime-interfaces \
@@ -339,7 +339,7 @@ cargo build -p jupiter-dev --all-features --release
 ./target/release/jupiter-dev benchmark -p pallet_template -e wasm_bls_12_381_add
 
 </code></pre>
-<h2><a class="header" href="#result" id="result">Result</a></h2>
+<h2 id="result"><a class="header" href="#result">Result</a></h2>
 <table><thead><tr><th>memory</th><th>processor</th></tr></thead><tbody>
 <tr><td>64GiB System memory</td><td>AMD Ryzen 9 5900X 12-Core Processor</td></tr>
 </tbody></table>
@@ -366,32 +366,32 @@ cargo build -p jupiter-dev --all-features --release
 # 2. Has compiled jupiter-dev
 sh ./benchmark.sh
 </code></pre>
-<h1><a class="header" href="#milestones" id="milestones">Milestones</a></h1>
-<h3><a class="header" href="#m1-integrate-the-basic-units-of-alt_bn128--bls12_381-3-developer--1-weeks" id="m1-integrate-the-basic-units-of-alt_bn128--bls12_381-3-developer--1-weeks">M1: Integrate the basic units of alt_bn128 &amp; bls12_381 (3 developer * 1 weeks)</a></h3>
+<h1 id="milestones"><a class="header" href="#milestones">Milestones</a></h1>
+<h3 id="m1-integrate-the-basic-units-of-alt_bn128--bls12_381-3-developer--1-weeks"><a class="header" href="#m1-integrate-the-basic-units-of-alt_bn128--bls12_381-3-developer--1-weeks">M1: Integrate the basic units of alt_bn128 &amp; bls12_381 (3 developer * 1 weeks)</a></h3>
 <ol>
 <li>Prepare the 3 basic algorithm codes (Add, Scalar_Mul, and Pairing) of alt_bn128 elliptic curve from zcash's official library <a href="https://github.com/zcash-hackworks/bn">bn</a>.</li>
 <li>Prepare the same 3  basic algorithm codes of bls12_381 from zcash's official library <a href="https://github.com/zkcrypto/bls12_381">bls12_381</a> .</li>
 <li>Integrate the above 6 algorithms into the under layer of Substrate Runtime.</li>
 </ol>
-<h3><a class="header" href="#m2-provide-to-upper-runtime-and-smart-contract-applications-3-developers--1-weeks" id="m2-provide-to-upper-runtime-and-smart-contract-applications-3-developers--1-weeks">M2: Provide to upper runtime and smart contract applications (3 developers * 1 weeks)</a></h3>
+<h3 id="m2-provide-to-upper-runtime-and-smart-contract-applications-3-developers--1-weeks"><a class="header" href="#m2-provide-to-upper-runtime-and-smart-contract-applications-3-developers--1-weeks">M2: Provide to upper runtime and smart contract applications (3 developers * 1 weeks)</a></h3>
 <ol>
 <li>Add Runtime_interface to the Jupiter testnet and provide it to Runtime applications.</li>
 <li>Add Contract_Seal to the contract module of the Jupiter testnet and provide it to the WASM contract application.</li>
 </ol>
-<h3><a class="header" href="#m3-integrate-upper-level-verification-and-tool-functions-3-developers--1-week" id="m3-integrate-upper-level-verification-and-tool-functions-3-developers--1-week">M3: Integrate upper-level verification and tool functions (3 developers * 1 week)</a></h3>
+<h3 id="m3-integrate-upper-level-verification-and-tool-functions-3-developers--1-week"><a class="header" href="#m3-integrate-upper-level-verification-and-tool-functions-3-developers--1-week">M3: Integrate upper-level verification and tool functions (3 developers * 1 week)</a></h3>
 <ol>
 <li>The runtime pallet that implements the zkSNARK verification algorithm.</li>
 <li>The Metis contract library that implements the zkSNARK verification algorithm.</li>
 <li>The Metis contract library that implements other commonly used algorithms, such as Poseidon, EdDSA, MerkleTree, MiMC and other commonly used algorithms.</li>
 </ol>
-<h3><a class="header" href="#m4-test-3-developers--1-week" id="m4-test-3-developers--1-week">M4: Test (3 developers * 1 week)</a></h3>
+<h3 id="m4-test-3-developers--1-week"><a class="header" href="#m4-test-3-developers--1-week">M4: Test (3 developers * 1 week)</a></h3>
 <ol>
 <li>Test six basic elliptic curve algorithms</li>
 <li>Test the zkSNARK verification algorithm of the Runtime layer</li>
 <li>Test the zkSNARK verification algorithm implemented in the contract layer</li>
 <li>Test Poseidon, EdDSA, MerkleTree, MiMC and other commonly used algorithm contract templates.</li>
 </ol>
-<h3><a class="header" href="#m5-benchmark-3-developers--1-week" id="m5-benchmark-3-developers--1-week">M5: Benchmark (3 developers * 1 week)</a></h3>
+<h3 id="m5-benchmark-3-developers--1-week"><a class="header" href="#m5-benchmark-3-developers--1-week">M5: Benchmark (3 developers * 1 week)</a></h3>
 <ol>
 <li>Provide benchmark results of all the above functions and develop them for the community as a reference for transaction weight and pricing.</li>
 </ol>

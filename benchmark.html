@@ -167,10 +167,10 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1><a class="header" href="#benchmark" id="benchmark">Benchmark</a></h1>
+                        <h1 id="benchmark"><a class="header" href="#benchmark">Benchmark</a></h1>
 <p>We have constructed <a href="https://github.com/patractlabs/megaclite/tree/master/crates/arkworks/src/tests">the tests of megaclite curves</a> in <a href="https://github.com/patractlabs/substrate/blob/features/curve-benchmark/bin/node-template/pallets/template/src/lib.rs">pallet-template</a> which imports the 
 curves from megaclite directly(<em>Wasm</em>) and with <a href="https://github.com/patractlabs/substrate/blob/features/curve-benchmark/bin/node-template/io/src/lib.rs">runtime-interface</a>(<em>Native</em>).</p>
-<h2><a class="header" href="#building" id="building">Building</a></h2>
+<h2 id="building"><a class="header" href="#building">Building</a></h2>
 <pre><code class="language-bash"># Clone the branch `curve-benchmark` of our fork
 git clone https://github.com/patractlabs/jupiter.git \
     --branch features/runtime-interfaces \
@@ -184,7 +184,7 @@ cargo build -p jupiter-dev --all-features --release
 ./target/release/jupiter-dev benchmark -p pallet_template -e wasm_bls_12_381_add
 
 </code></pre>
-<h2><a class="header" href="#result" id="result">Result</a></h2>
+<h2 id="result"><a class="header" href="#result">Result</a></h2>
 <table><thead><tr><th>memory</th><th>processor</th></tr></thead><tbody>
 <tr><td>64GiB System memory</td><td>AMD Ryzen 9 5900X 12-Core Processor</td></tr>
 </tbody></table>
