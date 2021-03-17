@@ -5,7 +5,7 @@ authors = ["clearloop <udtrokia@gmail.com>"]
 edition = "2018"
 
 [dev-dependencies]
-arkworks = { package = "megaclite-arkworks", path = "../crates/curve" }
+arkworks = { package = "zkmega-arkworks", path = "../crates/curve" }
 
 # Git deps
 ark-bls12-377 = { git = "https://github.com/arkworks-rs/curves", default-features = false, features = ["curve"] }

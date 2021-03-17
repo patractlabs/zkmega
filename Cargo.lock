@@ -807,29 +807,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "60302e4db3a61da70c0cb7991976248362f30319e88850c487b9b95bbf059e00"
 
 [[package]]
-name = "megaclite-arkworks"
-version = "0.1.0"
-dependencies = [
- "ark-bls12-377",
- "ark-bls12-381",
- "ark-bn254",
- "ark-bw6-761",
- "ark-cp6-782",
- "ark-ec",
- "ark-ff",
- "ark-groth16",
- "ark-relations",
- "ark-serialize",
- "ark-std",
- "hex",
- "ink_env",
- "num-bigint 0.3.1",
- "parity-scale-codec",
- "rand 0.7.3",
- "rustc-hex",
-]
-
-[[package]]
 name = "memchr"
 version = "2.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1416,7 +1393,6 @@ dependencies = [
  "ark-std",
  "bellman_ce",
  "hex",
- "megaclite-arkworks",
  "num-bigint 0.3.1",
  "num-traits",
  "parity-scale-codec",
@@ -1424,6 +1400,7 @@ dependencies = [
  "rust-crypto",
  "rustc-hex",
  "sapling-crypto_ce",
+ "zkmega-arkworks",
 ]
 
 [[package]]
@@ -1567,6 +1544,29 @@ dependencies = [
  "quote",
  "syn",
  "synstructure",
+]
+
+[[package]]
+name = "zkmega-arkworks"
+version = "0.1.0"
+dependencies = [
+ "ark-bls12-377",
+ "ark-bls12-381",
+ "ark-bn254",
+ "ark-bw6-761",
+ "ark-cp6-782",
+ "ark-ec",
+ "ark-ff",
+ "ark-groth16",
+ "ark-relations",
+ "ark-serialize",
+ "ark-std",
+ "hex",
+ "ink_env",
+ "num-bigint 0.3.1",
+ "parity-scale-codec",
+ "rand 0.7.3",
+ "rustc-hex",
 ]
 
 [[package]]
