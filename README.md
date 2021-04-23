@@ -2,11 +2,6 @@
 
 [zkMega](https://patractlabs.github.io/substrate-contracts-book/zh_CN/zkmega/introduction.html) is a zero-knowledge proof tool set building for the Polkadot ecology.
 
-+ [Pairing](https://patractlabs.github.io/zkmega/pairing)
-+ [Pallet Contracts](https://patractlabs.github.io/zkmega/pallet-contracts)
-+ [Metis](https://patractlabs.github.io/zkmega/metis)
-
-* Polkadot Treasury report for v0.1: https://polkadot.polkassembly.io/post/221.
 * Element group for discussion: https://app.element.io/#/room/#PatractLabsDev:matrix.org
 
 ## ZK Rollup Introduction
@@ -35,6 +30,37 @@ and [uniswap][uniswap] etc. However, in the past 3 years, ZK technology has furt
 such as the more practical [BLS curve][BLS curve], and [PLONK algorithm][PLONK algorithm] etc.
 Ethereum has not yet supported it.
 
+## Summary of zkMega's  plan
+- v0.1: Provide on-chain support for elliptic curve alt_bn128 、 bls12_381 、 BLS12-377 and BW6_761
+    - Integrate addition (ADD), scalar multiplication (MUL) and Pairing functions of the curves in Native layer and Runtime WASM layer.
+    - Provide these three functions to the upper Runtime Pallets and Contracts to call.
+    - In the Runtime layer and the Ink! contract layer, provide two zkSNARK Verify upper-layer interfaces ( verification function of groth16, similar to the Verifier library of ethsnarks).
+    - Start the Metis project and implement EdDSA, MerkleTree, MiMC Hash, etc. contract library on the Ink! contract layer.
+
+- v0.2: Provide off-chain toolbox support for Ink! contract
+    - ZoPatract_core integrates arkworks-g16、arkworks-bls12_381、arkworks-bn254
+    - Implement CLI command for the whole phase of Zksnarks agreement (Zopatract_cli)
+    - The Ink smart contract template ink_verifier.rs that implements the verifier function is connected to Zopatract_cli's export-verifier.
+  - Modify the Zopatract JavaScript toolkit
+  - Test CLI's use of Arkworks groth16 algorithm and curve Bls12_381 and Bn254 curve package
+  - Test CLI on compile, setup, compute-witness, generate-proof, export-verifier commands in ink! smart contract environments.
+- v0.3: Create a sample payment DApp based on Megaclite
+
+##  Current Development Progress
+ At present, we have completed the 0.2 version development.
+
+You Can view:
+ - 0.1 
+    + [Pairing](https://patractlabs.github.io/zkmega/pairing)
+    + [Pallet Contracts](https://patractlabs.github.io/zkmega/pallet-contracts)
+    + [Metis](https://patractlabs.github.io/zkmega/metis)
+
+     Polkadot Treasury report for v0.1: https://polkadot.polkassembly.io/post/221.
+
+- 0.2 
+    + [ZoPatract](https://github.com/patractlabs/ZoPatract/)
+
+    Report  for v0.2 : https://github.com/patractlabs/ZoPatract/blob/master/REPORT.md
 
 ## LICENSE
 
