@@ -1,0 +1,106 @@
+name: build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  clippy:
+    name: Format & Clippy Check
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+        toolchain: [stable]
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v2
+
+      - name: Install Rust Toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.toolchain }}
+          override: true
+          components: rustfmt, clippy
+
+      - name: Check Code Format
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+
+      - name: Clippy Check
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: -- -D warnings
+
+  build-no-std:
+    name: Build no_std
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+        toolchain: [stable]
+    runs-on: ${{ matrix.platform }}
+
+    if: "! contains(toJSON(github.event.commits.head_commit.message), 'ci(skip)')"
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v2
+
+      - name: Install Rust Toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.toolchain }}
+          override: true
+          target: thumbv6m-none-eabi
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: -p zkmega-arkworks --no-default-features --target thumbv6m-none-eabi
+
+  build-std:
+    name: Build & Test
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+        toolchain: [stable]
+    runs-on: ${{ matrix.platform }}
+
+    if: "! contains(toJSON(github.event.commits.head_commit.message), 'ci(skip)')"
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v2
+
+      - name: Install Rust Toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.toolchain }}
+          override: true
+
+      - name: Cache Dependencies & Outputs
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --all -vv
+
+      - name: Test
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --all -vv

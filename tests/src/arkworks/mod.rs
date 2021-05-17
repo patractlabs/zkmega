@@ -3,17 +3,18 @@ mod ops;
 mod verify;
 
 use ark_ec::{AffineCurve, PairingEngine, ProjectiveCurve};
-use ark_ff::{test_rng, FromBytes, One, PrimeField, ToBytes, UniformRand, Zero};
+use ark_ff::{FromBytes, One, PrimeField, ToBytes, Zero};
 use ark_serialize::SerializationError;
 use ark_std::{
     io::{Error, ErrorKind},
     ops::{MulAssign, Neg},
     str::FromStr,
+    test_rng,
     vec::Vec,
+    UniformRand,
 };
 use arkworks::CurveBasicOperations;
 use rand::Rng;
-use rustc_hex::ToHex;
 
 type G1Affine<T> = <T as PairingEngine>::G1Affine;
 type G2Affine<T> = <T as PairingEngine>::G2Affine;
@@ -31,10 +32,10 @@ where
         <G1Affine<T> as Zero>::zero().write(&mut input);
         <G1Affine<T> as Zero>::zero().write(&mut input);
 
-        println!("1 zero: {}", input.to_hex::<String>());
+        println!("1 zero: {}", hex::encode(&input));
         let mut expected = Vec::new();
         <G1Affine<T> as Zero>::zero().write(&mut expected);
-        println!("1 expected: {}", expected.to_hex::<String>());
+        println!("1 expected: {}", hex::encode(&expected));
 
         let res = T::add(&input[..]).unwrap();
         assert_eq!(&expected[..], &res[..]);
@@ -46,17 +47,17 @@ where
         let mut input1 = Vec::new();
         <G1Affine<T> as AffineCurve>::prime_subgroup_generator().write(&mut input1);
         <G1Affine<T> as AffineCurve>::prime_subgroup_generator().write(&mut input1);
-        println!("2 input1: {}", input1.to_hex::<String>());
+        println!("2 input1: {}", hex::encode(&input1));
 
         let mut input2 = Vec::new();
         <G1Affine<T> as AffineCurve>::prime_subgroup_generator().write(&mut input2);
         <Fr<T> as PrimeField>::from_repr(2u64.into()).map(|x| x.write(&mut input2));
-        println!("2 input2: {}", input2.to_hex::<String>());
+        println!("2 input2: {}", hex::encode(&input2));
 
         let res1 = T::add(&input1[..]).unwrap();
         let res2 = T::mul(&input2[..]).unwrap();
-        println!("2 res1: {}", res1.to_hex::<String>());
-        println!("2 res2: {}", res2.to_hex::<String>());
+        println!("2 res1: {}", hex::encode(&res1));
+        println!("2 res2: {}", hex::encode(&res2));
 
         assert_eq!(res1, res2);
         println!("test add2 success!");
@@ -66,12 +67,12 @@ where
     {
         let mut input1 = Vec::new();
         <G1Affine<T> as AffineCurve>::prime_subgroup_generator().write(&mut input1);
-        println!("3 input1: {}", input1.to_hex::<String>());
+        println!("3 input1: {}", hex::encode(&input1));
 
         let mut input2 = Vec::new();
         <G1Affine<T> as AffineCurve>::prime_subgroup_generator().write(&mut input2);
         <Fr<T> as FromStr>::from_str("2").map(|x| x.write(&mut input2));
-        println!("3 input2: {}", input2.to_hex::<String>());
+        println!("3 input2: {}", hex::encode(&input2));
 
         let res1 = T::add(&input1.repeat(2)[..]).expect("Generator add failed");
         let res2 = T::mul(&input2[..]).expect("Generator scalar_mul 2 failed");
@@ -83,9 +84,9 @@ where
             .into_affine()
             .write(&mut res3);
 
-        println!("3 res1: {}", res1.to_hex::<String>());
-        println!("3 res2: {}", res2.to_hex::<String>());
-        println!("3 res3: {}", res3.to_hex::<String>());
+        println!("3 res1: {}", hex::encode(&res1));
+        println!("3 res2: {}", hex::encode(&res2));
+        println!("3 res3: {}", hex::encode(&res3));
         // prime_subgroup_generator + prime_subgroup_generator = prime_subgroup_generator * 2
         assert_eq!(res1, res3);
         println!("test add3 success!");
@@ -119,7 +120,7 @@ where
             println!("random g1:{:?}", input.len());
             sb.into_affine().write(&mut input);
             println!("random g1:{:?}", input.len());
-            println!("4 input: {}", input.to_hex::<String>());
+            println!("4 input: {}", hex::encode(&input));
 
             // e(sa, b) = e(sb, a)
             assert!(<T as CurveBasicOperations>::pairings(&input[..]).expect("pairings failed"));
@@ -157,9 +158,9 @@ where
 
         // a1 * b1  + a2 * b2  + -a1 * b1  + -a2 * b2 = 0
         let expected = <T as PairingEngine>::pairing(a1, b1)
-            * &<T as PairingEngine>::pairing(a2, b2)
-            * &<T as PairingEngine>::pairing(a3, b3)
-            * &<T as PairingEngine>::pairing(a4, b4);
+            * <T as PairingEngine>::pairing(a2, b2)
+            * <T as PairingEngine>::pairing(a3, b3)
+            * <T as PairingEngine>::pairing(a4, b4);
         // e(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) = 1
         assert_eq!(<T as PairingEngine>::Fqk::one(), expected);
 
@@ -170,7 +171,7 @@ where
             g1.write(&mut input);
             g2.write(&mut input);
         });
-        println!("5 input: {}", input.to_hex::<String>());
+        println!("5 input: {}", hex::encode(&input));
 
         // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
         assert!(<T as CurveBasicOperations>::pairings(&input[..]).unwrap());

@@ -62,7 +62,7 @@ pub fn call(func_id: u32, input: &[u8]) -> Result<Vec<u8>> {
         0x01000012 => <ark_bls12_381::Bls12_381 as CurveBasicOperations>::pairings(input).map(b2b),
         0x01000022 => <ark_bn254::Bn254 as CurveBasicOperations>::pairings(input).map(b2b),
         0x01000032 => <ark_bw6_761::BW6_761 as CurveBasicOperations>::pairings(input).map(b2b),
-        id => Err(Error::InvalidFunctionId)?,
+        id => return Err(Error::InvalidFunctionId),
     }?)
 }
 
@@ -73,7 +73,7 @@ pub fn add(func_id: u32, input: &[u8]) -> Result<Vec<u8>> {
         0x10 => call(0x01000010, input)?,
         0x20 => call(0x01000020, input)?,
         0x30 => call(0x01000030, input)?,
-        _ => Err(Error::InvalidFunctionId)?,
+        _ => return Err(Error::InvalidFunctionId),
     })
 }
 
@@ -84,7 +84,7 @@ pub fn mul(func_id: u32, input: &[u8]) -> Result<Vec<u8>> {
         0x10 => call(0x01000011, input)?,
         0x20 => call(0x01000021, input)?,
         0x30 => call(0x01000031, input)?,
-        _ => Err(Error::InvalidFunctionId)?,
+        _ => return Err(Error::InvalidFunctionId),
     })
 }
 
@@ -95,7 +95,7 @@ pub fn pairing(func_id: u32, input: &[u8]) -> Result<Vec<u8>> {
         0x10 => call(0x01000012, input)?,
         0x20 => call(0x01000022, input)?,
         0x30 => call(0x01000032, input)?,
-        _ => Err(Error::InvalidFunctionId)?,
+        _ => return Err(Error::InvalidFunctionId),
     })
 }
 

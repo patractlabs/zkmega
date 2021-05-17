@@ -1,15 +1,14 @@
 use crate::{tests::mimc::test_mimc_groth_16, CurveBasicOperations};
 use ark_bls12_381::{Bls12_381, Fr};
-use ark_ff::{test_rng, Field, FromBytes, ToBytes, UniformRand};
+use ark_ff::{Field, FromBytes, ToBytes};
 use ark_groth16::{verify_proof, PreparedVerifyingKey, Proof, VerifyingKey};
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
-use ark_std::{ops::MulAssign, vec::Vec};
-use rustc_hex::FromHex;
+use ark_std::{ops::MulAssign, test_rng, vec::Vec, UniformRand};
 
 /// BLS12_381 ADD
 pub fn bls12_381_add() {
     // two one-points add encode
-    let input1:Vec<u8> = FromHex::from_hex(
+    let input1 = hex::decode(
         "bbc622db0af03afbef1a7af93fe8556c58ac1b173f3a4ea105b974974f8c68c30faca94f8c63952694d79731a7d3f117e1\
          e7c5462923aa0ce48a88a244c73cd0edb3042ccb18db00f60ad0d595e0f5fce48a1d74ed309ea0f1a0aae381f4b30800\
          bbc622db0af03afbef1a7af93fe8556c58ac1b173f3a4ea105b974974f8c68c30faca94f8c63952694d79731a7d3f117e1\
@@ -17,7 +16,7 @@ pub fn bls12_381_add() {
 
     let res1 = Bls12_381::add(&input1[..]).unwrap();
 
-    let expected :Vec<u8> = FromHex::from_hex(
+    let expected = hex::decode(
         "4e0fbf29558c9ac3427c1c8fbb758fe22aa658c30a2d90432501289130db21970c45a950ebc8088846674d90eacb720528\
          9d7479198886ba1bbd16cdd4d9564c6ad75f1d02b93bf761e47086cb3eba22388e9d7773a6fd22a373c6ab8c9d6a1600").unwrap();
 
@@ -26,13 +25,13 @@ pub fn bls12_381_add() {
 
 /// BLS12_381 MUL
 pub fn bls12_381_mul() {
-    let input:Vec<u8> = FromHex::from_hex(
+    let input = hex::decode(
         "bbc622db0af03afbef1a7af93fe8556c58ac1b173f3a4ea105b974974f8c68c30faca94f8c63952694d79731a7d3f117e1e7c5462923aa0ce48a88a244c73cd0edb3042ccb18db00f60ad0d595e0f5fce48a1d74ed309ea0f1a0aae381f4b3080029833b7bbb804ef963d8b7ad8bc2b8f618f7d002103309d09ad6f3ac351a0c06"
     ).unwrap();
 
     let res2 = Bls12_381::mul(&input[..]).unwrap();
 
-    let expected :Vec<u8> = FromHex::from_hex(
+    let expected = hex::decode(
         "c8315497236f5373dea887756f63ebc5487c07a40cb4c086e9b08c2130229d3740d5610745636296b01eabd0f1265f1233e03378baf08d5bd6e386631d1b143694ebaa70481b86dba120e8dbc1cbf392dbd3718a8af4ad38d4de77bb2b37790900"
     ).unwrap();
 
@@ -42,7 +41,7 @@ pub fn bls12_381_mul() {
 /// BLS12_381 PAIRING
 pub fn bls12_381_pairing() {
     // vec![sa,b,-sb,a]
-    let input: Vec<u8> = FromHex::from_hex(
+    let input = hex::decode(
                 "0b198686e7b0d46c9857744a328590a0a4368724b79e3c747df05f90ef692a36dbef2f5643a3789c29f536d58068cb162e\
                  586c47ee9fc22748c5b6ca5e125dcf758bb3899a581e58c0fa5bc8c6be87edeb1bd21125524eb45c750da4a9d278030009\
                  c3078d5c5886fb948bbda03027f17c5a4d807fe558c5651578eb4f72038408ca45da26f19066f74c656542cf161507eee2\
@@ -98,7 +97,7 @@ pub fn bls12_381_pairing_six() {
                  b7fe9c27f4751bbd1ebdcfd0aa1898ef915ecdb2c9586f05e8faba135d0b64fd0d3610a6e94eb220c3523519374e582f03\
                  d08a8a51f7e452b7a3b7bf6cc8492e01b8c7b79b8929157a18b51ed5c3e26c0a00";
 
-        let input: Vec<u8> = FromHex::from_hex(pairings_encoded).unwrap();
+        let input = hex::decode(pairings_encoded).unwrap();
 
         // check pairings operation:(a1*b1) * e(a2*b2) * e(-a1*b1) * e(-a2*b2) == 1 return true
         assert!(Bls12_381::pairings(&input[..]).unwrap());
@@ -110,9 +109,9 @@ pub fn bls12_381_verify() {
     let vk = "408697568bc15871da494a2fe12199531130a8a5b96f07c69020dc01bf9f3ed043a6e1bd08f8d7826c7d5c0fc5c771995b6d86316ea7c1dc4df3e3396a9f78aadf416d5af1619883f5dbbf0a39c6743b194e5adedda54d7cb3ae33e556602e19dd43a31bca7bdb15ad5245dc1ad0affb97edc8f35bb00d1c5b417a132d5be9b72a39870193b6a142198a888c0fe3768f9094c864d37f890720969430f2682ccc76dc83f9234694590bd334b40dbfa7f28de40e914571d8ae2a88712844f86f0d6dd2f4875120f66304bfcedd55c9a805310155a5345ddc626cbb6fe5ce7026be174a08c798e4d1f1010f97138c30b10a0c06c5cc02155140b97283cc024daf57023a781a9115bb6e17350264f8b52784a6008921402af8c05dd39f4b789bd50435d2c5aefeb6dc9817af41f45779e3a2d80ab98ef923723b938566747c10a4a169ca5097c5d5073449c3d2e65e1629980200000000000000e60f6032ed7f170ba3481c5d99c0890554c808ad380a7c9aefc9e62eeecf0363ecef5e59ba8eaf6dd0af40e08d7cfd82ea7f398187aecf2721441218e54645b17acd35bdf65886255e772a58353ef2e25c92cf7f872bea5afca6081d03e6b115";
     let image = "1d6c7850edbac8a5281ab93d2ed245d47b64f20c21950926d595624b488c291c";
 
-    let proof_input: Vec<u8> = FromHex::from_hex(proof).unwrap();
-    let vk_input: Vec<u8> = FromHex::from_hex(vk).unwrap();
-    let image_input: Vec<u8> = FromHex::from_hex(image).unwrap();
+    let proof_input = hex::decode(proof).unwrap();
+    let vk_input = hex::decode(vk).unwrap();
+    let image_input = hex::decode(image).unwrap();
 
     let proof = Proof::<Bls12_381>::deserialize(&*proof_input).expect("Proof deserialize fail:");
     let vk = VerifyingKey::<Bls12_381>::deserialize(&*vk_input).expect("vk deserialize fail");
@@ -136,7 +135,7 @@ pub fn test_bls12_381_groth16() {
 fn test_bls12_381_additional() {
     // zero-points additions
     {
-        let input:Vec<u8> = FromHex::from_hex(
+        let input = hex::decode(
             "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
                     000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
                     00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
@@ -144,7 +143,7 @@ fn test_bls12_381_additional() {
 
         let res = Bls12_381::add(&input[..]).unwrap();
 
-        let expected :Vec<u8> = FromHex::from_hex(
+        let expected = hex::decode(
             "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\
                     000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001").unwrap();
 

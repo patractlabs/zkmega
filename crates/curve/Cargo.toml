@@ -1,38 +1,45 @@
 [package]
 name = "zkmega-arkworks"
 version = "0.1.0"
-authors = ["zkMega <https://github.com/patractlabs/zkmega>"]
+authors = ["Patract <https://github.com/patractlabs>"]
 edition = "2018"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
-ark-bls12-377 = { git = "https://github.com/arkworks-rs/curves", default-features = false, features = ["curve"] }
-ark-bls12-381 = { git = "https://github.com/arkworks-rs/curves", default-features = false, features = ["curve"] }
-ark-bn254 = { git = "https://github.com/arkworks-rs/curves", default-features = false, features = ["curve"] }
-ark-bw6-761 = { git = "https://github.com/arkworks-rs/curves", default-features = false }
-ark-cp6-782 = { git = "https://github.com/arkworks-rs/curves", default-features = false }
-ark-ff = { git = "https://github.com/arkworks-rs/algebra", default-features = false }
-ark-ec = { git = "https://github.com/arkworks-rs/algebra", default-features = false }
-ark-std = { git = "https://github.com/arkworks-rs/utils", default-features = false }
-ark-serialize = { git = "https://github.com/arkworks-rs/algebra", default-features = false }
-ark-relations = { git = "https://github.com/arkworks-rs/snark", default-features = false, optional = true }
-ark-groth16 = { git = "https://github.com/arkworks-rs/groth16", default-features = false, optional = true }
-
-num-bigint = { version = "0.3", default-features = false }
-rand = { version = "0.7", default-features = false }
-rustc-hex = { version = "2", default-features = false }
 hex = { version = "0.4.3", default-features = false, features = ["alloc"] }
+num-bigint = { version = "0.4", default-features = false }
+rand = { version = "0.7", default-features = false }
 
-ink_env = { git = "https://github.com/paritytech/ink", optional = true, default-features = false }
-parity-scale-codec = { version = "2.0.0", default-features = false, features = [ "derive" ] }
+## Parity
+parity-scale-codec = { version = "2.1", default-features = false, features = ["derive"] }
+
+## Arkworks
+# https://github.com/arkworks-rs/utils
+ark-std = { version = "0.2", default-features = false }
+# https://github.com/arkworks-rs/curves
+ark-bls12-377 = { version = "0.2", default-features = false, features = ["curve"] }
+ark-bls12-381 = { version = "0.2", default-features = false, features = ["curve"] }
+ark-bn254 = { version = "0.2", default-features = false, features = ["curve"] }
+ark-bw6-761 = { version = "0.2", default-features = false }
+ark-cp6-782 = { version = "0.2", default-features = false }
+# https://github.com/arkworks-rs/algebra
+ark-ec = { version = "0.2", default-features = false }
+ark-ff = { version = "0.2", default-features = false }
+ark-serialize = { version = "0.2", default-features = false }
+# https://github.com/arkworks-rs/groth16
+ark-groth16 = { version = "0.2", default-features = false, optional = true }
+# https://github.com/arkworks-rs/snark
+ark-relations = { version = "0.2", default-features = false, optional = true }
+
+## Ink!
+#ink_env = { git = "https://github.com/paritytech/ink", default-features = false, optional = true }
+ink_env = { version = "3.0.0-rc3", default-features = false, optional = true }
 
 [dev-dependencies]
-ark-relations = { git = "https://github.com/arkworks-rs/snark", default-features = false }
-ark-groth16 = { git = "https://github.com/arkworks-rs/groth16", default-features = false }
+ark-relations = { version = "0.2", default-features = false }
+ark-groth16 = { version = "0.2", default-features = false }
 
 [features]
 default = []
 tests = ["ark-relations", "ark-groth16"]
-ink_std = [ "ink_env/std" ]
-ink = [ "ink_env" ]
+ink_std = ["ink_env/std"]
+ink = ["ink_env"]
