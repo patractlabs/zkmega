@@ -3,9 +3,9 @@
 use rand::Rng;
 
 // For benchmarking
-use ark_std::{time::Duration, vec::Vec};
+use ark_std::{test_rng, time::Duration, vec::Vec, UniformRand};
 
-use ark_ff::{test_rng, Field, FromBytes, ToBytes, UniformRand};
+use ark_ff::{Field, FromBytes, ToBytes};
 
 // We'll use these interfaces to construct our circuit.
 use ark_relations::{
@@ -19,7 +19,6 @@ use ark_groth16::{
     PreparedVerifyingKey, Proof, VerifyingKey,
 };
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
-use rustc_hex::{FromHex, ToHex};
 
 const MIMC_ROUNDS: usize = 322;
 

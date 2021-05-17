@@ -1,5 +1,4 @@
 //! Tests
-#![feature(test)]
 #![cfg(test)]
 #![allow(unused_doc_comments)]
 #![allow(unused_imports)]

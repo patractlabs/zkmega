@@ -167,12 +167,11 @@ impl<'a, F: Field> ConstraintSynthesizer<F> for MiMCDemo<'a, F> {
 #[test]
 fn test_mimc_groth16() {
     // We're going to use the Groth-Maller17 proving system.
-    use ark_ff::test_rng;
     use ark_groth16::{
         create_random_proof, generate_random_parameters, prepare_verifying_key,
         verify_proof as raw_verify_proof,
     };
-    use rustc_hex::{FromHex, ToHex};
+    use ark_std::test_rng;
 
     // This may not be cryptographically safe, use
     // `OsRng` (for example) in production software.
@@ -229,7 +228,7 @@ fn test_mimc_groth16() {
         // proof encode
         let mut proof_encode = Vec::new();
         proof.write(&mut proof_encode).unwrap();
-        println!("proof:{}", proof_encode.to_hex::<String>());
+        println!("proof:{}", hex::encode(&proof_encode));
 
         // vk encode
         let mut vk_encode = Vec::new();
@@ -237,7 +236,7 @@ fn test_mimc_groth16() {
         params.vk.delta_g2.write(&mut vk_encode).unwrap();
         params.vk.alpha_g1.write(&mut vk_encode).unwrap();
         params.vk.beta_g2.write(&mut vk_encode).unwrap();
-        println!("vk:{}", vk_encode.to_hex::<String>());
+        println!("vk:{}", hex::encode(&vk_encode));
 
         // vk_ic encode
         let vk_ic = params
@@ -252,8 +251,8 @@ fn test_mimc_groth16() {
             .collect::<Vec<Vec<u8>>>();
         let mut vk_ic_slice = Vec::new();
         vk_ic.iter().for_each(|ic| vk_ic_slice.push(ic.to_vec()));
-        println!("vk_ic:{}", vk_ic_slice[0].to_hex::<String>());
-        println!("vk_ic2:{}", vk_ic_slice[1].to_hex::<String>());
+        println!("vk_ic:{}", hex::encode(&vk_ic_slice[0]));
+        println!("vk_ic2:{}", hex::encode(&vk_ic_slice[1]));
 
         let mut input = vec![Vec::new(); 1];
         input_vec.iter().enumerate().for_each(|(i, scalar)| {
@@ -261,7 +260,7 @@ fn test_mimc_groth16() {
         });
 
         let public_input = input.iter().map(|x| x.to_vec()).collect::<Vec<_>>();
-        println!("public_input:{}", public_input[0].to_hex::<String>());
+        println!("public_input:{}", hex::encode(&public_input[0]));
 
         assert!(
             verify_proof::<Bn254>(vk_ic_slice, vk_encode, proof_encode, public_input,)

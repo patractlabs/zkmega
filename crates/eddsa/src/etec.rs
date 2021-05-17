@@ -3,11 +3,9 @@ use zkp_u256::{InvMod, One, U256};
 
 // Extended twisted edwards coordinates to extended affine coordinates
 pub fn etec_to_point(point: [U256; 4], q: U256) -> Option<(U256, U256)> {
-    if let Some(inv_z) = point[3].inv_mod(&q) {
-        Some((point[0].mulmod(&inv_z, &q), point[1].mulmod(&inv_z, &q)))
-    } else {
-        None
-    }
+    point[3]
+        .inv_mod(&q)
+        .map(|inv_z| (point[0].mulmod(&inv_z, &q), point[1].mulmod(&inv_z, &q)))
 }
 
 // Project (x,y) point to extended edwards coordinates.
@@ -41,6 +39,7 @@ pub fn etec_negate(input_point: [U256; 4], q: &U256) -> [U256; 4] {
 
 // local_a := 0x292FC
 // local_q := 0x30644E72E131A029B85045B68181585D2833E84879B9709143E1F593F0000001
+#[allow(clippy::many_single_char_names)]
 pub fn etec_double(p1: &[U256; 4], local_q: &U256, local_a: &U256) -> [U256; 4] {
     // a = x * x
     let a = p1[0].mulmod(&p1[0], local_q);
@@ -90,6 +89,7 @@ pub fn etec_double(p1: &[U256; 4], local_q: &U256, local_a: &U256) -> [U256; 4] 
 // y3 = (y1y2 - ax1x2) * (z1z2 + dt1t2)
 // t3 = (y1y2 - ax1x2) * (x1y2 + y1x2)
 // z3 = (z1z2 - dt1t2) * (z1z2 + dt1t2)
+#[allow(clippy::many_single_char_names)]
 pub fn etec_add(
     p1: &[U256; 4],
     p2: &[U256; 4],
