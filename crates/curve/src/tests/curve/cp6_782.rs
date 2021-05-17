@@ -1,6 +1,4 @@
-#![allow(unused)]
 use crate::{curve::CP6_782, CurveBasicOperations};
-use ark_std::{ops::MulAssign, vec::Vec};
 
 /// CP6_782 ADD
 pub fn cp6_782_add() {

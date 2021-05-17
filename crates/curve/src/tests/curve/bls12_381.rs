@@ -1,9 +1,10 @@
-use crate::{tests::mimc::test_mimc_groth_16, CurveBasicOperations};
 use ark_bls12_381::{Bls12_381, Fr};
 use ark_ff::{Field, FromBytes, ToBytes};
 use ark_groth16::{verify_proof, PreparedVerifyingKey, Proof, VerifyingKey};
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 use ark_std::{ops::MulAssign, test_rng, vec::Vec, UniformRand};
+
+use crate::{tests::mimc::test_mimc_groth_16, CurveBasicOperations};
 
 /// BLS12_381 ADD
 pub fn bls12_381_add() {

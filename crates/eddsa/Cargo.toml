@@ -8,5 +8,4 @@ edition = "2018"
 once_cell = "1.7"
 tiny-keccak = { version = "2.0", features = ["fips202"] }
 
-#zkp-u256 = "0.2.0"
-zkp-u256 = { git = "https://github.com/patractlabs/OpenZKP", branch = "master"}
+zkp-u256 = { git = "https://github.com/patractlabs/OpenZKP", branch = "master", default-features = false }

@@ -1,8 +1,10 @@
-use super::*;
 use alloc::vec::Vec;
+
 use once_cell::sync::Lazy;
 use tiny_keccak::{Hasher, Sha3};
 use zkp_u256::U256;
+
+use super::*;
 
 static GENERATE: Lazy<Vec<U256>> = Lazy::new(|| {
     let generator = [

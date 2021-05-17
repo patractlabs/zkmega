@@ -4,31 +4,22 @@
 #![allow(unused_must_use)]
 #![allow(non_snake_case)]
 #![cfg_attr(not(features = "std"), no_std)]
-mod derive;
 
 #[macro_use]
 extern crate alloc;
 
 pub mod curve;
+mod derive;
+pub mod error;
 pub mod groth16;
 pub mod ops;
-pub mod result;
 pub mod tests;
 
-// use groth16;
-use alloc::vec::Vec;
 pub use ark_serialize::SerializationError;
-pub use ark_std::io::ErrorKind;
-use ark_std::ops::MulAssign;
-pub use ops::CurveBasicOperations;
-use parity_scale_codec::{Decode, Encode};
-pub use result::{Error, Result};
+pub use ark_std::{io::ErrorKind, ops::MulAssign, vec::Vec};
 
-/// bool to bytes
-#[cfg(not(feature = "ink"))]
-fn b2b(b: bool) -> Vec<u8> {
-    Vec::from(if b { [0] } else { [1] })
-}
+pub use self::error::{Error, Result};
+pub use self::ops::CurveBasicOperations;
 
 /// Call curve function
 #[cfg(feature = "ink")]
@@ -39,6 +30,12 @@ pub fn call(func_id: u32, input: &[u8]) -> Result<Vec<u8>> {
         .output_result::<Vec<u8>, Error>()
         .ignore_error_code()
         .call(&input)?)
+}
+
+/// bool to bytes
+#[cfg(not(feature = "ink"))]
+fn b2b(b: bool) -> Vec<u8> {
+    Vec::from(if b { [0] } else { [1] })
 }
 
 /// Call curve function

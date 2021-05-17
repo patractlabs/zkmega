@@ -1,4 +1,5 @@
 //! Curve Operations
+
 pub use ark_ec::{AffineCurve, PairingEngine, ProjectiveCurve};
 pub use ark_ff::{FromBytes, One, PrimeField, ToBytes, Zero};
 pub use ark_serialize::SerializationError;
@@ -10,7 +11,6 @@ pub use ark_std::{
     vec::Vec,
     UniformRand,
 };
-use num_bigint::BigUint;
 
 /// Arkworks Curve Ops
 pub trait CurveBasicOperations: PairingEngine {

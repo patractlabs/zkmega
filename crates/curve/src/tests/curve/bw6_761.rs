@@ -1,9 +1,10 @@
-use crate::{tests::mimc::test_mimc_groth_16, CurveBasicOperations};
 use ark_bw6_761::{Fr, BW6_761};
 use ark_ff::{Field, FromBytes, ToBytes};
 use ark_groth16::{verify_proof, PreparedVerifyingKey, Proof, VerifyingKey};
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 use ark_std::{ops::MulAssign, test_rng, vec::Vec, UniformRand};
+
+use crate::{tests::mimc::test_mimc_groth_16, CurveBasicOperations};
 
 /// BW6_761 ADD
 pub fn bw6_761_add() {
