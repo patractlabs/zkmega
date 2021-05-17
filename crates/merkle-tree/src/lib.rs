@@ -1,4 +1,5 @@
 #![no_std]
+
 #[macro_use]
 extern crate alloc;
 
@@ -6,4 +7,4 @@ extern crate alloc;
 mod merkle_tree;
 mod mimc;
 
-pub use mimc::*;
+pub use self::mimc::*;

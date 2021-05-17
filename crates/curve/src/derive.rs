@@ -1,8 +1,14 @@
 //! Impl ops for curves
-#![macro_use]
+
+use rand::Rng;
+
+use ark_ec::PairingEngine;
+use ark_ff::{Field, One, PrimeField};
+use ark_std::{ops::MulAssign, test_rng, vec::Vec};
+
+use crate::CurveBasicOperations;
 
 /// Paste pairing test
-#[macro_export]
 macro_rules! paste_test {
     ($curve:ident, $fq:ident) => {
         #[test]
@@ -36,15 +42,8 @@ macro_rules! paste_test {
 }
 
 mod bls12_377 {
-    use crate::CurveBasicOperations;
+    use super::*;
     use ark_bls12_377::{Bls12_377, Fq12, Fr, G1Projective, G2Projective};
-    use ark_ec::PairingEngine;
-    use ark_ff::{
-        fields::{Field, PrimeField},
-        One,
-    };
-    use ark_std::{ops::MulAssign, test_rng, vec::Vec};
-    use rand::Rng;
 
     impl CurveBasicOperations for Bls12_377 {
         const SCALAR_FIELD: &'static str =
@@ -65,12 +64,8 @@ mod bls12_377 {
 }
 
 mod bls12_381 {
-    use crate::CurveBasicOperations;
+    use super::*;
     use ark_bls12_381::{Bls12_381, Fq12, Fr, G1Projective, G2Projective};
-    use ark_ec::PairingEngine;
-    use ark_ff::{Field, One, PrimeField};
-    use ark_std::{ops::MulAssign, test_rng, vec::Vec};
-    use rand::Rng;
 
     impl CurveBasicOperations for Bls12_381 {
         const SCALAR_FIELD: &'static str =
@@ -91,12 +86,8 @@ mod bls12_381 {
 }
 
 mod bn254 {
-    use crate::CurveBasicOperations;
+    use super::*;
     use ark_bn254::{Bn254, Fq12, Fr, G1Projective, G2Projective};
-    use ark_ec::PairingEngine;
-    use ark_ff::{Field, One, PrimeField};
-    use ark_std::{ops::MulAssign, test_rng, vec::Vec};
-    use rand::Rng;
 
     impl CurveBasicOperations for Bn254 {
         const SCALAR_FIELD: &'static str =
@@ -116,12 +107,8 @@ mod bn254 {
 }
 
 mod bw6_761 {
-    use crate::CurveBasicOperations;
+    use super::*;
     use ark_bw6_761::{Fq6, Fr, G1Projective, G2Projective, BW6_761};
-    use ark_ec::PairingEngine;
-    use ark_ff::{Field, One, PrimeField};
-    use ark_std::{ops::MulAssign, test_rng, vec::Vec};
-    use rand::Rng;
 
     impl CurveBasicOperations for BW6_761 {
         const SCALAR_FIELD: &'static str = "6891450384315732539396789682275657542479668912536150109513790160209623422243491736087683183289411687640864567753786613451161759120554247759349511699125301598951605099378508850372543631423596795951899700429969112842764913119068299";
@@ -144,12 +131,8 @@ mod bw6_761 {
 }
 
 mod cp6_782 {
-    use crate::CurveBasicOperations;
+    use super::*;
     use ark_cp6_782::{Fq6, Fr, G1Projective, G2Projective, CP6_782};
-    use ark_ec::PairingEngine;
-    use ark_ff::{Field, One, PrimeField};
-    use ark_std::{ops::MulAssign, test_rng, vec::Vec};
-    use rand::Rng;
 
     impl CurveBasicOperations for CP6_782 {
         const SCALAR_FIELD: &'static str = "22369874298875696930346742206501054934775599465297184582183496627646774052458024540232479018147881220178054575403841904557897715222633333372134756426301062487682326574958588001132586331462553235407484089304633076250782629492557320825577";

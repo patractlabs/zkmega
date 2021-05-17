@@ -1,6 +1,7 @@
-use super::*;
 use once_cell::sync::Lazy;
 use zkp_u256::{One, Zero, U256};
+
+use super::*;
 
 pub(crate) static JUBJUB_A: u64 = 168700;
 pub(crate) static JUBJUB_D: u64 = 168696;

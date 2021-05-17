@@ -1,9 +1,11 @@
-use super::*;
 use alloc::vec::Vec;
 use core::mem::size_of;
+
 use once_cell::sync::Lazy;
 use tiny_keccak::{Hasher, Keccak};
 use zkp_u256::{Zero, U256};
+
+use super::*;
 
 // ceil(log2(1<<20))
 static TREE_DEPTH: usize = 10;

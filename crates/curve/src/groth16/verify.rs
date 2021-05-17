@@ -1,8 +1,17 @@
 //! Groth16 verifaction
-use crate::{result::Result, CurveBasicOperations, Error, ErrorKind, SerializationError};
-use alloc::{string::ToString, vec::Vec};
+
+use alloc::{
+    string::{String, ToString},
+    vec::Vec,
+};
+
 use num_bigint::BigUint;
-use parity_scale_codec::{alloc::string::String, Decode, Encode};
+use parity_scale_codec::{Decode, Encode};
+
+use crate::{
+    error::{Error, Result},
+    ops::CurveBasicOperations,
+};
 
 /// Groth16 Verifying Parcel
 #[derive(Debug, Encode, Decode)]
@@ -30,9 +39,7 @@ pub fn preprocessed_verify_proof<C: CurveBasicOperations>(
     vk_gamma_abc: [&str; 6],
     proof_and_input: &[u8],
 ) -> Result<bool> {
-    // TODO: here is a workaround
-    let proof_and_input = String::from_utf8_lossy(proof_and_input);
-    let bytes = hex::decode(&*proof_and_input).map_err(|e| format!("hex decode error:{}", e))?;
+    let bytes = hex::decode(proof_and_input).map_err(|e| format!("hex decode error:{}", e))?;
     let (proof, input) = bytes.split_at(2 * C::G1_LEN + C::G2_LEN);
 
     let mut vk_vec = Vec::new();

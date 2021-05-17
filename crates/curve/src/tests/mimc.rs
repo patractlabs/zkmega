@@ -1,12 +1,11 @@
 //! Groth16 MIMC DEMO
+
 // For randomness (during paramgen and proof generation)
 use rand::Rng;
 
 // For benchmarking
-use ark_std::{test_rng, time::Duration, vec::Vec, UniformRand};
-
 use ark_ff::{Field, FromBytes, ToBytes};
-
+use ark_std::{test_rng, time::Duration, vec::Vec, UniformRand};
 // We'll use these interfaces to construct our circuit.
 use ark_relations::{
     lc, ns,
