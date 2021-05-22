@@ -7,7 +7,7 @@ edition = "2018"
 [dependencies]
 hex = { version = "0.4.3", default-features = false, features = ["alloc"] }
 num-bigint = { version = "0.4", default-features = false }
-rand = { version = "0.7", default-features = false }
+rand = { version = "0.8", default-features = false }
 
 ## Parity
 parity-scale-codec = { version = "2.1", default-features = false, features = ["derive"] }
