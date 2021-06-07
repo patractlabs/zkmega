@@ -23,7 +23,7 @@ ark-bw6-761 = { version = "0.2", default-features = false }
 ark-cp6-782 = { version = "0.2", default-features = false }
 # https://github.com/arkworks-rs/algebra
 ark-ec = { version = "0.2", default-features = false }
-ark-ff = { version = "0.2", default-features = false }
+ark-ff = { version = "0.3", default-features = false }
 ark-serialize = { version = "0.2", default-features = false }
 # https://github.com/arkworks-rs/groth16
 ark-groth16 = { version = "0.2", default-features = false, optional = true }
