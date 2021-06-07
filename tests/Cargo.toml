@@ -15,7 +15,7 @@ parity-scale-codec = { version = "2.1", default-features = false, features = [ "
 
 ## Arkworks
 ark-std = { version = "0.2", default-features = false }
-ark-bls12-377 = { version = "0.2", default-features = false, features = ["curve"] }
+ark-bls12-377 = { version = "0.3", default-features = false, features = ["curve"] }
 ark-bls12-381 = { version = "0.2", default-features = false, features = ["curve"] }
 ark-bn254 = { version = "0.2", default-features = false, features = ["curve"] }
 ark-bw6-761 = { version = "0.2", default-features = false }
