@@ -10,7 +10,7 @@ num-bigint = { version = "0.4", default-features = false }
 rand = { version = "0.8", default-features = false }
 
 ## Parity
-parity-scale-codec = { version = "2.1", default-features = false, features = ["derive"] }
+parity-scale-codec = { version = "3.1", default-features = false, features = ["derive"] }
 
 ## Arkworks
 # https://github.com/arkworks-rs/utils
