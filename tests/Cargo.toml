@@ -23,7 +23,7 @@ ark-cp6-782 = { version = "0.3", default-features = false }
 ark-ff = { version = "0.3", default-features = false }
 ark-ec = { version = "0.3", default-features = false }
 ark-serialize = { version = "0.3", default-features = false }
-ark-relations = { version = "0.3", default-features = false }
+ark-relations = { version = "0.4", default-features = false }
 ark-groth16 = { version = "0.3", default-features = false }
 
 # zkMega
