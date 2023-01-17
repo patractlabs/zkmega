@@ -14,7 +14,7 @@ rand = { version = "0.8", default-features = false }
 parity-scale-codec = { version = "2.1", default-features = false, features = [ "derive" ] }
 
 ## Arkworks
-ark-std = { version = "0.3", default-features = false }
+ark-std = { version = "0.4", default-features = false }
 ark-bls12-377 = { version = "0.3", default-features = false, features = ["curve"] }
 ark-bls12-381 = { version = "0.3", default-features = false, features = ["curve"] }
 ark-bn254 = { version = "0.3", default-features = false, features = ["curve"] }
