@@ -11,7 +11,7 @@ num-traits = "0.2"
 rand = { version = "0.8", default-features = false }
 
 # Parity
-parity-scale-codec = { version = "2.1", default-features = false, features = [ "derive" ] }
+parity-scale-codec = { version = "3.3", default-features = false, features = [ "derive" ] }
 
 ## Arkworks
 ark-std = { version = "0.3", default-features = false }
